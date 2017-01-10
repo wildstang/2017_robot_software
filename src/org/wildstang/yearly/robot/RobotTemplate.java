@@ -65,7 +65,11 @@ public class RobotTemplate extends IterativeRobot
 //       outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
-      m_stateLogger.start();
+      
+      // Set the interval between writes to the file. Try 100ms
+      m_stateLogger.setWriteInterval(100);
+//      m_stateLogger.start();
+      
       Thread t = new Thread(m_stateLogger);
       t.start();
    }
@@ -150,7 +154,6 @@ public class RobotTemplate extends IterativeRobot
 
       // Create application systems
       m_core.createInputs(WSInputs.values());
-      // m_core.createInputs(SwerveInputs.values());
       m_core.createOutputs(WSOutputs.values());
 
       // 1. Add subsystems
@@ -300,16 +303,9 @@ public class RobotTemplate extends IterativeRobot
       teleopPerodicCalled = true;
 
       long cycleStartTime = System.currentTimeMillis();
-      // System.out.println("Cycle separation time: " + (cycleStartTime -
-      // lastCycleTime));
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-
-      /*
-       * try { NIVision.IMAQdxGrab(session, frame, 1);
-       * CameraServer.getInstance().setImage(frame); } catch(Exception e){}
-       */
 
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
