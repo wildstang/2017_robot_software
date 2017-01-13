@@ -70,8 +70,8 @@ public class LED implements Subsystem
       disableDataSent = false;
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
   
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
@@ -197,14 +197,14 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
-      {
-         m_antiTurbo = ((DigitalInput) source).getValue();
-      }
-      else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
-      {
-         m_turbo = ((DigitalInput) source).getValue();
-      }
+//      if (source.getName().equals(WSInputs.DRV_BUTTON_5.getName()))
+//      {
+//         m_antiTurbo = ((DigitalInput) source).getValue();
+//      }
+//      else if (source.getName().equals(WSInputs.DRV_BUTTON_8.getName()))
+//      {
+//         m_turbo = ((DigitalInput) source).getValue();
+//      }
       
       if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
       {

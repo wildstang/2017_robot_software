@@ -33,8 +33,7 @@ public enum WSInputs implements Inputs
          getLogging()),
    // DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 0), getLogging()),
-   DRV_BUTTON_2("Driver Limbo", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 1), getLogging()),
+   DRV_BUTTON_2("Shooter on", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),
    // DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 2), getLogging()),
    // DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new
@@ -47,16 +46,11 @@ public enum WSInputs implements Inputs
    // WsJSButtonInputConfig(0, 6), getLogging()),
    // DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 7), getLogging()),
-   DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 3), getLogging()),
-   DRV_BUTTON_5("Driver Turret Mode", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 4), getLogging()),
-   DRV_BUTTON_6("Driver Shift", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 5), getLogging()),
-   DRV_BUTTON_7("Driver Intake Nose Control", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 6), getLogging()),
-   DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON,
-         new WsJSButtonInputConfig(0, 7), getLogging()),
+   DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), getLogging()),
+   SPEED_UP_50("Speed up 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),
+   SPEED_UP_10("Speed up 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),
+   SPEED_DOWN_50("Speed down 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), getLogging()),
+   SPEED_DOWN_10("Speed down 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),
    DRV_BUTTON_12_PG("Pistol Grip", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(0, 11), getLogging()),
 
