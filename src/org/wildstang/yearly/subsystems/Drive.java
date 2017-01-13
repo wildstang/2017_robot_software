@@ -1,5 +1,8 @@
 package org.wildstang.yearly.subsystems;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
@@ -11,6 +14,7 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
 import org.wildstang.yearly.subsystems.drive.DriveSignal;
+import org.wildstang.yearly.subsystems.drive.DriveState;
 import org.wildstang.yearly.subsystems.drive.DriveType;
 import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
@@ -42,6 +46,9 @@ public class Drive implements Subsystem
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
+   
+   private DriveState absoluteDriveState = new DriveState(0,0,0,0);
+   private List<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
 
@@ -84,6 +91,24 @@ public class Drive implements Subsystem
 
       setBrakeMode(true);
 
+      
+      //Calculate all changes in DriveState
+      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks  = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // ONCE HEADING IS IMPLEMENTED ADD CODE HERE FOR HEADING
+      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
+      
+      
+      //Add the DriveState to the list 
+      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading));
+      
+      
+      //reset the absolute DriveState for the next cycle
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
+      
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders

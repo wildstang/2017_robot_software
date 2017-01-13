@@ -17,5 +17,8 @@
 	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="talon_lib"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/bulldog.beagleboneblack.hardfp.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/opencv-2411.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
