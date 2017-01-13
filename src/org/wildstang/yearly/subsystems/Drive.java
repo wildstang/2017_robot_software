@@ -87,24 +87,28 @@ public class Drive implements Subsystem
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders
-      // m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-      // if
-      // (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative)
-      // != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent) {
-      // DriverStation.reportError("Could not detect left drive encoder!",
-      // false);
-      // }
-      // m_leftMaster.reverseSensor(true);
+      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      {
+         SmartDashboard.putBoolean("LeftEncPresent", false);
+      }
+      else
+      {
+         SmartDashboard.putBoolean("LeftEncPresent", true);
+      }
+      m_leftMaster.reverseSensor(true);
 
-      // m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-      // if
-      // (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative)
-      // != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent) {
-      // DriverStation.reportError("Could not detect right drive encoder!",
-      // false);
-      // }
-      //
-      // m_rightMaster.reverseSensor(false);
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      {
+         SmartDashboard.putBoolean("RightEndPresent", false);
+      }
+      else
+      {
+         SmartDashboard.putBoolean("RightEndPresent", true);
+      }
+
+      m_rightMaster.reverseSensor(false);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit
@@ -113,9 +117,8 @@ public class Drive implements Subsystem
       // m_rightMaster.reverseOutput(true);
       // m_rightFollower.reverseOutput(false);
 
-      
       // TODO:Load PID profiles
-      
+
    }
 
    @Override
@@ -214,7 +217,7 @@ public class Drive implements Subsystem
 
       m_driveMode = DriveType.CHEESY;
 
-      // Configure motor controllers
+      // TODO: Reconfigure motor controllers
    }
 
    public void setRawDrive()
@@ -242,17 +245,18 @@ public class Drive implements Subsystem
       if (m_driveMode != DriveType.FULL_BRAKE)
       {
          // TODO: Need to test and tune PID
-         // At least set constants and set a profile before uncommenting the code
-         
-//         m_leftMaster.setProfile(kBaseLockControlSlot);
-//         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-//         m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-//         m_leftMaster.set(m_leftMaster.getPosition());
-//
-//         m_rightMaster.setProfile(kBaseLockControlSlot);
-//         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-//         m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-//         m_rightMaster.set(m_rightMaster.getPosition());
+         // At least set constants and set a profile before uncommenting the
+         // code
+
+         // m_leftMaster.setProfile(kBaseLockControlSlot);
+         // m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         // m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+         // m_leftMaster.set(m_leftMaster.getPosition());
+         //
+         // m_rightMaster.setProfile(kBaseLockControlSlot);
+         // m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         // m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+         // m_rightMaster.set(m_rightMaster.getPosition());
 
          m_driveMode = DriveType.FULL_BRAKE;
 
@@ -271,7 +275,7 @@ public class Drive implements Subsystem
          }
       }
 
-      m_pathFollower = new PathFollower(p_path);
+      m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 
    public void startFollowingPath()
