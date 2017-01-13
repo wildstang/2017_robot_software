@@ -50,5 +50,10 @@ public class DriveState {
 	public double getHeadingAngle() {
 		return headingAngle;
 	}
+	
+	public String toString() {
+		return deltaTimeMS + ", " + deltaRightEncoderTicks + ", " 
+				+ deltaLeftEncoderTicks + ", " + headingAngle + "\n"; 
+	}
 
 }

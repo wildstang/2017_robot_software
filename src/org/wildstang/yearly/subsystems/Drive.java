@@ -1,5 +1,8 @@
 package org.wildstang.yearly.subsystems;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -333,4 +336,41 @@ public class Drive implements Subsystem
       return "Drive";
    }
 
+   
+   public void writeDriveStatesToFile(String fileName) {
+	   BufferedWriter bw = null;
+		FileWriter fw = null;
+
+		try {
+
+			fw = new FileWriter(fileName);
+			bw = new BufferedWriter(fw);
+			for (DriveState ds: driveStates) {
+
+				bw.write(ds.toString());
+			}
+
+			System.out.println("Done");
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bw != null)
+					bw.close();
+
+				if (fw != null)
+					fw.close();
+
+			} catch (IOException ex) {
+
+				ex.printStackTrace();
+
+			}
+
+   }
 }
