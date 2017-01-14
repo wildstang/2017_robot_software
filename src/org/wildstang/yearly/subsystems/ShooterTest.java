@@ -35,7 +35,7 @@ public class ShooterTest implements Subsystem
    private DigitalInput m_shooterOnInput;
    private DigitalInput m_shooterPosInput;
 
-   private int m_currentSpeed = 1000;
+   private int m_currentSpeed = 50;
    
    private boolean m_shooterOn;
    private boolean m_shooterOnCurr;
@@ -75,7 +75,7 @@ public class ShooterTest implements Subsystem
    @Override
    public void init()
    {
-      m_shooter = new CANTalon(CANConstants.FLYWHEEL_TEST_TALON_ID);
+      m_shooter = new CANTalon(2);
 
       m_shooter.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_shooter.configEncoderCodesPerRev(256);
