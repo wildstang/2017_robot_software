@@ -16,12 +16,14 @@ public class PneumaticsTest implements Subsystem
    private boolean m_buttonPressed;
    private DigitalInput m_buttonInput;
    
-   private long elapsed = 0;
+   private long m_elapsed = 0;
    private long m_last = 0;
    private long m_current = 0;
    
    private boolean m_toggle;
    private WsDoubleSolenoid m_solenoid;
+   
+   private boolean m_first = true;
    
    @Override
    public void inputUpdate(Input p_source)
@@ -52,13 +54,17 @@ public class PneumaticsTest implements Subsystem
       if (m_buttonPressed)
       {
          m_current = System.currentTimeMillis();
-
-         elapsed += (m_current - m_last);
+         if (m_first)
+         {
+            m_first = false;
+            m_last = m_current;
+         }
+         m_elapsed += (m_current - m_last);
          
-         if (elapsed > 100)
+         if (m_elapsed > 100)
          {
             m_toggle = !m_toggle;
-            elapsed = 0;
+            m_elapsed = 0;
          }
          m_last = m_current;
          
