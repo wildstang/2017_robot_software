@@ -58,7 +58,7 @@ public class RobotTemplate extends IterativeRobot
 
    static boolean teleopPerodicCalled = false;
    
-   private static final String FILENAME = "";
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
    
    private void startloggingState()
    {
@@ -279,7 +279,7 @@ public class RobotTemplate extends IterativeRobot
    public void teleopInit()
    {
       //Write all DriveState objects to a file from auto
-	  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE.getName())).writeDriveStatesToFile(FILENAME);
+	  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
 	  
 	  // Remove the AutoManager from the Core
 	  m_core.setAutoManager(null);

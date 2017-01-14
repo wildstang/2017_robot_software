@@ -52,7 +52,7 @@ public class Drive implements Subsystem {
 	private static final double ROBOT_WIDTH_INCHES = 38;
 	private static final double WHEEL_DIAMETER_INCHES = 4;
 	private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
-	private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0);
+	private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
 	private List<DriveState> driveStates = new LinkedList<DriveState>();
 
 	private boolean m_brakeMode = true;
@@ -169,10 +169,9 @@ public class Drive implements Subsystem {
 		double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
 		double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
 		double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); //CHANGE
-		
-		
 		double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
-
+		
+		/******CONVERT TICKS TO TURN RADIUS AND CIRCLE******/
 		long startTime = System.nanoTime();
 		
 		double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
@@ -202,11 +201,11 @@ public class Drive implements Subsystem {
 			
 		}
 		
-		rLong = c + ROBOT_WIDTH_INCHES;
-		
-		
+		rLong = c + ROBOT_WIDTH_INCHES; //Will probably use later, this is the larger turn radius.
 		
 		System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
+		/*********************************/
+		
 		
 		// Add the DriveState to the list
 		driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
