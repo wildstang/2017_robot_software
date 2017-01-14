@@ -173,15 +173,6 @@ public class Drive implements Subsystem {
 		
 		double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
-		// Add the DriveState to the list
-		driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading));
-
-		// reset the absolute DriveState for the next cycle
-		absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
-		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
-		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
-		absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
-
 		long startTime = System.nanoTime();
 		
 		double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
@@ -215,7 +206,16 @@ public class Drive implements Subsystem {
 		
 		
 		
-		System.out.println("Time Elapsed: " + (System.nanoTime() - startTime) + " Turn Radius: " + c + " Delta Theta: " + deltaTheta);
+		System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
+		
+		// Add the DriveState to the list
+		driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
+
+		// reset the absolute DriveState for the next cycle
+		absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+		absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
 		
 	}
 
