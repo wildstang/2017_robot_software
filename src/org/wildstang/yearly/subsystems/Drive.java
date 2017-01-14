@@ -23,6 +23,7 @@ import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.StatusFrameRate;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -76,7 +77,7 @@ public class Drive implements Subsystem {
 	}
 
 	public void initDriveTalons() {
-		m_leftMaster = new CANTalon(CANConstants.LEFT_MASTER_TALON_ID);
+		m_leftMaster = new CANTalon(2/*CANConstants.LEFT_MASTER_TALON_ID*/);
 		m_leftFollower = new CANTalon(CANConstants.LEFT_FOLLOWER_TALON_ID);
 		m_rightMaster = new CANTalon(CANConstants.RIGHT_MASTER_TALON_ID);
 		m_rightFollower = new CANTalon(CANConstants.RIGHT_FOLLOWER_TALON_ID);
@@ -91,6 +92,8 @@ public class Drive implements Subsystem {
 		m_rightMaster.set(0);
 		m_rightFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
 		m_rightFollower.set(CANConstants.RIGHT_MASTER_TALON_ID);
+		
+		m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
 
 		setBrakeMode(true);
 
@@ -213,7 +216,7 @@ public class Drive implements Subsystem {
 		// reset the absolute DriveState for the next cycle
 		absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
 		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
-		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+		absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
 		absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
 		
 	}

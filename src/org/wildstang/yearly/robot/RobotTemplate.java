@@ -28,7 +28,7 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.subsystems.Drive;
-import org.wildstang.yearly.subsystems.DriveBase;
+//import org.wildstang.yearly.subsystems.DriveBase;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -238,7 +238,7 @@ public class RobotTemplate extends IterativeRobot
    public void disabledPeriodic()
    {
       // If we are finished with teleop, finish and close the log file
-      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+     // ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
@@ -264,13 +264,13 @@ public class RobotTemplate extends IterativeRobot
 
       m_core.executeUpdate();
 
-      if (AutoFirstRun)
-      {
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(true);
-         AutoFirstRun = false;
-      }
+//      if (AutoFirstRun)
+//      {
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(true);
+//         AutoFirstRun = false;
+//      }
    }
 
    /**
@@ -286,24 +286,24 @@ public class RobotTemplate extends IterativeRobot
 
       Core.getSubsystemManager().init();
       
-      DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+      //DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       
-      driveBase.stopStraightMoveWithMotionProfile();
+      //driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }
 
    public void teleopPeriodic()
    {
-      if (firstRun)
-      {
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(false);
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
-         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(0);
-         firstRun = false;
-      }
+//      if (firstRun)
+//      {
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(false);
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(0);
+//         firstRun = false;
+//      }
 
       try{
       teleopPerodicCalled = true;
