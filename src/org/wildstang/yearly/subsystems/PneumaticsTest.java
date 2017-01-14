@@ -21,7 +21,8 @@ public class PneumaticsTest implements Subsystem
    private long m_current = 0;
    
    private boolean m_toggle;
-   private WsDoubleSolenoid m_solenoid;
+   private WsDoubleSolenoid m_solenoid1;
+   private WsDoubleSolenoid m_solenoid2;
    
    private boolean m_first = true;
    
@@ -40,7 +41,8 @@ public class PneumaticsTest implements Subsystem
       m_buttonInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName());
       m_buttonInput.addInputListener(this);
       
-      m_solenoid = (WsDoubleSolenoid)Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
+      m_solenoid1 = (WsDoubleSolenoid)Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
+      m_solenoid2 = (WsDoubleSolenoid)Core.getOutputManager().getOutput(WSOutputs.SOLENOID2.getName());
    }
 
    @Override
@@ -70,11 +72,13 @@ public class PneumaticsTest implements Subsystem
          
          if (m_toggle)
          {
-            m_solenoid.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            m_solenoid1.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+            m_solenoid2.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
          }
          else
          {
-            m_solenoid.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            m_solenoid1.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+            m_solenoid2.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
          }
          
       }
