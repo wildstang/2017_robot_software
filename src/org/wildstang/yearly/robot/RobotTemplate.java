@@ -27,6 +27,7 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.DriveBase;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -56,6 +57,8 @@ public class RobotTemplate extends IterativeRobot
    private boolean AutoFirstRun = true;
 
    static boolean teleopPerodicCalled = false;
+   
+   private static final String FILENAME = "";
    
    private void startloggingState()
    {
@@ -275,8 +278,11 @@ public class RobotTemplate extends IterativeRobot
     */
    public void teleopInit()
    {
-      // Remove the AutoManager from the Core
-      m_core.setAutoManager(null);
+      //Write all DriveState objects to a file from auto
+	  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE.getName())).writeDriveStatesToFile(FILENAME);
+	  
+	  // Remove the AutoManager from the Core
+	  m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
       

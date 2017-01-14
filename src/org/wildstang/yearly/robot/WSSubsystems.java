@@ -1,6 +1,7 @@
 package org.wildstang.yearly.robot;
 
 import org.wildstang.framework.core.Subsystems;
+import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.DriveBase;
 
 public enum WSSubsystems implements Subsystems
@@ -10,7 +11,8 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
-   DRIVE_BASE("Drive Base", DriveBase.class);
+	DRIVE("Drive", Drive.class),
+	DRIVE_BASE("Drive Base", DriveBase.class);
 //   ENCODER_TEST("Encoder Test", EncoderTest.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.

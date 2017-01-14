@@ -49,6 +49,9 @@ public class Drive implements Subsystem {
 	private PathFollower m_pathFollower;
 	private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
+	private static final double ROBOT_WIDTH_INCHES = 38;
+	private static final double WHEEL_DIAMETER_INCHES = 4;
+	private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
 	private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0);
 	private List<DriveState> driveStates = new LinkedList<DriveState>();
 
@@ -165,15 +168,9 @@ public class Drive implements Subsystem {
 		// Calculate all changes in DriveState
 		double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
 		double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
-		double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // ONCE
-																		// HEADING
-																		// IS
-																		// IMPLEMENTED
-																		// ADD
-																		// CODE
-																		// HERE
-																		// FOR
-																		// HEADING
+		double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); //CHANGE
+		
+		
 		double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
 		// Add the DriveState to the list
@@ -185,6 +182,41 @@ public class Drive implements Subsystem {
 		absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
 		absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
 
+		long startTime = System.nanoTime();
+		
+		double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
+		double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
+		
+		double deltaTheta;
+		if (deltaLeftTicks != deltaRightTicks) {
+			deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks - deltaRightTicks));
+		} else {
+			deltaTheta = 0;
+		}
+		
+		double c;
+		double rLong;
+		//double deltaXRight; // delta X and Y relative to the robots position
+		//double deltaXLeft;
+		//double deltaYRight;
+		//double deltaYLeft;
+		if (deltaTheta < 0) {
+			c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
+
+		} else if (deltaTheta > 0) {
+			c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
+			
+		} else {
+			c = (double) Integer.MAX_VALUE;
+			
+		}
+		
+		rLong = c + ROBOT_WIDTH_INCHES;
+		
+		
+		
+		System.out.println("Time Elapsed: " + (System.nanoTime() - startTime) + " Turn Radius: " + c + " Delta Theta: " + deltaTheta);
+		
 	}
 
 	public void setHighGear(boolean p_high) {
