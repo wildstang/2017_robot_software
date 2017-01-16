@@ -83,6 +83,12 @@ public class Drive implements Subsystem
       m_rightFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
       m_rightFollower.set(CANConstants.RIGHT_MASTER_TALON_ID);
 
+      m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
+      m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
+      
+      m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
+      m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
+
       setBrakeMode(true);
 
       // TODO: Enable when encoders are mounted
@@ -204,7 +210,14 @@ public class Drive implements Subsystem
       m_driveMode = DriveType.PATH;
 
       // Configure motor controller modes for path following
-      // TODO
+      m_leftMaster.changeControlMode(TalonControlMode.Speed);
+      m_leftMaster.setProfile(0);
+      
+      m_rightMaster.changeControlMode(TalonControlMode.Speed);
+      m_rightMaster.setProfile(0);
+      
+      setHighGear(true);
+      setBrakeMode(true);
    }
 
    public void setOpenLoopDrive()

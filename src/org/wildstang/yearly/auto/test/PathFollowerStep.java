@@ -33,7 +33,7 @@ public class PathFollowerStep extends AutoStep
       
       Track[] tracks = PathReader.readTracks(file);
       m_path.setLeft(tracks[0]);
-      m_path.setRight(tracks[0]);
+      m_path.setRight(tracks[1]);
       
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
    }
