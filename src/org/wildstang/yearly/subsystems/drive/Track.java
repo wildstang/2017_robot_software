@@ -3,34 +3,22 @@ package org.wildstang.yearly.subsystems.drive;
 public class Track {
    
    // this array is indexed as [time][velocity%]
-   private double[][] m_velocities;
-   private double[][] m_coords;
+   private double[][] m_trajectoryPoints;
    
    public Track()
    {
    }
 
-   public double[][] getVelocities()
+   public double[][] getTrajectoryPoints()
    {
-      return m_velocities;
+      return m_trajectoryPoints;
    }
 
-   public double[][] getCoords()
+   public void setTrajectoryPoints(double[][] p_trajectoryPoints)
    {
-      return m_coords;
+      m_trajectoryPoints = p_trajectoryPoints;
    }
 
-   public void setCoords(double[][] p_coords)
-   {
-      m_coords = p_coords;
-   }
-
-   public void setVelocities(double[][] p_velocities)
-   {
-      m_velocities = p_velocities;
-   }
-   
-   
    
    
 

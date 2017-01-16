@@ -16,6 +16,7 @@ import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -217,7 +218,9 @@ public class Drive implements Subsystem
 
       m_driveMode = DriveType.CHEESY;
 
-      // TODO: Reconfigure motor controllers
+      // Reconfigure motor controllers
+      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
+      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
    }
 
    public void setRawDrive()
@@ -276,6 +279,13 @@ public class Drive implements Subsystem
       }
 
       m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
+   }
+
+   
+   
+   public PathFollower getPathFollower()
+   {
+      return m_pathFollower;
    }
 
    public void startFollowingPath()
