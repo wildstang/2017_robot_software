@@ -72,9 +72,9 @@ public class LED implements Subsystem
   
 //      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_5.getName()).addInputListener(this);
 //      Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_6.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_7.getName()).addInputListener(this);
+//      Core.getInputManager().getInput(WSInputs.MAN_BUTTON_8.getName()).addInputListener(this);
    }
   
    @Override
@@ -206,20 +206,20 @@ public class LED implements Subsystem
 //         m_turbo = ((DigitalInput) source).getValue();
 //      }
       
-      if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
-      {
-        m_shooter = ((DigitalInput) source).getValue();
-      }
-     
-      if (source.getName().equals(WSInputs.MAN_BUTTON_7.getName()))
-      {
-        m_intake = ((DigitalInput) source).getValue();
-      }
-      
-      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
-      {
-        m_shooter = ((DigitalInput) source).getValue();
-      }
+//      if (source.getName().equals(WSInputs.MAN_BUTTON_6.getName()))
+//      {
+//        m_shooter = ((DigitalInput) source).getValue();
+//      }
+//     
+//      if (source.getName().equals(WSInputs.MAN_BUTTON_7.getName()))
+//      {
+//        m_intake = ((DigitalInput) source).getValue();
+//      }
+//      
+//      if (source.getName().equals(WSInputs.MAN_BUTTON_8.getName()))
+//      {
+//        m_shooter = ((DigitalInput) source).getValue();
+//      }
       
       m_newDataAvailable = true;
    }

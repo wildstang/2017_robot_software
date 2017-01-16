@@ -16,6 +16,6 @@
 	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="talon_lib"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/core_framework"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Core-Framework"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

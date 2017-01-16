@@ -224,7 +224,7 @@ public class RobotTemplate extends IterativeRobot
 
       loadConfig();
 
-      Core.getSubsystemManager().init();
+//      Core.getSubsystemManager().init();
 
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
@@ -245,7 +245,7 @@ public class RobotTemplate extends IterativeRobot
 
    public void autonomousInit()
    {
-      Core.getSubsystemManager().init();
+//      Core.getSubsystemManager().init();
 
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
@@ -277,7 +277,7 @@ public class RobotTemplate extends IterativeRobot
       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
-      Core.getSubsystemManager().init();
+//      Core.getSubsystemManager().init();
       
 //      DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
 //      
