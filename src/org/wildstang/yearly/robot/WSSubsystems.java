@@ -5,7 +5,6 @@ import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.PneumaticsTest;
 import org.wildstang.yearly.subsystems.ShooterTest;
-import org.wildstang.yearly.subsystems.SpeedModeDirectTest;
 import org.wildstang.yearly.subsystems.TalonTest;
 
 public enum WSSubsystems implements Subsystems
@@ -20,7 +19,6 @@ public enum WSSubsystems implements Subsystems
 //   LED("LEDs", LED.class),
 //   SHOOTER_TEST("Shooter Test", ShooterTest.class);
    TALON_TEST("Talon test", TalonTest.class);
-//   SPEED_MODE_TEST("Talon test", SpeedModeDirectTest.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
    //This keeps the formatter from completely making the enumeration unreadable.
