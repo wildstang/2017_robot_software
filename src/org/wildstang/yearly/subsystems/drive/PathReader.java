@@ -73,7 +73,7 @@ public class PathReader
          mpPoint.velocity = velocity;
          mpPoint.timeDurMs = (int) interval;
          mpPoint.profileSlotSelect = 0; // which set of gains would you like to use?
-         mpPoint.velocityOnly = false; // set true to not do any position servo, just velocity feedforward
+         mpPoint.velocityOnly = true; // set true to not do any position servo, just velocity feedforward
          mpPoint.zeroPos = false;
 
          if (i == 0)

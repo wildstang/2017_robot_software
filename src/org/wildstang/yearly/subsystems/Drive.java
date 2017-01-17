@@ -102,6 +102,7 @@ public class Drive implements Subsystem
 
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.configEncoderCodesPerRev(256);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
@@ -112,7 +113,8 @@ public class Drive implements Subsystem
       }
       m_leftMaster.reverseSensor(true);
 
-//      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.configEncoderCodesPerRev(256);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEndPresent", false);
@@ -273,7 +275,10 @@ public class Drive implements Subsystem
       m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_rightMaster.setProfile(0);
       
+      // Go as fast as possible
       setHighGear(true);
+      
+      // Use brake mode to stop quickly at end of path, since Talons will put output to neutral
       setBrakeMode(true);
    }
 
