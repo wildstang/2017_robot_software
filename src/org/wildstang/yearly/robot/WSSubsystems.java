@@ -12,7 +12,7 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
-   DRIVE_BASE("Drive Base", Drive.class),
+//   DRIVE_BASE("Drive Base", Drive.class),
    LED("LEDs", LED.class),
    SHOOTER_TEST("Shooter Test", ShooterTest.class);
    
