@@ -112,7 +112,7 @@ public class Drive implements Subsystem
       }
       m_leftMaster.reverseSensor(true);
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEndPresent", false);
@@ -262,13 +262,15 @@ public class Drive implements Subsystem
 
    public void setPathFollowingMode()
    {
+      System.out.println("Drive.setPathFollowingMode() called");
+
       m_driveMode = DriveType.PATH;
 
       // Configure motor controller modes for path following
-      m_leftMaster.changeControlMode(TalonControlMode.Speed);
+      m_leftMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_leftMaster.setProfile(0);
       
-      m_rightMaster.changeControlMode(TalonControlMode.Speed);
+      m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_rightMaster.setProfile(0);
       
       setHighGear(true);
@@ -340,6 +342,7 @@ public class Drive implements Subsystem
          }
       }
 
+      System.out.println("Drive.setPath(): Creating new PathFollower");
       m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 
@@ -375,13 +378,14 @@ public class Drive implements Subsystem
 
    public void pathCleanup()
    {
+      m_pathFollower.stop();
       m_pathFollower = null;
    }
 
    @Override
    public String getName()
    {
-      return "Drive";
+      return "Drive Base";
    }
 
 }

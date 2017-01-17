@@ -1,13 +1,14 @@
 package org.wildstang.yearly.subsystems.drive;
 
+import java.util.ArrayList;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.MotionProfileStatus;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class PathFollower implements Runnable
+public class PathFollower
 {
    
    private boolean m_running = false;
@@ -27,23 +28,32 @@ public class PathFollower implements Runnable
       m_left = p_left;
       m_right = p_right;
 
-      m_left.changeMotionControlFramePeriod(5);
-      m_right.changeMotionControlFramePeriod(5);
+      m_left.changeMotionControlFramePeriod(10);
+      m_right.changeMotionControlFramePeriod(10);
 
       fillPathBuffers();
-      
    }
    
    public void start()
    {
-      Thread t = new Thread(this);
+      System.out.println("PathFollower.start() called");
+
+//      Thread t = new Thread(this);
       m_running = true;
-      t.start();
-      
+//      t.start();
+
+      m_notifer.startPeriodic(0.005);
+
+      m_mpEnable = CANTalon.SetValueMotionProfile.Enable;
+      m_left.set(m_mpEnable.value);
+      m_right.set(m_mpEnable.value);
+
    }
    
    public void stop()
    {
+      System.out.println("PathFollower.stop() called");
+
       m_running = false;
 
       /*
@@ -53,20 +63,25 @@ public class PathFollower implements Runnable
        */
       m_left.clearMotionProfileTrajectories();
       m_right.clearMotionProfileTrajectories();
+      
       /* When we do re-enter motionProfile control mode, stay disabled. */
       m_mpEnable = CANTalon.SetValueMotionProfile.Disable;
+      
+      m_left.set(m_mpEnable.value);
+      m_right.set(m_mpEnable.value);
+      
       m_notifer.stop();
    }
    
-   @Override
-   public void run()
-   {
-      m_mpEnable = CANTalon.SetValueMotionProfile.Enable;
-      m_notifer.startPeriodic(0.005);
 
-      while (m_running)
-      {
-         // Throw commands at the talon
+   public void update()
+   {
+      System.out.println("PathFollower.update() called");
+
+//      while (m_running)
+//      {
+//         System.out.println("PathFollower.run() running");
+
          m_left.getMotionProfileStatus(m_leftStatus);
          m_right.getMotionProfileStatus(m_rightStatus);
          
@@ -78,7 +93,14 @@ public class PathFollower implements Runnable
          {
             System.out.println("Right Talon has buffer underrun");
          }
-      }
+
+         if (m_leftStatus.activePointValid && m_leftStatus.activePoint.isLastPoint)
+         {
+            m_running = false;
+         }
+         
+         
+//      }
       
    }
    
@@ -92,6 +114,7 @@ public class PathFollower implements Runnable
       public void run()
       {
          m_left.processMotionProfileBuffer();
+         System.out.println("Top buffer size: " + m_left.getMotionProfileTopLevelBufferCount());
          m_right.processMotionProfileBuffer();
       }
    }
@@ -101,15 +124,14 @@ public class PathFollower implements Runnable
    
    private void fillPathBuffers()
    {
-      fillPathBuffers(m_path.getLeft().getTrajectoryPoints(), m_path.getRight().getTrajectoryPoints(), m_path.getLeft().getTrajectoryPoints().length);
+      fillPathBuffers(m_path.getLeft().getTalonPoints(), m_path.getRight().getTalonPoints(), m_path.getLeft().getTrajectoryPoints().length);
    }
 
-   private void fillPathBuffers(double[][] leftProfile, double[][] rightPoints, int totalCnt)
+   private void fillPathBuffers(ArrayList<CANTalon.TrajectoryPoint> leftPoints, ArrayList<CANTalon.TrajectoryPoint> rightPoints, int totalCnt)
    {
 
       /* create an empty point */
-      CANTalon.TrajectoryPoint leftPoint = new CANTalon.TrajectoryPoint();
-      CANTalon.TrajectoryPoint rightPoint = new CANTalon.TrajectoryPoint();
+      System.out.println("PathFollower.fillPathBuffers() called");
 
       /* did we get an underrun condition since last time we checked ? */
       if (m_leftStatus.hasUnderrun)
@@ -133,39 +155,12 @@ public class PathFollower implements Runnable
       /* This is fast since it's just into our TOP buffer */
       for (int i = 0; i < totalCnt; ++i)
       {
-         /* for each point, fill our structure and pass it to API */
-         leftPoint.position = leftProfile[i][0];
-         leftPoint.velocity = leftProfile[i][1];
-         leftPoint.timeDurMs = (int) leftProfile[i][2];
-         leftPoint.profileSlotSelect = 0; // which set of gains would you like to use?
-         leftPoint.velocityOnly = false; // set true to not do any position servo, just velocity feedforward
-         leftPoint.zeroPos = false;
-         
-         rightPoint.position = leftProfile[i][0];
-         rightPoint.velocity = leftProfile[i][1];
-         rightPoint.timeDurMs = (int) leftProfile[i][2];
-         rightPoint.profileSlotSelect = 0; // which set of gains would you like to use?
-         rightPoint.velocityOnly = false; // set true to not do any position servo, just velocity feedforward
-         rightPoint.zeroPos = false;
-
-         if (i == 0)
-         {
-            leftPoint.zeroPos = true; // set this to true on the first point
-            rightPoint.zeroPos = true; // set this to true on the first point
-         }
-         
-         leftPoint.isLastPoint = false;
-         rightPoint.isLastPoint = false;
-
-         if ((i + 1) == totalCnt)
-         {
-            leftPoint.isLastPoint = true; // set this to true on the last point
-            rightPoint.isLastPoint = true; // set this to true on the last point
-         }
-         
-         m_left.pushMotionProfileTrajectory(leftPoint);
-         m_right.pushMotionProfileTrajectory(rightPoint);
+         m_left.pushMotionProfileTrajectory(leftPoints.get(i));
+         m_right.pushMotionProfileTrajectory(rightPoints.get(i));
       }
+      
+      System.out.println("PathFollower.fillPathBuffers(): added " + m_left.getMotionProfileTopLevelBufferCount());
+
    }
 
 }

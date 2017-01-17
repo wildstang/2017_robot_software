@@ -8,7 +8,7 @@ public class TESTTalonMotionProfileAuto extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new PathFollowerStep("path.test.txt"));
+      addStep(new PathFollowerStep("/home/lvuser/path.test.txt"));
    }
 
    @Override

@@ -36,6 +36,9 @@ public class PathFollowerStep extends AutoStep
       Trajectory leftTrajectory = PathReader.readTrajectory(leftFile);
       Trajectory rightTrajectory = PathReader.readTrajectory(rightFile);
 
+      System.out.println("Left has " + leftTrajectory.getTalonPoints().size() + " points");
+      System.out.println("right has " + rightTrajectory.getTalonPoints().size() + " points");
+      
       m_path.setLeft(leftTrajectory);
       m_path.setRight(rightTrajectory);
       
@@ -45,29 +48,34 @@ public class PathFollowerStep extends AutoStep
    @Override
    public void update()
    {
-      if (!m_started)
+      if (!isFinished())
       {
-         m_drive.setPathFollowingMode();
-         m_drive.setPath(m_path);
-         m_pathFollower = m_drive.getPathFollower();
-         m_drive.startFollowingPath();
-      
-         m_started = true;
-         
-      }
-      else
-      {
-         if (m_pathFollower.isActive())
+         if (!m_started)
          {
-            // Do nothing - path is running
+            System.out.println("Step.update() called first time");
+   
+            m_drive.setPathFollowingMode();
+            m_drive.setPath(m_path);
+            m_pathFollower = m_drive.getPathFollower();
+            m_drive.startFollowingPath();
+         
+            m_started = true;
+            
          }
          else
          {
-            m_drive.pathCleanup();
-            setFinished(true);
+            if (m_pathFollower.isActive())
+            {
+               m_pathFollower.update();
+            }
+            else
+            {
+               System.out.println("Step.update(): path now inactive");
+               m_drive.pathCleanup();
+               setFinished(true);
+            }
          }
-      }
-      
+      }      
    }
 
    @Override
