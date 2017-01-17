@@ -8,6 +8,7 @@ import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,7 +36,7 @@ public class ShooterTest implements Subsystem
    private DigitalInput m_shooterOnInput;
    private DigitalInput m_shooterPosInput;
 
-   private int m_currentSpeed = 1000;
+   private float m_currentSpeed = .3f;
    
    private boolean m_shooterOn;
    private boolean m_shooterOnCurr;
@@ -75,31 +76,40 @@ public class ShooterTest implements Subsystem
    @Override
    public void init()
    {
-      m_shooter = new CANTalon(CANConstants.FLYWHEEL_TEST_TALON_ID);
+      m_shooter = new CANTalon(2);
 
       m_shooter.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_shooter.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       m_shooter.configEncoderCodesPerRev(256);
       m_shooter.reverseOutput(false);
       m_shooter.reverseSensor(false);
-      
+
+      m_shooter.configNominalOutputVoltage(0.0,  0.0);
       m_shooter.configPeakOutputVoltage(+12.0,  -12.0);
-      m_shooter.setVoltageRampRate(6.0);  // Max spinup of 6V/s - start here
+//      m_shooter.setVoltageRampRate(24.0);  // Max spinup of 6V/s - start here
       
+      
+      m_shooter.changeControlMode(TalonControlMode.Speed);
+      m_shooter.setAllowableClosedLoopErr(0);
       // Set up closed loop PID control gains in slot 0
       m_shooter.setProfile(0);
       m_shooter.setF(0);      // 0.1998
       m_shooter.setP(0);      //(10% X 1023) / (error) 
       m_shooter.setI(0);
       m_shooter.setD(0);
+
       
-      m_shooter.changeControlMode(TalonControlMode.Speed);
-      if (m_shooter.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      switch (m_shooter.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder))
       {
-         SmartDashboard.putBoolean("ShooterEncoder", false);
-      }
-      else
-      {
-         SmartDashboard.putBoolean("ShooterEncoder", true);
+         case FeedbackStatusPresent:
+            SmartDashboard.putString("Shooter encoder status", "Present");
+            break;
+         case FeedbackStatusNotPresent:
+            SmartDashboard.putString("Shooter encoder status", "Not present");
+            break;
+         case FeedbackStatusUnknown:
+            SmartDashboard.putString("Shooter encoder status", "Unknown");
+            break;
       }
 
       m_up50Input = (DigitalInput)Core.getInputManager().getInput(WSInputs.SPEED_UP_50.getName());
@@ -130,28 +140,29 @@ public class ShooterTest implements Subsystem
       if (m_inc50curr && !m_inc50prev)
       {
          m_currentSpeed += 50;
-         m_inc50prev = m_inc50curr;
       }
       else if (m_inc10curr && !m_inc10prev)
       {
          m_currentSpeed += 10;
-         m_inc10prev = m_inc10curr;
       }
       else if (m_dec50curr && !m_dec50prev)
       {
          m_currentSpeed -= 50;
-         m_dec50prev = m_dec50curr;
       }
       else if (m_dec10curr && !m_dec10prev)
       {
          m_currentSpeed -= 10;
-         m_dec10prev = m_dec10curr;
       }
       
       if (m_shooterOnCurr && !m_shooterPrev)
       {
          m_shooterOn = !m_shooterOn;
       }
+      m_inc50prev = m_inc50curr;
+      m_inc10prev = m_inc10curr;
+      m_dec50prev = m_dec50curr;
+      m_dec10prev = m_dec10curr;
+      
       m_shooterPrev = m_shooterOnCurr;
       
       if (m_shooterOn)
@@ -172,9 +183,12 @@ public class ShooterTest implements Subsystem
 //      }
       
       // Print the target and current to the dashboard
+      SmartDashboard.putBoolean("Shooter on", m_shooterOn);
       SmartDashboard.putNumber("Target RPM", m_currentSpeed);
       SmartDashboard.putNumber("Current RPM", m_shooter.getSpeed());
       SmartDashboard.putNumber("Error", m_shooter.getClosedLoopError());
+      SmartDashboard.putNumber("Output voltage", m_shooter.getOutputVoltage());
+      SmartDashboard.putNumber("Bus voltage", m_shooter.getBusVoltage());
    }
 
    @Override

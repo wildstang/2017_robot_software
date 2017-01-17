@@ -16,7 +16,7 @@ public enum WSSubsystems implements Subsystems
 //   MONITOR("Monitor", Monitor.class),
 //   PNEUMATICS_TEST("Pneumatics Test", PneumaticsTest.class),
 //   DRIVE_BASE("Drive Base", Drive.class),
-//   LED("LEDs", LED.class),
+   LED("LEDs", LED.class),
 //   SHOOTER_TEST("Shooter Test", ShooterTest.class);
    TALON_TEST("Talon test", TalonTest.class);
    
