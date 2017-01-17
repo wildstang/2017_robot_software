@@ -9,7 +9,7 @@ import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
 import org.wildstang.yearly.subsystems.drive.PathReader;
-import org.wildstang.yearly.subsystems.drive.Track;
+import org.wildstang.yearly.subsystems.drive.Trajectory;
 
 public class PathFollowerStep extends AutoStep
 {
@@ -25,15 +25,19 @@ public class PathFollowerStep extends AutoStep
    {
       m_filePath = p_path;
    }
+   
    @Override
    public void initialize()
    {
-      m_path = new Path(null);
-      File file = new File(m_filePath);
+      m_path = new Path();
+      File leftFile = new File(m_filePath + ".left");
+      File rightFile = new File(m_filePath + ".right");
       
-      Track[] tracks = PathReader.readTracks(file);
-      m_path.setLeft(tracks[0]);
-      m_path.setRight(tracks[1]);
+      Trajectory leftTrajectory = PathReader.readTrajectory(leftFile);
+      Trajectory rightTrajectory = PathReader.readTrajectory(rightFile);
+
+      m_path.setLeft(leftTrajectory);
+      m_path.setRight(rightTrajectory);
       
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
    }
@@ -59,6 +63,7 @@ public class PathFollowerStep extends AutoStep
          }
          else
          {
+            m_drive.pathCleanup();
             setFinished(true);
          }
       }

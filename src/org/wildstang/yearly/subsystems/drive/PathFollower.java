@@ -30,7 +30,8 @@ public class PathFollower implements Runnable
       m_left.changeMotionControlFramePeriod(5);
       m_right.changeMotionControlFramePeriod(5);
 
-      m_notifer.startPeriodic(0.005);
+      fillPathBuffers();
+      
    }
    
    public void start()
@@ -54,12 +55,14 @@ public class PathFollower implements Runnable
       m_right.clearMotionProfileTrajectories();
       /* When we do re-enter motionProfile control mode, stay disabled. */
       m_mpEnable = CANTalon.SetValueMotionProfile.Disable;
+      m_notifer.stop();
    }
    
    @Override
    public void run()
    {
       m_mpEnable = CANTalon.SetValueMotionProfile.Enable;
+      m_notifer.startPeriodic(0.005);
 
       while (m_running)
       {
@@ -67,7 +70,14 @@ public class PathFollower implements Runnable
          m_left.getMotionProfileStatus(m_leftStatus);
          m_right.getMotionProfileStatus(m_rightStatus);
          
-         
+         if (m_leftStatus.hasUnderrun)
+         {
+            System.out.println("Left Talon has buffer underrun");
+         }
+         if (m_rightStatus.hasUnderrun)
+         {
+            System.out.println("Right Talon has buffer underrun");
+         }
       }
       
    }

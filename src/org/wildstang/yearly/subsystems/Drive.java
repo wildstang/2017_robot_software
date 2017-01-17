@@ -3,6 +3,7 @@ package org.wildstang.yearly.subsystems;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
+import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -10,6 +11,7 @@ import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
+import org.wildstang.yearly.subsystems.drive.DriveConstants;
 import org.wildstang.yearly.subsystems.drive.DriveSignal;
 import org.wildstang.yearly.subsystems.drive.DriveType;
 import org.wildstang.yearly.subsystems.drive.Path;
@@ -27,12 +29,17 @@ public class Drive implements Subsystem
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
    private WsDoubleSolenoid m_shifter;
+   private DigitalInput m_rawModeInput;
 
    // Values from inputs
    private double m_throttleValue;
    private double m_headingValue;
    private boolean m_quickTurn;
 
+   private boolean m_rawModeCurrent = false;
+   private boolean m_rawModePrev = false;
+   private boolean m_rawMode = false;
+   
    // Talons for output
    private CANTalon m_leftMaster;
    private CANTalon m_rightMaster;
@@ -124,7 +131,32 @@ public class Drive implements Subsystem
       // m_rightMaster.reverseOutput(true);
       // m_rightFollower.reverseOutput(false);
 
-      // TODO:Load PID profiles
+      // Load PID profiles
+      // Path following profile
+      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
+      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
+      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
+      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
+
+      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
+      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
+      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
+      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
+
+      // Base lock profile
+      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
+      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
+      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
+      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
+
+      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
+      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
+      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
+      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
 
    }
 
@@ -144,6 +176,12 @@ public class Drive implements Subsystem
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
       // TODO: Add quickturn - either from a button or some state
+      
+      // If SELECT is pressed, use Raw mode
+      else if (p_source == m_rawModeInput)
+      {
+         m_rawModeCurrent = m_rawModeInput.getValue();
+      }
    }
 
    @Override
@@ -155,6 +193,9 @@ public class Drive implements Subsystem
    @Override
    public void update()
    {
+      
+      calculateRawMode();
+      
       switch (m_driveMode)
       {
          case PATH:
@@ -169,7 +210,21 @@ public class Drive implements Subsystem
          case RAW:
          default:
             // Raw is default
+            m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
+      }
+   }
+
+   private void calculateRawMode()
+   {
+      if (m_rawModeCurrent && !m_rawModePrev)
+      {
+         m_rawMode = !m_rawMode;
+      }
+      m_rawModePrev = m_rawModeCurrent;
+      if (m_rawMode)
+      {
+         setRawDrive();
       }
    }
 
@@ -238,14 +293,10 @@ public class Drive implements Subsystem
 
    public void setRawDrive()
    {
-      // Stop following any current path
-      if (m_driveMode == DriveType.PATH)
-      {
-         abortFollowingPath();
-         pathCleanup();
-      }
-
+      setOpenLoopDrive();
+      
       m_driveMode = DriveType.RAW;
+
    }
 
    public void setFullBrakeMode()
@@ -260,19 +311,17 @@ public class Drive implements Subsystem
       // Set talons to hold their current position
       if (m_driveMode != DriveType.FULL_BRAKE)
       {
-         // TODO: Need to test and tune PID
-         // At least set constants and set a profile before uncommenting the
-         // code
+         // Set up Talons to hold their current position as close as possible
 
-         // m_leftMaster.setProfile(kBaseLockControlSlot);
-         // m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-         // m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-         // m_leftMaster.set(m_leftMaster.getPosition());
-         //
-         // m_rightMaster.setProfile(kBaseLockControlSlot);
-         // m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-         // m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-         // m_rightMaster.set(m_rightMaster.getPosition());
+          m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+          m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+          m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+          m_leftMaster.set(m_leftMaster.getPosition());
+
+          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+          m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+          m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+          m_rightMaster.set(m_rightMaster.getPosition());
 
          m_driveMode = DriveType.FULL_BRAKE;
 
