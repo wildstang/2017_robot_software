@@ -1,5 +1,8 @@
 package org.wildstang.yearly.subsystems;
 
+import java.io.*;
+import java.util.LinkedList;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
@@ -13,6 +16,7 @@ import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
 import org.wildstang.yearly.subsystems.drive.DriveConstants;
 import org.wildstang.yearly.subsystems.drive.DriveSignal;
+import org.wildstang.yearly.subsystems.drive.DriveState;
 import org.wildstang.yearly.subsystems.drive.DriveType;
 import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
@@ -39,7 +43,7 @@ public class Drive implements Subsystem
    private boolean m_rawModeCurrent = false;
    private boolean m_rawModePrev = false;
    private boolean m_rawMode = false;
-   
+
    // Talons for output
    private CANTalon m_leftMaster;
    private CANTalon m_rightMaster;
@@ -50,6 +54,12 @@ public class Drive implements Subsystem
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
+
+   private static final double ROBOT_WIDTH_INCHES = 38;
+   private static final double WHEEL_DIAMETER_INCHES = 4;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
+   private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
 
@@ -178,7 +188,7 @@ public class Drive implements Subsystem
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
       // TODO: Add quickturn - either from a button or some state
-      
+
       // If SELECT is pressed, use Raw mode
       else if (p_source == m_rawModeInput)
       {
@@ -195,9 +205,9 @@ public class Drive implements Subsystem
    @Override
    public void update()
    {
-      
+
       calculateRawMode();
-      
+
       switch (m_driveMode)
       {
          case PATH:
@@ -215,6 +225,73 @@ public class Drive implements Subsystem
             m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
       }
+
+      collectDriveState();
+
+   }
+
+   private void collectDriveState()
+   {
+      // Calculate all changes in DriveState
+      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
+      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
+
+      /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
+      long startTime = System.nanoTime();
+
+      double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
+      double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
+
+      double deltaTheta;
+      if (deltaLeftTicks != deltaRightTicks)
+      {
+         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks - deltaRightTicks));
+      }
+      else
+      {
+         deltaTheta = 0;
+      }
+
+      double c;
+      double rLong;
+      // double deltaXRight; // delta X and Y relative to the robots position
+      // double deltaXLeft;
+      // double deltaYRight;
+      // double deltaYLeft;
+      if (deltaTheta < 0)
+      {
+         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
+
+      }
+      else if (deltaTheta > 0)
+      {
+         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
+
+      }
+      else
+      {
+         c = (double) Integer.MAX_VALUE;
+
+      }
+
+      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
+                                      // larger turn radius.
+
+      System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
+      /*********************************/
+
+      // Add the DriveState to the list
+      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
+
+      // reset the absolute DriveState for the next cycle
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
+
+
    }
 
    private void calculateRawMode()
@@ -271,11 +348,15 @@ public class Drive implements Subsystem
       // Configure motor controller modes for path following
       m_leftMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_leftMaster.setProfile(0);
-      
+
       m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_rightMaster.setProfile(0);
+<<<<<<< HEAD
       
       // Go as fast as possible
+=======
+
+>>>>>>> branch 'PathFollowing' of https://github.com/wildstang/2017_robot_software.git
       setHighGear(true);
       
       // Use brake mode to stop quickly at end of path, since Talons will put output to neutral
@@ -301,7 +382,7 @@ public class Drive implements Subsystem
    public void setRawDrive()
    {
       setOpenLoopDrive();
-      
+
       m_driveMode = DriveType.RAW;
 
    }
@@ -320,15 +401,15 @@ public class Drive implements Subsystem
       {
          // Set up Talons to hold their current position as close as possible
 
-          m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-          m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-          m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-          m_leftMaster.set(m_leftMaster.getPosition());
+         m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+         m_leftMaster.set(m_leftMaster.getPosition());
 
-          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-          m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-          m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-          m_rightMaster.set(m_rightMaster.getPosition());
+         m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+         m_rightMaster.set(m_rightMaster.getPosition());
 
          m_driveMode = DriveType.FULL_BRAKE;
 
@@ -351,8 +432,6 @@ public class Drive implements Subsystem
       m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 
-   
-   
    public PathFollower getPathFollower()
    {
       return m_pathFollower;
@@ -393,4 +472,40 @@ public class Drive implements Subsystem
       return "Drive Base";
    }
 
+   public void writeDriveStatesToFile(String fileName)
+   {
+      BufferedWriter bw = null;
+      FileWriter fw = null;
+
+      try
+      {
+         fw = new FileWriter(fileName);
+         bw = new BufferedWriter(fw);
+         for (DriveState ds : driveStates)
+         {
+            bw.write(ds.toString());
+         }
+         System.out.println("Done");
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+      try
+      {
+         if (bw != null)
+         {
+            bw.close();
+         }
+         if (fw != null)
+         {
+            fw.close();
+         }
+      }
+      catch (IOException ex)
+      {
+         ex.printStackTrace();
+      }
+   }
 }
