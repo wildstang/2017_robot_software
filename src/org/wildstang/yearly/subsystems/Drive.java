@@ -102,7 +102,7 @@ public class Drive implements Subsystem
 
       m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
       m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
-
+      
       m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
       m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
 
@@ -112,6 +112,7 @@ public class Drive implements Subsystem
 
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.configEncoderCodesPerRev(256);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
@@ -122,7 +123,8 @@ public class Drive implements Subsystem
       }
       m_leftMaster.reverseSensor(true);
 
-      // m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.configEncoderCodesPerRev(256);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEndPresent", false);
