@@ -351,12 +351,8 @@ public class Drive implements Subsystem
 
       m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_rightMaster.setProfile(0);
-<<<<<<< HEAD
-      
-      // Go as fast as possible
-=======
 
->>>>>>> branch 'PathFollowing' of https://github.com/wildstang/2017_robot_software.git
+      // Go as fast as possible
       setHighGear(true);
       
       // Use brake mode to stop quickly at end of path, since Talons will put output to neutral
