@@ -226,6 +226,12 @@ public class Drive implements Subsystem
             break;
       }
 
+      collectDriveState();
+
+   }
+
+   private void collectDriveState()
+   {
       // Calculate all changes in DriveState
       double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
       double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
@@ -284,7 +290,6 @@ public class Drive implements Subsystem
       absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
       absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
       absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
-
    }
 
    private void calculateRawMode()
