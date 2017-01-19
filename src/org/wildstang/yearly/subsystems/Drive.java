@@ -111,7 +111,7 @@ public class Drive implements Subsystem
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders
-      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_leftMaster.configEncoderCodesPerRev(256);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
@@ -121,9 +121,9 @@ public class Drive implements Subsystem
       {
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
-      m_leftMaster.reverseSensor(true);
+//      m_leftMaster.reverseSensor(true);
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_rightMaster.configEncoderCodesPerRev(256);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
@@ -134,7 +134,7 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEndPresent", true);
       }
 
-      m_rightMaster.reverseSensor(false);
+//      m_rightMaster.reverseSensor(false);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit

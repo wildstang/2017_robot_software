@@ -287,7 +287,8 @@ public class RobotTemplate extends IterativeRobot
 
       Core.getSubsystemManager().init();
       
-//      DriveBase driveBase = ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+      Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
+      driveBase.setOpenLoopDrive();
 //      
 //      driveBase.stopStraightMoveWithMotionProfile();
 
