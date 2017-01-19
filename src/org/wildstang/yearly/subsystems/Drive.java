@@ -32,13 +32,19 @@ public class Drive implements Subsystem
    // inputUpdate()
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
-   private WsDoubleSolenoid m_shifter;
+   private WsDoubleSolenoid m_shifterSolenoid;
    private DigitalInput m_rawModeInput;
+   private DigitalInput m_shifterInput;
+   private DigitalInput m_quickTurnInput;
 
    // Values from inputs
    private double m_throttleValue;
    private double m_headingValue;
    private boolean m_quickTurn;
+   
+   private boolean m_shifterCurrent = false;
+   private boolean m_shifterPrev = false;
+   private boolean m_highGear = false;
 
    private boolean m_rawModeCurrent = false;
    private boolean m_rawModePrev = false;
@@ -76,8 +82,14 @@ public class Drive implements Subsystem
 
       m_throttleInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName());
       m_throttleInput.addInputListener(this);
+      
+      m_shifterInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.SHIFT.getName());
+      m_shifterInput.addInputListener(this);
 
-      m_shifter = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
+      m_quickTurnInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
+      m_quickTurnInput.addInputListener(this);
+
+      m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
    }
@@ -187,12 +199,23 @@ public class Drive implements Subsystem
          // headingValue *= -1;
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
-      // TODO: Add quickturn - either from a button or some state
-
+      else if (p_source == m_shifterInput)
+      {
+         m_shifterCurrent = m_shifterInput.getValue();
+         // Check and toggle shifter state
+         toggleShifter();
+      }
+      else if (p_source == m_quickTurnInput)
+      {
+         m_quickTurn = m_quickTurnInput.getValue();
+      }
       // If SELECT is pressed, use Raw mode
       else if (p_source == m_rawModeInput)
       {
          m_rawModeCurrent = m_rawModeInput.getValue();
+
+         // Determine drive state override
+         calculateRawMode();
       }
    }
 
@@ -206,11 +229,22 @@ public class Drive implements Subsystem
    public void update()
    {
 
-      calculateRawMode();
-
+      // Set shifter output before driving
+      // NOTE: The state of m_highGear needs to be set prior to update being called.  This is either in inputUpdate() (for teleop)
+      // or by an auto program by calling setHighGear()
+      if (m_highGear)
+      {
+         m_shifterSolenoid.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+      }
+      else
+      {
+         m_shifterSolenoid.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+      }
+      
       switch (m_driveMode)
       {
          case PATH:
+            collectDriveState();
             break;
 
          case CHEESY:
@@ -226,8 +260,15 @@ public class Drive implements Subsystem
             break;
       }
 
-      collectDriveState();
+   }
 
+   private void toggleShifter()
+   {
+      if (m_shifterCurrent && !m_shifterPrev)
+      {
+         m_highGear = !m_highGear;
+      }
+      m_shifterPrev = m_shifterCurrent;
    }
 
    private void collectDriveState()
@@ -309,14 +350,7 @@ public class Drive implements Subsystem
 
    public void setHighGear(boolean p_high)
    {
-      if (p_high)
-      {
-         m_shifter.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
-      }
-      else
-      {
-         m_shifter.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
-      }
+      m_highGear = p_high;
    }
 
    public void setBrakeMode(boolean p_brakeOn)
