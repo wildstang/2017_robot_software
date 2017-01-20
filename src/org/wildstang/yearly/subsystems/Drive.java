@@ -123,7 +123,7 @@ public class Drive implements Subsystem
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders
-//      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_leftMaster.configEncoderCodesPerRev(256);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
@@ -133,20 +133,20 @@ public class Drive implements Subsystem
       {
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
-//      m_leftMaster.reverseSensor(true);
+      //m_leftMaster.reverseSensor(false);
 
-//      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_rightMaster.configEncoderCodesPerRev(256);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
-         SmartDashboard.putBoolean("RightEndPresent", false);
+         SmartDashboard.putBoolean("RightEncPresent", false);
       }
       else
       {
-         SmartDashboard.putBoolean("RightEndPresent", true);
+         SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
-//      m_rightMaster.reverseSensor(false);
+      //m_rightMaster.reverseSensor(true);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit
@@ -190,12 +190,12 @@ public class Drive implements Subsystem
 
       if (p_source == m_throttleInput)
       {
-         m_throttleValue = m_throttleInput.getValue();
+         m_throttleValue = -m_throttleInput.getValue();
          SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
       {
-         m_headingValue = m_headingInput.getValue();
+         m_headingValue = -m_headingInput.getValue();
          // headingValue *= -1;
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
@@ -250,6 +250,7 @@ public class Drive implements Subsystem
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
+            collectDriveState();
             break;
          case FULL_BRAKE:
             break;
@@ -279,6 +280,9 @@ public class Drive implements Subsystem
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
       double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
+      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
+      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
+      
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();
 
@@ -332,6 +336,7 @@ public class Drive implements Subsystem
       absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
       absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
 
+      
 
    }
 
