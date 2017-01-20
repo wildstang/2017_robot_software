@@ -32,7 +32,7 @@ public enum WSOutputs implements Outputs
    private OutputConfig m_config;
    private boolean m_trackingState;
    
-   private static boolean isLogging = false;
+   private static boolean isLogging = true;
 
    WSOutputs(String p_name, OutputType p_type, OutputConfig p_config, boolean p_trackingState)
    {

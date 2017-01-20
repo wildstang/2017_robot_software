@@ -7,6 +7,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.logger.StateTracker;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -24,6 +25,7 @@ import org.wildstang.yearly.subsystems.drive.PathFollower;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive implements Subsystem
@@ -69,6 +71,9 @@ public class Drive implements Subsystem
 
    private boolean m_brakeMode = true;
 
+   // TODO Remove this
+   private PowerDistributionPanel pdp;
+   
    // While this is really a temporary variable, declared here to prevent
    // constant stack allocation
    private DriveSignal m_driveSignal;
@@ -76,6 +81,14 @@ public class Drive implements Subsystem
    @Override
    public void init()
    {
+      pdp = new PowerDistributionPanel();
+      Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
+      Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
+      Core.getStateTracker().addIOInfo("Left 1 current", "Drive", "Input", null);
+      Core.getStateTracker().addIOInfo("Left 2 current", "Drive", "Input", null);
+      Core.getStateTracker().addIOInfo("Right 1 current", "Drive", "Input", null);
+      Core.getStateTracker().addIOInfo("Right 2 current", "Drive", "Input", null);
+      
       // Drive
       m_headingInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName());
       m_headingInput.addInputListener(this);
@@ -261,6 +274,13 @@ public class Drive implements Subsystem
             break;
       }
 
+      Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
+      Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
+      
+      Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
+      Core.getStateTracker().addState("Left 2 current", "Drive", m_rightMaster.getSpeed());
+      Core.getStateTracker().addState("Right 1 current", "Drive", m_rightMaster.getSpeed());
+      Core.getStateTracker().addState("Right 2 current", "Drive", m_rightMaster.getSpeed());
    }
 
    private void toggleShifter()
