@@ -278,9 +278,9 @@ public class Drive implements Subsystem
       Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
       
       Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
-      Core.getStateTracker().addState("Left 2 current", "Drive", m_rightMaster.getSpeed());
-      Core.getStateTracker().addState("Right 1 current", "Drive", m_rightMaster.getSpeed());
-      Core.getStateTracker().addState("Right 2 current", "Drive", m_rightMaster.getSpeed());
+      Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
+      Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
+      Core.getStateTracker().addState("Right 2 current", "Drive", pdp.getCurrent(15));
    }
 
    private void toggleShifter()
