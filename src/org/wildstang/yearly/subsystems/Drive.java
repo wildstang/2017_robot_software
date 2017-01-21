@@ -7,7 +7,6 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.logger.StateTracker;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
@@ -25,7 +24,6 @@ import org.wildstang.yearly.subsystems.drive.PathFollower;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive implements Subsystem
@@ -65,15 +63,13 @@ public class Drive implements Subsystem
 
    private static final double ROBOT_WIDTH_INCHES = 38;
    private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
-   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024; //May be wrong
+   private static final double RADIANS = Math.PI / 180;
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
 
-   // TODO Remove this
-   private PowerDistributionPanel pdp;
-   
    // While this is really a temporary variable, declared here to prevent
    // constant stack allocation
    private DriveSignal m_driveSignal;
@@ -81,14 +77,6 @@ public class Drive implements Subsystem
    @Override
    public void init()
    {
-      pdp = new PowerDistributionPanel();
-      Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
-      Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
-      Core.getStateTracker().addIOInfo("Left 1 current", "Drive", "Input", null);
-      Core.getStateTracker().addIOInfo("Left 2 current", "Drive", "Input", null);
-      Core.getStateTracker().addIOInfo("Right 1 current", "Drive", "Input", null);
-      Core.getStateTracker().addIOInfo("Right 2 current", "Drive", "Input", null);
-      
       // Drive
       m_headingInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName());
       m_headingInput.addInputListener(this);
@@ -274,13 +262,6 @@ public class Drive implements Subsystem
             break;
       }
 
-      Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
-      Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
-      
-      Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
-      Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
-      Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
-      Core.getStateTracker().addState("Right 2 current", "Drive", pdp.getCurrent(15));
    }
 
    private void toggleShifter()
@@ -308,11 +289,11 @@ public class Drive implements Subsystem
 
       double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
       double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
-
       double deltaTheta;
+      
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks - deltaRightTicks));
+         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftInches - deltaRightInches)) / RADIANS;
       }
       else
       {
@@ -346,9 +327,13 @@ public class Drive implements Subsystem
 
       System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
-
+      double straightLineInches = 0;
+      if (deltaTheta == 0) {
+    	  straightLineInches = deltaLeftTicks * TICKS_TO_INCHES; //Keep track how much we drive if we are going straight.
+      }
+      
       // Add the DriveState to the list
-      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
+      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
       absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);

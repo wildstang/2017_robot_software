@@ -9,20 +9,22 @@ public class DriveState
    private double headingAngle;
    private double turnRadiusInches;
    private double deltaTheta;
+   private double straightLineInches;
 
    public DriveState()
    {
-
+	   
    }
 
    public DriveState(double deltaTime, double deltaRightTicks,
-         double deltaLeftTicks, double heading, double turningRadius,
+         double deltaLeftTicks, double heading, double straightLineInches, double turningRadius,
          double deltaTheta)
    {
       deltaTimeMS = deltaTime;
       deltaRightEncoderTicks = deltaRightTicks;
       deltaLeftEncoderTicks = deltaLeftTicks;
       headingAngle = heading;
+      this.straightLineInches = straightLineInches;
       turnRadiusInches = turningRadius;
       this.deltaTheta = deltaTheta;
    }
@@ -87,11 +89,19 @@ public class DriveState
       return turnRadiusInches;
    }
 
+   public void setStraightLineEncoderTicks(double val) {
+	   straightLineInches = val;
+   }
+   
+   public double getStraightLineEncoderTicks() {
+	   return straightLineInches;
+   }
+   
    public String toString()
    {
       return deltaTimeMS + ", " + deltaRightEncoderTicks + ", "
-            + deltaLeftEncoderTicks + ", " + headingAngle + ", "
-            + turnRadiusInches + ", " + deltaTheta + "\n";
+            + deltaLeftEncoderTicks + ", " + ", " + headingAngle + ", " + 
+            straightLineInches + turnRadiusInches + ", " + deltaTheta + "\n";
    }
 
 }
