@@ -7,6 +7,8 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
+import org.wildstang.hardware.crio.outputs.WsVictor;
+import org.wildstang.yearly.robot.WSOutputs;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -92,13 +94,13 @@ public class TalonTest implements Subsystem
    @Override
    public void init()
    {
-      m_shooter = new CANTalon(2);
+      m_shooter = new CANTalon(5);
 
       m_shooter.setFeedbackDevice(FeedbackDevice.QuadEncoder);
       m_shooter.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
       m_shooter.configEncoderCodesPerRev(256);
 
-//      m_shooter.reverseSensor(true);
+      m_shooter.reverseSensor(true);
 //      m_shooter.reverseOutput(true);
       
       m_shooter.setEncPosition(0);
@@ -109,10 +111,10 @@ public class TalonTest implements Subsystem
 
       // Set up closed loop PID control gains in slot 0
       m_shooter.setProfile(0);
-      m_shooter.setF(2.0979);      // 0.1998
-      m_shooter.setP(0.5115);      //(10% X 1023) / (error) 
+      m_shooter.setF(2.5);      // 0.1998
+      m_shooter.setP(0.6115);      //(10% X 1023) / (error) 
       m_shooter.setI(0);
-      m_shooter.setD(0.1);
+      m_shooter.setD(0.3);
       
       m_up50Input = (DigitalInput)Core.getInputManager().getInput(WSInputs.SPEED_UP_50.getName());
       m_up50Input.addInputListener(this);
@@ -131,6 +133,8 @@ public class TalonTest implements Subsystem
       
       m_throttleInput = (AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName());
       m_throttleInput.addInputListener(this);
+      
+      
       
       SmartDashboard.putNumber("MAX_RPM", 0);
       
@@ -187,6 +191,9 @@ public class TalonTest implements Subsystem
          // Set the speed
 //         m_currentSpeed = m_throttle * MAX_RPM;
          m_shooter.set(m_currentSpeed);
+
+         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-0.85);
+
          /* append more signals to print when in speed mode. */
          m_sb.append("\terror: ");
          m_sb.append(m_shooter.getClosedLoopError());
@@ -197,6 +204,7 @@ public class TalonTest implements Subsystem
       {
          m_shooter.changeControlMode(TalonControlMode.PercentVbus);
          m_shooter.set(m_throttle);
+         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(0);
       }
       SmartDashboard.putNumber("Throttle", m_throttle);
       SmartDashboard.putBoolean("Speed mode", m_speedModeOn);
@@ -214,6 +222,7 @@ public class TalonTest implements Subsystem
       SmartDashboard.putNumber("Current RPM", m_shooter.getSpeed());
 //      System.out.println("Retrieved RPM: " + SmartDashboard.getNumber("MAX_RPM", 300));
       SmartDashboard.putNumber("Error", m_shooter.getClosedLoopError());
+
       
       if (m_loops++ >= 10)
       {
