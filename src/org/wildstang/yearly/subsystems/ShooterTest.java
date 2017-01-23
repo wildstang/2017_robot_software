@@ -121,10 +121,10 @@ public class ShooterTest implements Subsystem
       m_down10Input = (DigitalInput)Core.getInputManager().getInput(WSInputs.SPEED_DOWN_10.getName());
       m_down10Input.addInputListener(this);
       
-      m_shooterOnInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName());
+      m_shooterOnInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName());
       m_shooterOnInput.addInputListener(this);
 
-      m_shooterPosInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName());
+      m_shooterPosInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_3.getName());
       m_shooterPosInput.addInputListener(this);
       
    }

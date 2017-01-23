@@ -17,8 +17,7 @@
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/bulldog.beagleboneblack.hardfp.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-2411.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Core-Framework"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Janine/wpilib/user/java/lib/TalonSRXLibJava.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/core_framework"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
