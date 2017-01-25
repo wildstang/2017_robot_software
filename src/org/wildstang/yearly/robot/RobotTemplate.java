@@ -71,7 +71,7 @@ public class RobotTemplate extends IterativeRobot
       
       // Set the interval between writes to the file. Try 100ms
       m_stateLogger.setWriteInterval(100);
-//      m_stateLogger.start();
+      m_stateLogger.start();
       
       Thread t = new Thread(m_stateLogger);
       t.start();
