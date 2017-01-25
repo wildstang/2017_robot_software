@@ -30,6 +30,7 @@ import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
 import org.wildstang.yearly.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -224,6 +225,7 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledInit()
    {
+	  DriverStation.getInstance().reportWarning("Disabled Init", false); 
       initTimer.startTimingSection();
       AutoManager.getInstance().clear();
 
@@ -238,6 +240,7 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
+	   DriverStation.getInstance().reportWarning("Disabled Periodic", false);
       // If we are finished with teleop, finish and close the log file
 //      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
       if (teleopPerodicCalled)

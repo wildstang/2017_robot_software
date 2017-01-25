@@ -11,6 +11,8 @@ import org.wildstang.yearly.subsystems.drive.PathFollower;
 import org.wildstang.yearly.subsystems.drive.PathReader;
 import org.wildstang.yearly.subsystems.drive.Trajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class PathFollowerStep extends AutoStep
 {
 
@@ -52,8 +54,7 @@ public class PathFollowerStep extends AutoStep
       {
          if (!m_started)
          {
-            System.out.println("Step.update() called first time");
-   
+        	 DriverStation.getInstance().reportWarning("PathFollowerStep.update called first time", false);
             m_drive.setPathFollowingMode();
             m_drive.setPath(m_path);
             m_pathFollower = m_drive.getPathFollower();
@@ -70,7 +71,7 @@ public class PathFollowerStep extends AutoStep
             }
             else
             {
-               System.out.println("Step.update(): path now inactive");
+            	DriverStation.getInstance().reportWarning("Path Now Inactive", false);
                m_drive.pathCleanup();
                setFinished(true);
             }
