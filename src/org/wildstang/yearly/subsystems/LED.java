@@ -60,7 +60,7 @@ public class LED implements Subsystem
       disableDataSent = false;
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
 
-       Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
+      //Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
    }
 
@@ -184,10 +184,10 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
-      {
-         m_shooter = ((DigitalInput) source).getValue();
-      }
+      //if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
+      //{
+      //   m_shooter = ((DigitalInput) source).getValue();
+      //}
 
       m_newDataAvailable = true;
    }

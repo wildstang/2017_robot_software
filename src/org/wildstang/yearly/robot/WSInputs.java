@@ -34,11 +34,11 @@ public enum WSInputs implements Inputs
    //  
    //    +-------------------------------------------------------+
    //   /    +--+                 [FRONT]                         \
-   //  +     |YU|                		          (3)      +       
-   //  |  +--+  +--+        +----+       +----+    	    	   | 
+   //  +     |YU|                                         (3)      +       
+   //  |  +--+  +--+        +----+       +----+                    | 
    //  |  |XL    XR|        |  8 |  (X)  |  9 |       (0)     (2)  |       
-   //  |  +--+  +--+        +----+       +----+    	    	   | 
-   //  |     |YD|                       	          (1)      |       
+   //  |  +--+  +--+        +----+       +----+                    | 
+   //  |     |YD|                                         (1)      |       
    //  |     +--+     +--+          (X)          +--+              |
    //  |             /    \                     /    \             |
    //  |            |  10  |                   |  11  |            |
@@ -74,7 +74,7 @@ public enum WSInputs implements Inputs
    // Driver Buttons
    //---------------------------------
    //DRV_BUTTON_0("Driver button 0",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 0), getLogging()),
-   DRV_BUTTON_1("Shooter on",                      WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),
+   //DRV_BUTTON_1("Shooter on",                      WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),
    //DRV_BUTTON_2("Driver button 2",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 2), getLogging()),
    DRV_BUTTON_3("Driver button 3",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), getLogging()),
    QUICK_TURN("Driver Quick Turn",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),
@@ -84,15 +84,8 @@ public enum WSInputs implements Inputs
    //DRV_BUTTON_8("Driver button 8",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), getLogging()),
    //DRV_BUTTON_9("Driver button 9",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), getLogging()),
    //DRV_BUTTON_10("Driver button 10",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), getLogging()),
-   SPEED_UP_50("Speed up 50",                      WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),
-   SPEED_UP_10("Speed up 10",                      WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),
-   SPEED_DOWN_50("Speed down 50",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), getLogging()),
-   SPEED_DOWN_10("Speed down 10",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),
+   //DRV_BUTTON_11("Driver button 11",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
 
-   DRV_BUTTON_11_PG("Pistol Grip",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
-
-   // This should get deleted, for debug only
-   //DRV_BUTTON_11("Antiturbo (Driver 8)",           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
 
    // Manipulator Enums
    //---------------------------------
