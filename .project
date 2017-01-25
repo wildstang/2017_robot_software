@@ -3,6 +3,7 @@
 	<name>2017_robot_software</name>
 	<comment></comment>
 	<projects>
+		<project>core_framework</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
