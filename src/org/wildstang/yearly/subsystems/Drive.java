@@ -522,8 +522,10 @@ public class Drive implements Subsystem
 
    public void pathCleanup()
    { 
-      m_pathFollower.stop();
-      m_pathFollower = null;
+	  if(m_pathFollower != null) { 
+		  m_pathFollower.stop();
+          m_pathFollower = null;
+	  }
    }
 
    @Override

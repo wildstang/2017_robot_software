@@ -45,6 +45,7 @@ public class PathFollowerStep extends AutoStep
       m_path.setRight(rightTrajectory);
       
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
+      m_drive.setHighGear(true);
    }
 
    @Override

@@ -60,6 +60,8 @@ public class RobotTemplate extends IterativeRobot
    static boolean teleopPerodicCalled = false;
    
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
+   private boolean isRunning;
+   
    
    private void startloggingState()
    {
@@ -72,7 +74,7 @@ public class RobotTemplate extends IterativeRobot
       
       // Set the interval between writes to the file. Try 100ms
       m_stateLogger.setWriteInterval(100);
-//      m_stateLogger.start();
+      m_stateLogger.start();
       
       Thread t = new Thread(m_stateLogger);
       t.start();
@@ -291,7 +293,9 @@ public class RobotTemplate extends IterativeRobot
       //Write all DriveState objects to a file from auto
       ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
       
-      // Remove the AutoManager from the Core
+      //isRunning = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive();
+       
+       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
@@ -323,7 +327,7 @@ public class RobotTemplate extends IterativeRobot
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-
+      //DriverStation.reportWarning("isActive=" + isRunning, false);
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
       // System.out.println("Cycle time: " + cycleLength);
