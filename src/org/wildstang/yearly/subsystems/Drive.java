@@ -67,7 +67,8 @@ public class Drive implements Subsystem
    private static final double ROBOT_WIDTH_INCHES = 38;
    private static final double WHEEL_DIAMETER_INCHES = 4;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
-   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
+   private static final double RADIANS = Math.PI / 180;
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
@@ -309,14 +310,16 @@ public class Drive implements Subsystem
 
       double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
       double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
-
       double deltaTheta;
+      double straightLineInches = 0;
+      
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks - deltaRightTicks));
+         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftInches - deltaRightInches)) / RADIANS;
       }
       else
       {
+    	 straightLineInches = deltaLeftInches; 
          deltaTheta = 0;
       }
 
@@ -347,9 +350,9 @@ public class Drive implements Subsystem
 
       System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
-
+      
       // Add the DriveState to the list
-      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
+      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
       absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
@@ -360,7 +363,6 @@ public class Drive implements Subsystem
       
 
    }
-
    private void calculateRawMode()
    {
       if (m_rawModeCurrent && !m_rawModePrev)
