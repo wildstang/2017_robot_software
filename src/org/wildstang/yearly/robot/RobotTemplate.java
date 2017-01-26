@@ -225,7 +225,7 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledInit()
    {
-	  DriverStation.getInstance().reportWarning("Disabled Init", false); 
+	  DriverStation.reportWarning("Disabled Init", false); 
       initTimer.startTimingSection();
       AutoManager.getInstance().clear();
 
@@ -240,9 +240,15 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
-	   DriverStation.getInstance().reportWarning("Disabled Periodic", false);
+	  DriverStation.reportWarning("Disabled Periodic", false);
       // If we are finished with teleop, finish and close the log file
-//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+	  
+	  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null) {
+		  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive()) {
+			  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+		  }
+   	  }
+      
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();

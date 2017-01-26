@@ -96,6 +96,7 @@ public class PathFollower
 
          if (m_leftStatus.activePointValid && m_leftStatus.activePoint.isLastPoint)
          {
+        	DriverStation.reportWarning("m_running = false; !!!!!!!", false); 
             m_running = false;
          }
          
