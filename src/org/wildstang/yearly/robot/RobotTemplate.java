@@ -59,10 +59,7 @@ public class RobotTemplate extends IterativeRobot
 
    static boolean teleopPerodicCalled = false;
    
-   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
-   private boolean isRunning;
-   
-   
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";   
    private void startloggingState()
    {
       Writer outputWriter = null;
@@ -227,7 +224,6 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledInit()
    {
-	  DriverStation.reportWarning("Disabled Init", false); 
       initTimer.startTimingSection();
       AutoManager.getInstance().clear();
 
@@ -242,7 +238,6 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
-	  DriverStation.reportWarning("Disabled Periodic", false);
       // If we are finished with teleop, finish and close the log file
 	  
 	  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null) {
@@ -255,10 +250,20 @@ public class RobotTemplate extends IterativeRobot
       {
          m_stateLogger.stop();
       }
+      resetRobotState();
+   }
+
+   
+   /**
+    * This should be called to reset any robot state between runs, without having to restart robot code.
+    * 
+    */
+   private void resetRobotState()
+   {
       AutoFirstRun = true;
       firstRun = true;
    }
-
+   
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
@@ -278,9 +283,6 @@ public class RobotTemplate extends IterativeRobot
 
       if (AutoFirstRun)
       {
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(true);
          AutoFirstRun = false;
       }
    }
@@ -291,10 +293,7 @@ public class RobotTemplate extends IterativeRobot
    public void teleopInit()
    {
       //Write all DriveState objects to a file from auto
-      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
-      
-      //isRunning = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive();
-       
+      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);     
        // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
@@ -312,12 +311,7 @@ public class RobotTemplate extends IterativeRobot
    {
       if (firstRun)
       {
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(false);
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(0);
-//         firstRun = false;
+         firstRun = false;
       }
 
       try{
@@ -327,7 +321,7 @@ public class RobotTemplate extends IterativeRobot
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-      //DriverStation.reportWarning("isActive=" + isRunning, false);
+      
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
       // System.out.println("Cycle time: " + cycleLength);

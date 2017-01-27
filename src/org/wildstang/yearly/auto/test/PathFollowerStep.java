@@ -11,8 +11,6 @@ import org.wildstang.yearly.subsystems.drive.PathFollower;
 import org.wildstang.yearly.subsystems.drive.PathReader;
 import org.wildstang.yearly.subsystems.drive.Trajectory;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class PathFollowerStep extends AutoStep
 {
 
@@ -56,11 +54,13 @@ public class PathFollowerStep extends AutoStep
          if (!m_started)
          {
         	 DriverStation.getInstance().reportWarning("PathFollowerStep.update called first time", false);
+            // TODO: Can next 3 lines be moved to init() ??
             m_drive.setPathFollowingMode();
             m_drive.setPath(m_path);
             m_pathFollower = m_drive.getPathFollower();
             m_drive.startFollowingPath();
-         
+            m_drive.resetEncoders();
+            
             m_started = true;
             
          }
@@ -72,7 +72,6 @@ public class PathFollowerStep extends AutoStep
             }
             else
             {
-            	DriverStation.getInstance().reportWarning("Path Now Inactive", false);
                m_drive.pathCleanup();
                setFinished(true);
             }

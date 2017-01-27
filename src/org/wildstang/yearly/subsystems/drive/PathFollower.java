@@ -52,7 +52,6 @@ public class PathFollower
    
    public void stop()
    {
-	   DriverStation.getInstance().reportWarning("Path Follower: stop", false);
 
       m_running = false;
 
@@ -96,7 +95,6 @@ public class PathFollower
 
          if (m_leftStatus.activePointValid && m_leftStatus.activePoint.isLastPoint)
          {
-        	DriverStation.reportWarning("m_running = false; !!!!!!!", false); 
             m_running = false;
          }
          

@@ -66,7 +66,8 @@ public class Drive implements Subsystem
 
    private static final double ROBOT_WIDTH_INCHES = 38;
    private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
+   private static final double ENCODER_CPR = 1024;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR;
    private static final double RADIANS = Math.PI / 180;
    private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
@@ -107,6 +108,8 @@ public class Drive implements Subsystem
       m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
+      
+      resetEncoders();
    }
 
    public void initDriveTalons()
@@ -279,10 +282,10 @@ public class Drive implements Subsystem
       Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
       Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
       
-//      Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
-//      Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
-//      Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
-//      Core.getStateTracker().addState("Right 2 current", "Drive", pdp.getCurrent(15));
+      Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
+      Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
+      Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
+      Core.getStateTracker().addState("Right 2 current", "Drive", pdp.getCurrent(15));
    }
 
    private void toggleShifter()
@@ -419,6 +422,12 @@ public class Drive implements Subsystem
       
       // Use brake mode to stop quickly at end of path, since Talons will put output to neutral
       setBrakeMode(true);
+   }
+   
+   public void resetEncoders()
+   {
+      m_leftMaster.setPosition(0);
+      m_rightMaster.setPosition(0);
    }
 
    public void setOpenLoopDrive()
