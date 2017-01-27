@@ -70,6 +70,7 @@ public class Drive implements Subsystem
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR;
    private static final double RADIANS = Math.PI / 180;
    private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
+   double maxSpeed = 0;
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
@@ -295,6 +296,7 @@ public class Drive implements Subsystem
          m_highGear = !m_highGear;
       }
       m_shifterPrev = m_shifterCurrent;
+      maxSpeed = 0; // Easy way to reset max speed.
    }
 
    private void collectDriveState()
@@ -305,6 +307,14 @@ public class Drive implements Subsystem
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
       double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
+      if (Math.abs(m_leftMaster.getEncVelocity()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_leftMaster.getEncVelocity());
+      } else if (Math.abs(m_rightMaster.getEncVelocity()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_rightMaster.getEncVelocity());
+      }
+      
+      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+      
       SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
       SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
       
@@ -542,6 +552,7 @@ public class Drive implements Subsystem
    {
       return "Drive Base";
    }
+   
 
    public void writeDriveStatesToFile(String fileName)
    {
