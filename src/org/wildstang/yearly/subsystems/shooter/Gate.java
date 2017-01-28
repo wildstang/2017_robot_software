@@ -7,21 +7,21 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 public class Gate extends Shooter
 {
 
-   private Solenoid m_solenoid;
+   private WsSolenoid m_solenoid;
 
-   public Gate(Solenoid p_solenoid)
+   public Gate(WsSolenoid p_solenoid)
    {
       m_solenoid = p_solenoid;
    }
 
    void openGate()
    {
-      m_solenoid.set(true);
+      m_solenoid.setValue(true);
    }
 
    void closeGate()
    {
-      m_solenoid.set(false);
+      m_solenoid.setValue(false);
    }
 
    boolean isOpen()
