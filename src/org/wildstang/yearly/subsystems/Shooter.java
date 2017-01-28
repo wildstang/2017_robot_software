@@ -62,6 +62,14 @@ public class Shooter implements Subsystem
    double rightFeedCurrent;
    double leftFeedCurrent;
 
+   // Inputs
+   private DigitalInput leftBallReadySwitch;
+   private DigitalInput rightBallReadySwitch;
+
+   // Variables
+   private boolean leftBallReady;
+   private boolean rightBallReady;
+
    @Override
    public void selfTest()
    {
@@ -103,11 +111,24 @@ public class Shooter implements Subsystem
       leftFeedCurrent = pdp.getCurrent(8);
       rightFeedCurrent = pdp.getCurrent(9);
 
+      // Input Listeners
+      leftBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
+      leftBallReadySwitch.addInputListener(this);
+      rightBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
+      rightBallReadySwitch.addInputListener(this);
    }
 
    @Override
    public void inputUpdate(Input source)
    {
+      if (source == leftBallReadySwitch)
+      {
+         leftBallReady = m_leftFeed.isBallReady(leftBallReadySwitch.getValue());
+      }
+      if (source == rightBallReadySwitch)
+      {
+         rightBallReady = m_rightFeed.isBallReady(rightBallReadySwitch.getValue());
+      }
    }
 
    @Override
