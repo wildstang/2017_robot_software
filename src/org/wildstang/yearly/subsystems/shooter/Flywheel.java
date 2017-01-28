@@ -40,5 +40,5 @@ public class Flywheel extends Shooter
       m_talon.set(p_wheelSpeed);
    }
 
-//
+   //
 }

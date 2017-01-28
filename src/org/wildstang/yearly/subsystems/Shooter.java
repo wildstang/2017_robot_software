@@ -35,27 +35,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter implements Subsystem
 {
    // add variables here
-   //private boolean 	TestSwitchSensor;
-   //private double  	DrvJoystickRightY = 0.0;
-   //private WsServo	Servo_0;
-   //private WsServo	Servo_1;
-   //private boolean 	DpadXLeft	= false;
-   //private boolean 	DpadXRight	= false;
-   //private double  	ServoPos_0	= 0.0;
-   //private double  	ServoPos_1	= 0.0;
-	
-	private CANTalon m_CANFlywheelLeft;
-	private CANTalon m_CANFlywheelRight;
-	
-	private Flywheel m_leftFlywheel;
-	private Flywheel m_rightFlywheel;
-	
-	
+   // private boolean TestSwitchSensor;
+   // private double DrvJoystickRightY = 0.0;
+   // private WsServo Servo_0;
+   // private WsServo Servo_1;
+   // private boolean DpadXLeft = false;
+   // private boolean DpadXRight = false;
+   // private double ServoPos_0 = 0.0;
+   // private double ServoPos_1 = 0.0;
+
+   private CANTalon m_CANFlywheelLeft;
+   private CANTalon m_CANFlywheelRight;
+
+   private Flywheel m_leftFlywheel;
+   private Flywheel m_rightFlywheel;
 
    @Override
    public void selfTest()
    {
-	   // DO NOT IMPLELMENT
+      // DO NOT IMPLELMENT
    }
 
    @Override
@@ -67,12 +65,12 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-	   m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
-	   m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
-	   
-	   m_leftFlywheel = new Flywheel(m_CANFlywheelLeft);
-	   m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
-	   
+      m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
+      m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
+
+      m_leftFlywheel = new Flywheel(m_CANFlywheelLeft);
+      m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
+
    }
 
    @Override
@@ -83,7 +81,7 @@ public class Shooter implements Subsystem
    @Override
    public void update()
    {
-	   // if the shooter should turn on
-	   m_leftFlywheel.turnOn();
+      // if the shooter should turn on
+      m_leftFlywheel.turnOn();
    }
 }
