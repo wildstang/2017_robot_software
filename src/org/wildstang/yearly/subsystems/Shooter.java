@@ -161,6 +161,28 @@ public class Shooter implements Subsystem
    @Override
    public void update()
    {
+      updateFlywheels();
+   }
+
+   public void updateFlywheels()
+   {
+      if (leftFlywheelOn)
+      {
+         m_leftFlywheel.turnOn();
+      }
+      else if (!leftFlywheelOn)
+      {
+         m_leftFlywheel.turnOff();
+      }
+      
+      if (rightFlywheelOn)
+      {
+         m_rightFlywheel.turnOn();
+      }
+      else if (!rightFlywheelOn)
+      {
+         m_rightFlywheel.turnOff();
+      }
    }
 
 }
