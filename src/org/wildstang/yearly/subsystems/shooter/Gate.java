@@ -2,6 +2,7 @@ package org.wildstang.yearly.subsystems.shooter;
 
 import org.wildstang.yearly.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Solenoid;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
 
 public class Gate extends Shooter
 {
