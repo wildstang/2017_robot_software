@@ -244,7 +244,7 @@ public class RobotTemplate extends IterativeRobot
 		  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive()) {
 			  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
 		  }
-   	  }
+    }
       
       if (teleopPerodicCalled)
       {

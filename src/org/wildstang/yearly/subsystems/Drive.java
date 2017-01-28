@@ -165,7 +165,7 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
-      //m_rightMaster.reverseSensor(true);
+      //m_rightMaster.reverseSensor(false);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit
@@ -209,12 +209,12 @@ public class Drive implements Subsystem
 
       if (p_source == m_throttleInput)
       {
-         m_throttleValue = -m_throttleInput.getValue();
+         m_throttleValue = m_throttleInput.getValue();
          SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
       {
-         m_headingValue = -m_headingInput.getValue();
+         m_headingValue = m_headingInput.getValue();
          // headingValue *= -1;
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
@@ -251,7 +251,7 @@ public class Drive implements Subsystem
       // Set shifter output before driving
       // NOTE: The state of m_highGear needs to be set prior to update being called.  This is either in inputUpdate() (for teleop)
       // or by an auto program by calling setHighGear()
-      if (m_highGear)
+      if (!m_highGear)
       {
          m_shifterSolenoid.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }

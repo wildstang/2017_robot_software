@@ -37,7 +37,6 @@ public class PathFollower
    public void start()
    {
       //System.out.println("PathFollower.start() called");
-      DriverStation.getInstance().reportWarning("Path Follower: start", false);
 //      Thread t = new Thread(this);
       m_running = true;
 //      t.start();

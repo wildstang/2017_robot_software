@@ -53,7 +53,6 @@ public class PathFollowerStep extends AutoStep
       {
          if (!m_started)
          {
-        	 DriverStation.getInstance().reportWarning("PathFollowerStep.update called first time", false);
             // TODO: Can next 3 lines be moved to init() ??
             m_drive.setPathFollowingMode();
             m_drive.setPath(m_path);
@@ -62,6 +61,8 @@ public class PathFollowerStep extends AutoStep
             m_drive.resetEncoders();
             
             m_started = true;
+            
+            
             
          }
          else
