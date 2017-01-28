@@ -7,10 +7,12 @@ public class Feed extends Shooter
 {
 
    private WsVictor m_victor;
-   
+
    private double limit;
    private boolean jammed;
-   
+
+   private boolean ballReady;
+
    private double m_forwardSpeed;
    private double m_backwardSpeed;
 
@@ -31,6 +33,19 @@ public class Feed extends Shooter
       }
 
       return jammed;
+   }
+
+   public boolean isBallReady(boolean p_digitalInput)
+   {
+      if (p_digitalInput)
+      {
+         ballReady = true;
+      }
+      else
+      {
+         ballReady = false;
+      }
+      return ballReady;
    }
 
    public void runForward()
