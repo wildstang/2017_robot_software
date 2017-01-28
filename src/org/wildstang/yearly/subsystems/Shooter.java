@@ -53,11 +53,11 @@ public class Shooter implements Subsystem
    private Flywheel m_rightFlywheel;
 
    // Gates
-   // private WsSolenoid m_leftGateSolenoid;
-   // private WsSolenoid m_rightGateSolenoid;
-   //
-   // private Gate m_leftGate;
-   // private Gate m_rightGate;
+    private WsSolenoid m_leftGateSolenoid;
+    private WsSolenoid m_rightGateSolenoid;
+   
+    private Gate m_leftGate;
+    private Gate m_rightGate;
 
    // Feeds
    // private WsVictor m_leftFeedVictor;
@@ -90,13 +90,13 @@ public class Shooter implements Subsystem
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
 
       // Gates
-      // m_leftGateSolenoid = (WsSolenoid)
-      // Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
-      // m_rightGateSolenoid = (WsSolenoid)
-      // Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
-      //
-      // m_leftGate = new Gate(m_leftGateSolenoid);
-      // m_rightGate = new Gate(m_rightGateSolenoid);
+       m_leftGateSolenoid = (WsSolenoid)
+       Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+       m_rightGateSolenoid = (WsSolenoid)
+       Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
+      
+       m_leftGate = new Gate(m_leftGateSolenoid);
+       m_rightGate = new Gate(m_rightGateSolenoid);
 
       // Feeds
       // m_leftFeedVictor = (WsVictor)
