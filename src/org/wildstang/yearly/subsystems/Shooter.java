@@ -49,6 +49,10 @@ public class Shooter implements Subsystem
 
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
+   
+   private Gate m_leftGate;
+   private Gate m_rightGate;
+   
 
    @Override
    public void selfTest()
