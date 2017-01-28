@@ -20,7 +20,7 @@ public class Feed extends Shooter
       m_victor = p_victor;
    }
 
-   boolean isJammed(double p_current)
+   public boolean isJammed(double p_current)
    {
       if (p_current > limit)
       {
@@ -34,17 +34,17 @@ public class Feed extends Shooter
       return jammed;
    }
 
-   void runForward()
+   public void runForward()
    {
       m_victor.setValue(m_forwardSpeed);
    }
 
-   void runBackwards()
+   public void runBackwards()
    {
       m_victor.setValue(m_backwardSpeed);
    }
 
-   void stop()
+   public void stop()
    {
       m_victor.setValue(0);
    }
