@@ -13,7 +13,6 @@ public class Flywheel extends Shooter
    public Flywheel(CANTalon p_talon)
    {
       m_talon = p_talon;
-
    }
 
    public void turnOn()
@@ -28,8 +27,7 @@ public class Flywheel extends Shooter
 
    public boolean isRunning()
    {
-      m_talon.
-      return false;
+      return m_talon.isEnabled();
    }
 
    public double getSpeed()
@@ -37,9 +35,9 @@ public class Flywheel extends Shooter
       return m_talon.getSpeed();
    }
 
-   public void setSpeed(double p_wheel)
+   public void setSpeed(double p_wheelSpeed)
    {
-
+      m_talon.set(p_wheelSpeed);
    }
 
 }
