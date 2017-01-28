@@ -82,6 +82,13 @@ public class Shooter implements Subsystem
    private boolean leftGateToggleOpen = false;
    private boolean rightGateToggleOpen = false;
 
+   private boolean readyToShootLeft = false;
+   private boolean readyToShootRight = false;
+
+   private double targetSpeed;
+   private double lowLimitSpeed;
+   private double hiLimitSpeed;
+
    @Override
    public void selfTest()
    {
@@ -187,7 +194,7 @@ public class Shooter implements Subsystem
       // Left
       if (leftFlywheelToggleOn)
       {
-         m_leftFlywheel.turnOn();
+         m_leftFlywheel.setSpeed(targetSpeed);;
       }
       else if (!leftFlywheelToggleOn)
       {
@@ -197,7 +204,7 @@ public class Shooter implements Subsystem
       // Right
       if (rightFlywheelToggleOn)
       {
-         m_rightFlywheel.turnOn();
+         m_rightFlywheel.setSpeed(targetSpeed);
       }
       else if (!rightFlywheelToggleOn)
       {
@@ -209,8 +216,36 @@ public class Shooter implements Subsystem
    // make sure flywheels are on when gates open
    public void updateGates()
    {
-      // Left
-      if (leftGateToggleOpen && m_leftFlywheel.isRunning())
+      // Tests to see if the left and right flywheel is up to speed and ready to
+      // shoot a ball.
+      // Sets a conditional toggle to true if that flywheel is ready.
+
+      // Left Side
+      if (m_leftFlywheel.getSpeed() >= hiLimitSpeed
+            && m_leftFlywheel.getSpeed() <= lowLimitSpeed)
+      {
+         readyToShootLeft = true;
+      }
+      else
+      {
+         readyToShootLeft = false;
+      }
+
+      // Right Side
+      if (m_rightFlywheel.getSpeed() >= hiLimitSpeed
+            && m_rightFlywheel.getSpeed() <= lowLimitSpeed)
+      {
+         readyToShootRight = true;
+      }
+      else
+      {
+         readyToShootRight = false;
+      }
+
+      // Opens the gate if the flywheel is up to speed and the button is pressed
+
+      // Left Side
+      if (leftGateToggleOpen && readyToShootLeft)
       {
          m_leftGate.openGate();
       }
@@ -219,8 +254,8 @@ public class Shooter implements Subsystem
          m_leftGate.closeGate();
       }
 
-      // Right
-      if (rightGateToggleOpen && m_rightFlywheel.isRunning())
+      // Right Side
+      if (rightGateToggleOpen && readyToShootRight)
       {
          m_rightGate.openGate();
       }
