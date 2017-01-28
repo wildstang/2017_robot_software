@@ -21,8 +21,14 @@ import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
 import org.wildstang.hardware.crio.outputs.WsServo;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.subsystems.shooter.Flywheel;
+import org.wildstang.yearly.subsystems.shooter.Feed;
+import org.wildstang.yearly.subsystems.shooter.Gate;
+
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,6 +43,14 @@ public class Shooter implements Subsystem
    //private boolean 	DpadXRight	= false;
    //private double  	ServoPos_0	= 0.0;
    //private double  	ServoPos_1	= 0.0;
+	
+	private CANTalon m_CANFlywheelLeft;
+	private CANTalon m_CANFlywheelRight;
+	
+	private Flywheel m_leftFlywheel;
+	private Flywheel m_rightFlywheel;
+	
+	
 
    @Override
    public void selfTest()
@@ -89,6 +103,13 @@ public class Shooter implements Subsystem
       //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
 
       //SmartDashboard.putNumber("ServoPos_1", ServoPos_1);
+	   
+	   m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
+	   m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
+	   
+	   m_leftFlywheel = new Flywheel(m_CANFlywheelLeft);
+	   m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
+	   
    }
 
    @Override
