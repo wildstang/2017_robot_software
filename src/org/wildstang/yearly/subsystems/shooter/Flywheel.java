@@ -38,10 +38,7 @@ public class Flywheel extends Shooter
    public void setSpeed(double p_wheelSpeed)
    {
       m_talon.set(p_wheelSpeed);
-<<<<<<< HEAD
-=======
-      
->>>>>>> branch 'Shooter' of https://github.com/wildstang/2017_robot_software.git
    }
 
+//
 }
