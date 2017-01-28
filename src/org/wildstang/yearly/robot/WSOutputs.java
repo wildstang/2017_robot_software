@@ -17,15 +17,23 @@ import edu.wpi.first.wpilibj.I2C;
 
 public enum WSOutputs implements Outputs
 {
-   LEFT_1("Left motor 1",            WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),
-   LEFT_2("Left motor 2",          WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),
-   RIGHT_1("Right motor 1",              WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),
-   RIGHT_2("Right motor 2",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),
-   
-   LED("LEDs", WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kMXP, 0x10), true),
+   //PWM Outputs
+   // Motors
+   LEFT_1("Left motor 1",                    WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),
+   LEFT_2("Left motor 2",                    WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),
+   RIGHT_1("Right motor 1",                  WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),
+   RIGHT_2("Right motor 2",                  WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),
+                                             
+   //TEST_SERVO_0("Test Servo 0",              WSOutputType.SERVO,     new WsServoConfig(8, 0.0), getLogging()),
 
+   //DIO Outputs
    // Solenoids
-   SHIFTER("Shifter double solenoid", WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(0, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging());
+   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(0, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // 2 DIO pins are used
+   //INTAKE_FRONT_LOWER("Intake front lower",  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),                                  // 1 DIO pin is used
+
+
+   LED("LEDs",                         WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kMXP, 0x10), true);
+
    
    private String m_name;
    private OutputType m_type;
