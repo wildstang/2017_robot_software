@@ -59,9 +59,6 @@ public class Shooter implements Subsystem
 
    private Gate m_leftGate;
    private Gate m_rightGate;
-   
-   double rightFeedCurrent;
-   double leftFeedCurrent;
 
    // Feeds
    // private WsVictor m_leftFeedVictor;
@@ -69,6 +66,12 @@ public class Shooter implements Subsystem
    //
    // private Feed m_leftFeed;
    // private Feed m_rightFeed;
+
+   // PDP
+   private PowerDistributionPanel pdp;
+
+   double rightFeedCurrent;
+   double leftFeedCurrent;
 
    @Override
    public void selfTest()
@@ -85,7 +88,6 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-
       // Flywheels
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
@@ -99,12 +101,7 @@ public class Shooter implements Subsystem
 
       m_leftGate = new Gate(m_leftGateSolenoid);
       m_rightGate = new Gate(m_rightGateSolenoid);
-      
-      PowerDistributionPanel pdp = new PowerDistributionPanel();
-      
-      rightFeedCurrent = pdp.getCurrent(9);
-      leftFeedCurrent = pdp.getCurrent(8);
-      
+
       // Feeds
       // m_leftFeedVictor = (WsVictor)
       // Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
@@ -113,6 +110,10 @@ public class Shooter implements Subsystem
       //
       // m_leftFeed = new Feed(m_leftFeedVictor);
       // m_rightFeed = new Feed(m_rightFeedVictor);
+
+      pdp = new PowerDistributionPanel();
+      rightFeedCurrent = pdp.getCurrent(9);
+      leftFeedCurrent = pdp.getCurrent(8);
    }
 
    @Override
@@ -123,6 +124,5 @@ public class Shooter implements Subsystem
    @Override
    public void update()
    {
-      m_leftFlywheel.turnOn();
    }
 }
