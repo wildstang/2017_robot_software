@@ -7,23 +7,24 @@ import com.ctre.CANTalon;
 public class Flywheel extends Shooter {
 	
 	private CANTalon m_talon;
+	private double m_speed;
 	
 	public Flywheel (CANTalon p_talon){
 		m_talon = p_talon;
 		
 	}
 	
-	void turnOn() {
-		
+	public void turnOn() {
+		m_talon.set(m_speed);
 	}
 
 	
-    void turnOff() {
+    public void turnOff() {
 		
 	}
     
     
-    boolean getState() {
+    public boolean getState() {
     	
     	boolean state = false;
     	
@@ -36,7 +37,7 @@ public class Flywheel extends Shooter {
     }
     
     
-    void setSpeed( double p_wheel  ) {
+    public void setSpeed( double p_wheel  ) {
     	
     	
     }
