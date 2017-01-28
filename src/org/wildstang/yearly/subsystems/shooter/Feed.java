@@ -1,6 +1,5 @@
 package org.wildstang.yearly.subsystems.shooter;
 
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.subsystems.Shooter;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 
