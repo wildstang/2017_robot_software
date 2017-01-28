@@ -21,6 +21,7 @@ import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
 import org.wildstang.hardware.crio.outputs.WsServo;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -58,6 +59,13 @@ public class Shooter implements Subsystem
    // private Gate m_leftGate;
    // private Gate m_rightGate;
 
+   // Feeds
+   // private WsVictor m_leftFeedVictor;
+   // private WsVictor m_rightFeedVictor;
+   //
+   // private Feed m_leftFeed;
+   // private Feed m_rightFeed;
+
    @Override
    public void selfTest()
    {
@@ -85,11 +93,19 @@ public class Shooter implements Subsystem
       // m_leftGateSolenoid = (WsSolenoid)
       // Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
       // m_rightGateSolenoid = (WsSolenoid)
-      // Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+      // Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
       //
       // m_leftGate = new Gate(m_leftGateSolenoid);
       // m_rightGate = new Gate(m_rightGateSolenoid);
 
+      // Feeds
+      // m_leftFeedVictor = (WsVictor)
+      // Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
+      // m_rightFeedVictor = (WsVictor)
+      // Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
+      //
+      // m_leftFeed = new Feed(m_leftFeedVictor);
+      // m_rightFeed = new Feed(m_rightFeedVictor);
    }
 
    @Override

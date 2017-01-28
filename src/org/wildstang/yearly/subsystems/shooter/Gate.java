@@ -14,29 +14,25 @@ public class Gate extends Shooter
       m_solenoid = p_solenoid;
    }
 
-   void openGate()
+   public void openGate()
    {
       m_solenoid.setValue(true);
    }
 
-   void closeGate()
+   public void closeGate()
    {
       m_solenoid.setValue(false);
    }
 
-   boolean isOpen()
+   public boolean isOpen()
    {
-      // boolean state = false;
-      //
-      // return state;
-      
+
       return m_solenoid.getValue();
-      
+
    }
 
-   boolean isClosed()
+   public boolean isClosed()
    {
-      // return false;
 
       return !(m_solenoid.getValue());
 
