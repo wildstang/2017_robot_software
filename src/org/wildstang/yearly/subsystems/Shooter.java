@@ -44,15 +44,19 @@ public class Shooter implements Subsystem
    // private double ServoPos_0 = 0.0;
    // private double ServoPos_1 = 0.0;
 
+   // Flywheels
    private CANTalon m_CANFlywheelLeft;
    private CANTalon m_CANFlywheelRight;
 
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
-   
-   private Gate m_leftGate;
-   private Gate m_rightGate;
-   
+
+   // Gates
+   // private WsSolenoid m_leftGateSolenoid;
+   // private WsSolenoid m_rightGateSolenoid;
+   //
+   // private Gate m_leftGate;
+   // private Gate m_rightGate;
 
    @Override
    public void selfTest()
@@ -69,11 +73,22 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
+
+      // Flywheels
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
+
+      // Gates
+      // m_leftGateSolenoid = (WsSolenoid)
+      // Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+      // m_rightGateSolenoid = (WsSolenoid)
+      // Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+      //
+      // m_leftGate = new Gate(m_leftGateSolenoid);
+      // m_rightGate = new Gate(m_rightGateSolenoid);
 
    }
 
