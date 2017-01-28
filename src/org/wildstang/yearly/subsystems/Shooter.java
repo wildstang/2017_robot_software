@@ -36,16 +36,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
 {
-   // add variables here
-   // private boolean TestSwitchSensor;
-   // private double DrvJoystickRightY = 0.0;
-   // private WsServo Servo_0;
-   // private WsServo Servo_1;
-   // private boolean DpadXLeft = false;
-   // private boolean DpadXRight = false;
-   // private double ServoPos_0 = 0.0;
-   // private double ServoPos_1 = 0.0;
-
    // Flywheels
    private CANTalon m_CANFlywheelLeft;
    private CANTalon m_CANFlywheelRight;
@@ -61,11 +51,11 @@ public class Shooter implements Subsystem
    private Gate m_rightGate;
 
    // Feeds
-   // private WsVictor m_leftFeedVictor;
-   // private WsVictor m_rightFeedVictor;
-   //
-   // private Feed m_leftFeed;
-   // private Feed m_rightFeed;
+   private WsVictor m_leftFeedVictor;
+   private WsVictor m_rightFeedVictor;
+
+   private Feed m_leftFeed;
+   private Feed m_rightFeed;
 
    // PDP
    private PowerDistributionPanel pdp;
@@ -102,19 +92,17 @@ public class Shooter implements Subsystem
       m_rightGate = new Gate(m_rightGateSolenoid);
 
       // Feeds
-      // m_leftFeedVictor = (WsVictor)
-      // Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
-      // m_rightFeedVictor = (WsVictor)
-      // Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
-      //
-      // m_leftFeed = new Feed(m_leftFeedVictor);
-      // m_rightFeed = new Feed(m_rightFeedVictor);
+      m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
+      m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
+
+      m_leftFeed = new Feed(m_leftFeedVictor);
+      m_rightFeed = new Feed(m_rightFeedVictor);
 
       // PDP
       pdp = new PowerDistributionPanel();
       leftFeedCurrent = pdp.getCurrent(8);
       rightFeedCurrent = pdp.getCurrent(9);
-      
+
    }
 
    @Override
