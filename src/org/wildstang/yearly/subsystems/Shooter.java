@@ -68,13 +68,19 @@ public class Shooter implements Subsystem
 
    private DigitalInput leftFlywheelButton;
    private DigitalInput rightFlywheelButton;
+   
+   private DigitalInput leftGateButton;
+   private DigitalInput rightGateButton;
 
    // Variables
-   private boolean leftBallReady;
-   private boolean rightBallReady;
+   private boolean leftBallReady = false;
+   private boolean rightBallReady = false;
 
-   private boolean leftFlywheelOn;
-   private boolean rightFlywheelOn;
+   private boolean leftFlywheelToggleOn = false;
+   private boolean rightFlywheelToggleOn = false;
+   
+   private boolean leftGateToggleOpen = false;
+   private boolean rightGateToggleClosed = false;
 
    @Override
    public void selfTest()
@@ -127,18 +133,18 @@ public class Shooter implements Subsystem
       leftFlywheelButton.addInputListener(this);
       rightFlywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_RIGHT.getName());
       rightFlywheelButton.addInputListener(this);
+      
+      leftGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_LEFT.getName());
+      leftGateButton.addInputListener(this);
+      rightGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_RIGHT.getName());
+      rightGateButton.addInputListener(this);
 
-      // Variables
-      leftBallReady = false;
-      rightBallReady = false;
-
-      leftFlywheelOn = false;
-      rightFlywheelOn = false;
    }
 
    @Override
    public void inputUpdate(Input source)
    {
+      // Ball in waiting switches 
       if (source == leftBallReadySwitch)
       {
          leftBallReady = m_leftFeed.isBallReady(leftBallReadySwitch.getValue());
@@ -148,13 +154,24 @@ public class Shooter implements Subsystem
          rightBallReady = m_rightFeed.isBallReady(rightBallReadySwitch.getValue());
       }
 
+      // Toggle for flywheels
       if (source == leftFlywheelButton)
       {
-         leftFlywheelOn = !leftFlywheelOn;
+         leftFlywheelToggleOn = !leftFlywheelToggleOn;
       }
       if (source == rightFlywheelButton)
       {
-         rightFlywheelOn = !rightFlywheelOn;
+         rightFlywheelToggleOn = !rightFlywheelToggleOn;
+      }
+      
+      // will be toggle for gates
+      if (source == leftFlywheelButton)
+      {
+         leftFlywheelToggleOn = !leftFlywheelToggleOn;
+      }
+      if (source == rightFlywheelButton)
+      {
+         rightFlywheelToggleOn = !rightFlywheelToggleOn;
       }
    }
 
@@ -166,23 +183,27 @@ public class Shooter implements Subsystem
 
    public void updateFlywheels()
    {
-      if (leftFlywheelOn)
+      if (leftFlywheelToggleOn)
       {
          m_leftFlywheel.turnOn();
       }
-      else if (!leftFlywheelOn)
+      else if (!leftFlywheelToggleOn)
       {
          m_leftFlywheel.turnOff();
       }
       
-      if (rightFlywheelOn)
+      if (rightFlywheelToggleOn)
       {
          m_rightFlywheel.turnOn();
       }
-      else if (!rightFlywheelOn)
+      else if (!rightFlywheelToggleOn)
       {
          m_rightFlywheel.turnOff();
       }
+   }
+   
+   public void updateGates(){
+      
    }
 
 }
