@@ -9,31 +9,43 @@ public class Feed extends Shooter
 
    private WsVictor m_victor;
    
+   private double limit;
+   private boolean jammed;
+   
+   private double m_forwardSpeed;
+   private double m_backwardSpeed;
+
    public Feed(WsVictor p_victor)
    {
       m_victor = p_victor;
    }
-   
-   boolean isJammed()
+
+   boolean isJammed(double p_current)
    {
-      boolean state = false;
+      if (p_current > limit)
+      {
+         jammed = true;
+      }
+      else
+      {
+         jammed = false;
+      }
 
-      return state;
-
+      return jammed;
    }
 
    void runForward()
    {
-
+      m_victor.setValue(m_forwardSpeed);
    }
 
    void runBackwards()
    {
-
+      m_victor.setValue(m_backwardSpeed);
    }
 
    void stop()
    {
-
+      m_victor.setValue(0);
    }
 }

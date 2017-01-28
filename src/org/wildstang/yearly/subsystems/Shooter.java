@@ -112,8 +112,9 @@ public class Shooter implements Subsystem
 
       // PDP
       pdp = new PowerDistributionPanel();
-      rightFeedCurrent = pdp.getCurrent(9);
       leftFeedCurrent = pdp.getCurrent(8);
+      rightFeedCurrent = pdp.getCurrent(9);
+      
    }
 
    @Override
