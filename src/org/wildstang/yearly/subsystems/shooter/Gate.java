@@ -33,7 +33,7 @@ public class Gate extends Shooter
 
    public boolean isClosed()
    {
-
+      
       return !(m_solenoid.getValue());
 
    }
