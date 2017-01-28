@@ -26,14 +26,19 @@ public class Gate extends Shooter
 
    boolean isOpen()
    {
-      boolean state = false;
-
-      return state;
+      // boolean state = false;
+      //
+      // return state;
+      
+      return m_solenoid.getValue();
+      
    }
 
    boolean isClosed()
    {
-      return false;
+      // return false;
+
+      return !(m_solenoid.getValue());
 
    }
 }
