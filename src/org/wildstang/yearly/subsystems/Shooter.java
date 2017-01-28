@@ -66,9 +66,15 @@ public class Shooter implements Subsystem
    private DigitalInput leftBallReadySwitch;
    private DigitalInput rightBallReadySwitch;
 
+   private DigitalInput leftFlywheelButton;
+   private DigitalInput rightFlywheelButton;
+
    // Variables
    private boolean leftBallReady;
    private boolean rightBallReady;
+
+   private boolean leftFlywheelOn;
+   private boolean rightFlywheelOn;
 
    @Override
    public void selfTest()
@@ -116,6 +122,18 @@ public class Shooter implements Subsystem
       leftBallReadySwitch.addInputListener(this);
       rightBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
       rightBallReadySwitch.addInputListener(this);
+
+      leftFlywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_LEFT.getName());
+      leftFlywheelButton.addInputListener(this);
+      rightFlywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_RIGHT.getName());
+      rightFlywheelButton.addInputListener(this);
+
+      // Variables
+      leftBallReady = false;
+      rightBallReady = false;
+
+      leftFlywheelOn = false;
+      rightFlywheelOn = false;
    }
 
    @Override
@@ -129,10 +147,20 @@ public class Shooter implements Subsystem
       {
          rightBallReady = m_rightFeed.isBallReady(rightBallReadySwitch.getValue());
       }
+
+      if (source == leftFlywheelButton)
+      {
+         leftFlywheelOn = !leftFlywheelOn;
+      }
+      if (source == rightFlywheelButton)
+      {
+         rightFlywheelOn = !rightFlywheelOn;
+      }
    }
 
    @Override
    public void update()
    {
    }
+
 }
