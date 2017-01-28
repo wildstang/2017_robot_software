@@ -122,15 +122,15 @@ public enum WSInputs implements Inputs
 
    // Digital IOs                                  
    GEAR_IN_POSITION("Gear In Position Sensor",     WSInputType.SWITCH, new WsDigitalInputConfig(0, true), getLogging()),	// Gear Subsystem
-   //DIO_1("Digital Input 1",                        WSInputType.SWITCH, new WsDigitalInputConfig(1, true), getLogging()),	// Digital IO Channel 1
-   //DIO_2("Digital Input 2",                        WSInputType.SWITCH, new WsDigitalInputConfig(2, true), getLogging()),	// Digital IO Channel 2
-   //DIO_3("Digital Input 3",                        WSInputType.SWITCH, new WsDigitalInputConfig(3, true), getLogging()),	// Digital IO Channel 3
-   //DIO_4("Digital Input 4",                        WSInputType.SWITCH, new WsDigitalInputConfig(4, true), getLogging()),	// Digital IO Channel 4
-   //DIO_5("Digital Input 5",                        WSInputType.SWITCH, new WsDigitalInputConfig(5, true), getLogging()),	// Digital IO Channel 5
-   //DIO_6("Digital Input 6",                        WSInputType.SWITCH, new WsDigitalInputConfig(6, true), getLogging()),	// Digital IO Channel 6
-   //DIO_7("Digital Input 7",                        WSInputType.SWITCH, new WsDigitalInputConfig(7, true), getLogging()),	// Digital IO Channel 7
-   //DIO_8("Digital Input 8",                        WSInputType.SWITCH, new WsDigitalInputConfig(8, true), getLogging()),	// Digital IO Channel 8
-   //DIO_9("Digital Input 9",                        WSInputType.SWITCH, new WsDigitalInputConfig(9, true), getLogging()),	// Digital IO Channel 9
+   //DIO_I_1("Digital Input 1",                      WSInputType.SWITCH, new WsDigitalInputConfig(1, true), getLogging()),	// Digital IO Channel 1
+   //DIO_I_2("Digital Input 2",                      WSInputType.SWITCH, new WsDigitalInputConfig(2, true), getLogging()),	// Digital IO Channel 2
+   //DIO_I_3("Digital Input 3",                      WSInputType.SWITCH, new WsDigitalInputConfig(3, true), getLogging()),	// Digital IO Channel 3
+   //DIO_I_4("Digital Input 4",                      WSInputType.SWITCH, new WsDigitalInputConfig(4, true), getLogging()),	// Digital IO Channel 4
+   //DIO_I_5("Digital Input 5",                      WSInputType.SWITCH, new WsDigitalInputConfig(5, true), getLogging()),	// Digital IO Channel 5
+   //DIO_I_6("Digital Input 6",                      WSInputType.SWITCH, new WsDigitalInputConfig(6, true), getLogging()),	// Digital IO Channel 6
+   //DIO_I_7("Digital Input 7",                      WSInputType.SWITCH, new WsDigitalInputConfig(7, true), getLogging()),	// Digital IO Channel 7
+   //DIO_I_8("Digital Input 8",                      WSInputType.SWITCH, new WsDigitalInputConfig(8, true), getLogging()),	// Digital IO Channel 8
+   //DIO_I_9("Digital Input 9",                      WSInputType.SWITCH, new WsDigitalInputConfig(9, true), getLogging()),	// Digital IO Channel 9
 
    //MOTION_PROFILE_CONTROL("MotionProfileConfig", WSInputType.MOTION_PROFILE_CONTROL, new WsMotionProfileConfig(), getLogging()),
 
