@@ -31,6 +31,7 @@ import org.wildstang.yearly.subsystems.shooter.Gate;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
@@ -58,6 +59,9 @@ public class Shooter implements Subsystem
 
    private Gate m_leftGate;
    private Gate m_rightGate;
+   
+   double rightFeedCurrent;
+   double leftFeedCurrent;
 
    // Feeds
    // private WsVictor m_leftFeedVictor;
@@ -95,7 +99,12 @@ public class Shooter implements Subsystem
 
       m_leftGate = new Gate(m_leftGateSolenoid);
       m_rightGate = new Gate(m_rightGateSolenoid);
-
+      
+      PowerDistributionPanel pdp = new PowerDistributionPanel();
+      
+      rightFeedCurrent = pdp.getCurrent(9);
+      leftFeedCurrent = pdp.getCurrent(8);
+      
       // Feeds
       // m_leftFeedVictor = (WsVictor)
       // Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
@@ -114,7 +123,6 @@ public class Shooter implements Subsystem
    @Override
    public void update()
    {
-      // if the shooter should turn on
       m_leftFlywheel.turnOn();
    }
 }
