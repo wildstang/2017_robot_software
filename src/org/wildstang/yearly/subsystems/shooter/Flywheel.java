@@ -38,6 +38,7 @@ public class Flywheel extends Shooter
    public void setSpeed(double p_wheelSpeed)
    {
       m_talon.set(p_wheelSpeed);
+      
    }
 
 }
