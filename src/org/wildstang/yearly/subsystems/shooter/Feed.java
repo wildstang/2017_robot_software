@@ -8,6 +8,8 @@ public class Feed extends Shooter
 {
 
    private WsVictor m_victor;
+   private double m_forwardSpeed;
+   private double m_backwardSpeed;
    
    public Feed(WsVictor p_victor)
    {
@@ -24,16 +26,16 @@ public class Feed extends Shooter
 
    void runForward()
    {
-
+      m_victor.setValue(m_forwardSpeed);
    }
 
    void runBackwards()
    {
-
+      m_victor.setValue(m_backwardSpeed);
    }
 
    void stop()
    {
-
+      m_victor.setValue(0);
    }
 }
