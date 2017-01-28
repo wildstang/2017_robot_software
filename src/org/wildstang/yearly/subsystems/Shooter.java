@@ -69,7 +69,6 @@ public class Shooter implements Subsystem
 
    // PDP
    private PowerDistributionPanel pdp;
-
    double rightFeedCurrent;
    double leftFeedCurrent;
 
@@ -111,6 +110,7 @@ public class Shooter implements Subsystem
       // m_leftFeed = new Feed(m_leftFeedVictor);
       // m_rightFeed = new Feed(m_rightFeedVictor);
 
+      // PDP
       pdp = new PowerDistributionPanel();
       rightFeedCurrent = pdp.getCurrent(9);
       leftFeedCurrent = pdp.getCurrent(8);
