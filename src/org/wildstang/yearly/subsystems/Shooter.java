@@ -86,7 +86,7 @@ public class Shooter implements Subsystem
    private boolean readyToShootRight = false;
 
    private double targetSpeed;
-   private double lowLimitSpeed;
+   private double loLimitSpeed;
    private double hiLimitSpeed;
 
    @Override
@@ -221,8 +221,8 @@ public class Shooter implements Subsystem
       // Sets a conditional toggle to true if that flywheel is ready.
 
       // Left Side
-      if (m_leftFlywheel.getSpeed() >= hiLimitSpeed
-            && m_leftFlywheel.getSpeed() <= lowLimitSpeed)
+      if (m_leftFlywheel.getSpeed() <= hiLimitSpeed
+            && m_leftFlywheel.getSpeed() >= loLimitSpeed)
       {
          readyToShootLeft = true;
       }
@@ -232,8 +232,8 @@ public class Shooter implements Subsystem
       }
 
       // Right Side
-      if (m_rightFlywheel.getSpeed() >= hiLimitSpeed
-            && m_rightFlywheel.getSpeed() <= lowLimitSpeed)
+      if (m_rightFlywheel.getSpeed() <= hiLimitSpeed
+            && m_rightFlywheel.getSpeed() >= loLimitSpeed)
       {
          readyToShootRight = true;
       }
