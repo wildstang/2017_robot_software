@@ -14,7 +14,7 @@ public class Feed extends Shooter
    private boolean ballReady;
 
    private double m_forwardSpeed;
-   private double m_backwardSpeed;
+   private double m_backwardSpeed;     // this should be negative
 
    public Feed(WsVictor p_victor)
    {

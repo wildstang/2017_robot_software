@@ -71,16 +71,17 @@ public class Shooter implements Subsystem
 
    private DigitalInput leftGateButton;
    private DigitalInput rightGateButton;
+   
+   private AnalogInput leftBeltJoystick;
+   private AnalogInput rightBeltJoystick;
 
    // Variables
-   private boolean leftBallReady = false;
-   private boolean rightBallReady = false;
 
    private boolean leftFlywheelToggleOn = false;
-   private boolean rightFlywheelToggleOn = false;
-
-   private boolean leftGateToggleOpen = false;
-   private boolean rightGateToggleOpen = false;
+   private boolean rightFlywheelToggleOn = false;  
+   
+   private boolean leftBallReady = false;
+   private boolean rightBallReady = false;
 
    private boolean readyToShootLeft = false;
    private boolean readyToShootRight = false;
@@ -88,6 +89,13 @@ public class Shooter implements Subsystem
    private double targetSpeed;
    private double lowLimitSpeed;
    private double highLimitSpeed;
+   
+   private boolean leftGateToggleOpen = false;
+   private boolean rightGateToggleOpen = false;
+   
+   private double leftJoyAxis;
+   private double rightJoyAxis;
+
 
    @Override
    public void selfTest()
@@ -145,12 +153,21 @@ public class Shooter implements Subsystem
       leftGateButton.addInputListener(this);
       rightGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_RIGHT.getName());
       rightGateButton.addInputListener(this);
-
+      
+      leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_LEFT.getName());
+      leftBeltJoystick.addInputListener(this);
+      rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_RIGHT.getName());
+      rightBeltJoystick.addInputListener(this);
+      
+      
    }
 
    @Override
    public void inputUpdate(Input source)
    {
+      leftJoyAxis = leftBeltJoystick.getValue();
+      rightJoyAxis = rightBeltJoystick.getValue();
+      
       // Ball in waiting switches
       if (source == leftBallReadySwitch)
       {
@@ -187,6 +204,7 @@ public class Shooter implements Subsystem
    {
       updateFlywheels();
       updateGates();
+      updateFeed();
    }
 
    public void updateFlywheels()
@@ -194,7 +212,8 @@ public class Shooter implements Subsystem
       // Left
       if (leftFlywheelToggleOn)
       {
-         m_leftFlywheel.setSpeed(targetSpeed);;
+         m_leftFlywheel.setSpeed(targetSpeed);
+         
       }
       else if (!leftFlywheelToggleOn)
       {
@@ -263,6 +282,55 @@ public class Shooter implements Subsystem
       {
          m_rightGate.closeGate();
       }
+   }
+
+   public void updateFeed()
+   {
+      // Determines whether or not the feeder is jammed and, if so,
+      // displays "Is Jammed" on the dash
+      
+      // Left
+      if (m_leftFeed.isJammed(leftFeedCurrent))
+      {
+         SmartDashboard.putBoolean("Left is Jammed", true);
+      }
+      
+      // Right
+      if (m_rightFeed.isJammed(rightFeedCurrent))
+      {
+         SmartDashboard.putBoolean("Right is Jammed", true);
+      }
+      
+      // Setting left and right talon speed based off of analog joystick input
+      
+      //Left
+      if (leftJoyAxis > 0)
+      {
+         m_leftFeed.runForward();
+      }
+      else if (leftJoyAxis < 0)
+      {
+         m_leftFeed.runBackwards();
+      }
+      else 
+      {
+         m_leftFeed.stop();
+      }
+      
+    //Right
+      if (rightJoyAxis > 0)
+      {
+         m_rightFeed.runForward();
+      }
+      else if (rightJoyAxis < 0)
+      {
+         m_rightFeed.runBackwards();
+      }
+      else 
+      {
+         m_rightFeed.stop();
+      }
+
    }
 
 }
