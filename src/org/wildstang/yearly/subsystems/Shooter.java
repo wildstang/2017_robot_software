@@ -66,8 +66,7 @@ public class Shooter implements Subsystem
    private DigitalInput leftBallReadySwitch;
    private DigitalInput rightBallReadySwitch;
 
-   private DigitalInput leftFlywheelButton;
-   private DigitalInput rightFlywheelButton;
+   private DigitalInput flywheelButton;
 
    private DigitalInput leftGateButton;
    private DigitalInput rightGateButton;
@@ -77,8 +76,7 @@ public class Shooter implements Subsystem
 
    // Variables
 
-   private boolean leftFlywheelToggleOn = false;
-   private boolean rightFlywheelToggleOn = false;  
+   private boolean flywheelToggleOn = false;
    
    private boolean leftBallReady = false;
    private boolean rightBallReady = false;
@@ -144,19 +142,17 @@ public class Shooter implements Subsystem
       rightBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
       rightBallReadySwitch.addInputListener(this);
 
-      leftFlywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_LEFT.getName());
-      leftFlywheelButton.addInputListener(this);
-      rightFlywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_RIGHT.getName());
-      rightFlywheelButton.addInputListener(this);
+      flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
+      flywheelButton.addInputListener(this);
 
       leftGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_LEFT.getName());
       leftGateButton.addInputListener(this);
       rightGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_RIGHT.getName());
       rightGateButton.addInputListener(this);
       
-      leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_LEFT.getName());
+      leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName());
       leftBeltJoystick.addInputListener(this);
-      rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL_RIGHT.getName());
+      rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName());
       rightBeltJoystick.addInputListener(this);
       
       
@@ -179,13 +175,9 @@ public class Shooter implements Subsystem
       }
 
       // Toggle for flywheels
-      if (source == leftFlywheelButton)
+      if (source == flywheelButton)
       {
-         leftFlywheelToggleOn = !leftFlywheelToggleOn;
-      }
-      if (source == rightFlywheelButton)
-      {
-         rightFlywheelToggleOn = !rightFlywheelToggleOn;
+         flywheelToggleOn = !flywheelToggleOn;
       }
 
       // Toggle for gates
@@ -210,25 +202,25 @@ public class Shooter implements Subsystem
    public void updateFlywheels()
    {
       // Left
-      if (leftFlywheelToggleOn)
+      if (flywheelToggleOn)
       {
          m_leftFlywheel.setSpeed(targetSpeed);
+         m_rightFlywheel.setSpeed(targetSpeed);
          
       }
-      else if (!leftFlywheelToggleOn)
+      else if (!flywheelToggleOn)
       {
          m_leftFlywheel.turnOff();
-      }
-
-      // Right
-      if (rightFlywheelToggleOn)
-      {
-         m_rightFlywheel.setSpeed(targetSpeed);
-      }
-      else if (!rightFlywheelToggleOn)
-      {
          m_rightFlywheel.turnOff();
+         
+         m_leftFeed.stop();
+         m_rightFeed.stop();
+         
+         // the gates will close if the flywheel is off
+         // this is in the Gate Update to prevent the gates from opening
+         // when flywheel isnt running and at speed
       }
+      
    }
 
    // TODO:
