@@ -133,8 +133,8 @@ public class Shooter implements Subsystem
 
       // PDP
       pdp = new PowerDistributionPanel();
-      leftFeedCurrent = pdp.getCurrent(8);
-      rightFeedCurrent = pdp.getCurrent(9);
+      leftFeedCurrent = pdp.getCurrent(0);
+      rightFeedCurrent = pdp.getCurrent(1);
 
       // Input Listeners
       leftBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
