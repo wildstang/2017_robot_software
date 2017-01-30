@@ -213,9 +213,6 @@ public class Shooter implements Subsystem
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
          
-         m_leftFeed.stop();
-         m_rightFeed.stop();
-         
          // the gates will close if the flywheel is off
          // this is in the Gate Update to prevent the gates from opening
          // when flywheel isnt running and at speed
