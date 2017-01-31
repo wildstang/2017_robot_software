@@ -95,7 +95,7 @@ public class Shooter implements Subsystem
    private double highLimitSpeed;
 
    // needs to be changed
-   private double feedThreshold = 0;
+   private double feedThreshold;
 
    @Override
    public void selfTest()
@@ -297,8 +297,13 @@ public class Shooter implements Subsystem
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
       }
+      
+      // Determine if ball is in feed and ready 
+      // Tell driver with Smart Dashboard
+      
 
       // Setting left and right talon speed based off of analog joystick input
+      // feedThreshold can be set to different values to give a range for stop
 
       // Left
       if (leftJoyAxis > feedThreshold)
