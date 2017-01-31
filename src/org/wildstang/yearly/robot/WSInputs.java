@@ -26,7 +26,7 @@ public enum WSInputs implements Inputs
    //  +  +---------+              [TOP]              +---------+  +       
    //  |  |    6    |                                 |    7    |  |       
    //  |  +---------+                                 +---------+  |       
-   //  |      			                                |   
+   //  |      			                             			   |   
    //  |  +---------+                                 +---------+  |       
    //  |  |    4    |                                 |    5    |  |
    //  +  +---------+                                 +---------+  +
@@ -119,7 +119,7 @@ public enum WSInputs implements Inputs
    FLYWHEEL_RIGHT("Flywheel Right On/Off",         WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),        // Shooter Subsystem
    GATE_LEFT("Gate Left On/Off",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
    GATE_RIGHT("Gate Left On/Off",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),        // Shooter Subsystem
-   //MAN_BUTTON_8("Manipulator button 8",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 8), getLogging()),
+   GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 8), getLogging()),
    //MAN_BUTTON_9("Manipulator button 9",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()),
    //MAN_BUTTON_10("Manipulator button 10",        WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 10), getLogging()),
    //MAN_BUTTON_11("Manipulator button 11",        WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 11), getLogging()),

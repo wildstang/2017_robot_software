@@ -29,7 +29,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Gear implements Subsystem
 {
    // add variables here
-   //private boolean 	TestSwitchSensor;
+   private boolean 	buttonPressed;
+   private boolean 	gearPistonOn;
+   private boolean sensorPressed;
    //private double  	DrvJoystickRightY = 0.0;
    //private WsServo	Servo_0;
    //private WsServo	Servo_1;
@@ -79,8 +81,8 @@ public class Gear implements Subsystem
       //DrvJoystickRightY	= 0.0;
       //
       //// Register the sensors that this subsystem wants to be notified about
-      //Core.getInputManager().getInput(WSInputs.TEST_SWITCH_SENSOR.getName()).addInputListener(this);
-      //
+      Core.getInputManager().getInput(WSInputs.GEAR.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.GEAR_IN_POSITION.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_RIGHT.getName()).addInputListener(this);
@@ -112,11 +114,14 @@ public class Gear implements Subsystem
       //   TestSwitchSensor = ((DigitalInput) source).getValue();
       //}
       //
-      //if (source.getName().equals(WSInputs.DRV_RIGHT_Y.getName()))
-      //{
-      //    // -1.0 <= TestJoystickLeft<= 1.0
-      //    DrvJoystickRightY= ((AnalogInput) source).getValue();
-      //}
+      if (source.getName().equals(WSInputs.GEAR.getName()))
+      {
+    	  buttonPressed = ((DigitalInput) source).getValue();
+      }
+      if (source.getName().equals(WSInputs.GEAR_IN_POSITION.getName()))
+      {
+    	  sensorPressed = ((DigitalInput) source).getValue();
+      }
       //
       //if (source.getName().equals(WSInputs.DRV_DPAD_X_LEFT.getName()))
       //{
@@ -141,19 +146,17 @@ public class Gear implements Subsystem
       //
       // 1. Tell the framework what the updated output values should be set to.
       // 
-//       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.TEST_LED.getName())).setValue(TestSwitchSensor);
-       //if (DpadXLeft == true)
-       //{
-       //    ServoPos_0 = 90.0;
-       //}
-       //else if (DpadXRight == true)
-       //{
-       //    ServoPos_0 = 45.0;
-       //}
-       //else
-       //    ServoPos_0 = 0.0;
+       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.GEAR_SHIFTER.getName())).setValue(gearPistonOn);
+       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(sensorPressed);
+       
+       // when sensor is pushed, gear is in position and button is disabled
+	   
+	   if (buttonPressed == true && sensorPressed == false)
+	   {
+		   gearPistonOn = true; 
+	   }
 
-       //SmartDashboard.putBoolean("DpadXLeft", DpadXLeft);
+       SmartDashboard.putBoolean("sensorPressed", sensorPressed);
        //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
        //SmartDashboard.putNumber("ServoPos_0", ServoPos_0);
        //

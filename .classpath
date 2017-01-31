@@ -19,5 +19,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-2411.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/core_framework"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
