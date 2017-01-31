@@ -75,7 +75,6 @@ public class Shooter implements Subsystem
    private AnalogInput rightBeltJoystick;
 
    // Variables
-
    private boolean flywheelToggleOn = false;
 
    private boolean leftBallReady = false;
@@ -84,15 +83,19 @@ public class Shooter implements Subsystem
    private boolean readyToShootLeft = false;
    private boolean readyToShootRight = false;
 
-   private double targetSpeed;
-   private double lowLimitSpeed;
-   private double highLimitSpeed;
-
    private boolean leftGateToggleOpen = false;
    private boolean rightGateToggleOpen = false;
 
    private double leftJoyAxis;
    private double rightJoyAxis;
+
+   // Constants or things to get from WPILIB config
+   private double targetSpeed;
+   private double lowLimitSpeed;
+   private double highLimitSpeed;
+
+   // needs to be changed
+   private double feedThreshold = 0;
 
    @Override
    public void selfTest()
@@ -298,11 +301,11 @@ public class Shooter implements Subsystem
       // Setting left and right talon speed based off of analog joystick input
 
       // Left
-      if (leftJoyAxis > 0)
+      if (leftJoyAxis > feedThreshold)
       {
          m_leftFeed.runForward();
       }
-      else if (leftJoyAxis < 0)
+      else if (leftJoyAxis < (-(feedThreshold)))
       {
          m_leftFeed.runBackwards();
       }
@@ -312,11 +315,11 @@ public class Shooter implements Subsystem
       }
 
       // Right
-      if (rightJoyAxis > 0)
+      if (rightJoyAxis > feedThreshold)
       {
          m_rightFeed.runForward();
       }
-      else if (rightJoyAxis < 0)
+      else if (rightJoyAxis < (-(feedThreshold)))
       {
          m_rightFeed.runBackwards();
       }
