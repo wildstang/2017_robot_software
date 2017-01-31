@@ -11,10 +11,8 @@ public class Feed extends Shooter
    private double limit;
    private boolean jammed;
 
-   private boolean ballReady;
-
    private double m_forwardSpeed;
-   private double m_backwardSpeed;     // this should be negative
+   private double m_backwardSpeed; // this should be negative
 
    public Feed(WsVictor p_victor)
    {
@@ -23,29 +21,13 @@ public class Feed extends Shooter
 
    public boolean isJammed(double p_current)
    {
-      if (p_current > limit)
-      {
-         jammed = true;
-      }
-      else
-      {
-         jammed = false;
-      }
-
+      jammed = (p_current > limit);
       return jammed;
    }
 
    public boolean isBallReady(boolean p_digitalInput)
    {
-      if (p_digitalInput)
-      {
-         ballReady = true;
-      }
-      else
-      {
-         ballReady = false;
-      }
-      return ballReady;
+      return p_digitalInput;
    }
 
    public void runForward()

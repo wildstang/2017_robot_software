@@ -214,9 +214,8 @@ public class Shooter implements Subsystem
       {
          m_leftFlywheel.setSpeed(targetSpeed);
          m_rightFlywheel.setSpeed(targetSpeed);
-
       }
-      else if (!flywheelToggleOn)
+      else
       {
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
@@ -237,26 +236,12 @@ public class Shooter implements Subsystem
       // Sets a conditional toggle to true if that flywheel is ready.
 
       // Left Side
-      if (m_leftFlywheel.getSpeed() <= highLimitSpeed
-            && m_leftFlywheel.getSpeed() >= lowLimitSpeed)
-      {
-         readyToShootLeft = true;
-      }
-      else
-      {
-         readyToShootLeft = false;
-      }
+      readyToShootLeft = (m_leftFlywheel.getSpeed() <= highLimitSpeed)
+            && (m_leftFlywheel.getSpeed() >= lowLimitSpeed);
 
       // Right Side
-      if (m_rightFlywheel.getSpeed() <= highLimitSpeed
-            && m_rightFlywheel.getSpeed() >= lowLimitSpeed)
-      {
-         readyToShootRight = true;
-      }
-      else
-      {
-         readyToShootRight = false;
-      }
+      readyToShootRight = (m_rightFlywheel.getSpeed() <= highLimitSpeed)
+            && (m_rightFlywheel.getSpeed() >= lowLimitSpeed);
 
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
