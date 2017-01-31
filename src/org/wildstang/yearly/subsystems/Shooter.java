@@ -285,22 +285,13 @@ public class Shooter implements Subsystem
    {
       // Determines whether or not the feeder is jammed and, if so,
       // displays "Is Jammed" on the dash
+      SmartDashboard.putBoolean("Left is Jammed", m_leftFeed.isJammed(leftFeedCurrent));
+      SmartDashboard.putBoolean("Right is Jammed", m_leftFeed.isJammed(rightFeedCurrent));
 
-      // Left
-      if (m_leftFeed.isJammed(leftFeedCurrent))
-      {
-         SmartDashboard.putBoolean("Left is Jammed", true);
-      }
-
-      // Right
-      if (m_rightFeed.isJammed(rightFeedCurrent))
-      {
-         SmartDashboard.putBoolean("Right is Jammed", true);
-      }
-      
-      // Determine if ball is in feed and ready 
+      // Determine if ball is in feed and ready
       // Tell driver with Smart Dashboard
-      
+      SmartDashboard.putBoolean("Left has Ball Ready", leftBallReady);
+      SmartDashboard.putBoolean("Right has Ball Ready", rightBallReady);
 
       // Setting left and right talon speed based off of analog joystick input
       // feedThreshold can be set to different values to give a range for stop
