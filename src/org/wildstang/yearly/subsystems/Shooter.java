@@ -70,14 +70,14 @@ public class Shooter implements Subsystem
 
    private DigitalInput leftGateButton;
    private DigitalInput rightGateButton;
-   
+
    private AnalogInput leftBeltJoystick;
    private AnalogInput rightBeltJoystick;
 
    // Variables
 
    private boolean flywheelToggleOn = false;
-   
+
    private boolean leftBallReady = false;
    private boolean rightBallReady = false;
 
@@ -87,13 +87,12 @@ public class Shooter implements Subsystem
    private double targetSpeed;
    private double lowLimitSpeed;
    private double highLimitSpeed;
-   
+
    private boolean leftGateToggleOpen = false;
    private boolean rightGateToggleOpen = false;
-   
+
    private double leftJoyAxis;
    private double rightJoyAxis;
-
 
    @Override
    public void selfTest()
@@ -149,21 +148,27 @@ public class Shooter implements Subsystem
       leftGateButton.addInputListener(this);
       rightGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_RIGHT.getName());
       rightGateButton.addInputListener(this);
-      
+
       leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName());
       leftBeltJoystick.addInputListener(this);
       rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName());
       rightBeltJoystick.addInputListener(this);
-      
-      
+
    }
 
    @Override
    public void inputUpdate(Input source)
    {
-      leftJoyAxis = leftBeltJoystick.getValue();
-      rightJoyAxis = rightBeltJoystick.getValue();
-      
+      // Joystick for Feed belts
+      if (source == leftBeltJoystick)
+      {
+         leftJoyAxis = leftBeltJoystick.getValue();
+      }
+      if (source == rightBeltJoystick)
+      {
+         rightJoyAxis = rightBeltJoystick.getValue();
+      }
+
       // Ball in waiting switches
       if (source == leftBallReadySwitch)
       {
@@ -206,18 +211,18 @@ public class Shooter implements Subsystem
       {
          m_leftFlywheel.setSpeed(targetSpeed);
          m_rightFlywheel.setSpeed(targetSpeed);
-         
+
       }
       else if (!flywheelToggleOn)
       {
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
-         
+
          // the gates will close if the flywheel is off
          // this is in the Gate Update to prevent the gates from opening
          // when flywheel isnt running and at speed
       }
-      
+
    }
 
    // TODO:
@@ -277,22 +282,22 @@ public class Shooter implements Subsystem
    {
       // Determines whether or not the feeder is jammed and, if so,
       // displays "Is Jammed" on the dash
-      
+
       // Left
       if (m_leftFeed.isJammed(leftFeedCurrent))
       {
          SmartDashboard.putBoolean("Left is Jammed", true);
       }
-      
+
       // Right
       if (m_rightFeed.isJammed(rightFeedCurrent))
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
       }
-      
+
       // Setting left and right talon speed based off of analog joystick input
-      
-      //Left
+
+      // Left
       if (leftJoyAxis > 0)
       {
          m_leftFeed.runForward();
@@ -301,12 +306,12 @@ public class Shooter implements Subsystem
       {
          m_leftFeed.runBackwards();
       }
-      else 
+      else
       {
          m_leftFeed.stop();
       }
-      
-    //Right
+
+      // Right
       if (rightJoyAxis > 0)
       {
          m_rightFeed.runForward();
@@ -315,7 +320,7 @@ public class Shooter implements Subsystem
       {
          m_rightFeed.runBackwards();
       }
-      else 
+      else
       {
          m_rightFeed.stop();
       }
