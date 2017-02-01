@@ -23,6 +23,7 @@ import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,7 +65,7 @@ public class Drive implements Subsystem
    private PathFollower m_pathFollower;
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
-   private static final double ROBOT_WIDTH_INCHES = 38;
+   private static final double ROBOT_WIDTH_INCHES = 22;
    private static final double WHEEL_DIAMETER_INCHES = 4;
    private static final double ENCODER_CPR = 1024;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR;
@@ -144,6 +145,7 @@ public class Drive implements Subsystem
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_leftMaster.configEncoderCodesPerRev(256);
+      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
@@ -156,6 +158,7 @@ public class Drive implements Subsystem
 
       m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_rightMaster.configEncoderCodesPerRev(256);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
@@ -279,7 +282,10 @@ public class Drive implements Subsystem
             m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
       }
-
+      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
+      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
+      
+      
       Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
       Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
       
@@ -307,16 +313,14 @@ public class Drive implements Subsystem
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
       double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
-      if (Math.abs(m_leftMaster.getEncVelocity()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_leftMaster.getEncVelocity());
-      } else if (Math.abs(m_rightMaster.getEncVelocity()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_rightMaster.getEncVelocity());
+      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
+      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
       }
       
       SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
       
-      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
-      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
       
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();

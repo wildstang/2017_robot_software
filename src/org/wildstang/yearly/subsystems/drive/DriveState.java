@@ -100,8 +100,8 @@ public class DriveState
    public String toString()
    {
       return deltaTimeMS + ", " + deltaRightEncoderTicks + ", "
-            + deltaLeftEncoderTicks + ", " + ", " + headingAngle + ", " + 
-            straightLineInches + turnRadiusInches + ", " + deltaTheta + "\n";
+            + deltaLeftEncoderTicks + ", " + headingAngle + ", " + 
+            straightLineInches + ", " + turnRadiusInches + ", " + deltaTheta + "\n";
    }
 
 }
