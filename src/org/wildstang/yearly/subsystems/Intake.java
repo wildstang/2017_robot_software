@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake implements Subsystem
 {
    // add variables here
-   //private boolean 	TestSwitchSensor;
+   private boolean 	intakeOn;
    //private double  	DrvJoystickRightY = 0.0;
    //private WsServo	Servo_0;
    //private WsServo	Servo_1;
@@ -83,7 +83,7 @@ public class Intake implements Subsystem
       //
       //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_RIGHT.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName()).addInputListener(this);
       //
       //Servo_0 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_0.getName());
       //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
@@ -127,6 +127,14 @@ public class Intake implements Subsystem
       //{
       //    DpadXRight= ((DigitalInput) source).getValue();
       //}
+	  
+	   if (source.getName().equals(WSInputs.INTAKE_ON.getName()))
+	   {
+		    if (((DigitalInput) source).getValue() == true)
+			{
+		    	intakeOn= !intakeOn;
+			}
+		}
    }
 
    @Override
@@ -152,8 +160,14 @@ public class Intake implements Subsystem
        //}
        //else
        //    ServoPos_0 = 0.0;
+	    //intakeOn;
+	   
+	   if (intakeOn == true)
+	   {
+		   ((AnalogOutput)Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName())).setValue(.75);
+	   }
 
-       //SmartDashboard.putBoolean("DpadXLeft", DpadXLeft);
+       SmartDashboard.putBoolean("intakeOn", intakeOn);
        //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
        //SmartDashboard.putNumber("ServoPos_0", ServoPos_0);
        //
@@ -161,5 +175,6 @@ public class Intake implements Subsystem
        //
        //Servo_0.setValue(ServoPos_0);
        //Servo_1.setValue(ServoPos_1);
+	   
    }
 }
