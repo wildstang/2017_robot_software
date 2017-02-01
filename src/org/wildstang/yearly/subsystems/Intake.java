@@ -21,6 +21,7 @@ import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
 import org.wildstang.hardware.crio.outputs.WsServo;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
@@ -30,7 +31,9 @@ public class Intake implements Subsystem
 {
    // add variables here
    private boolean 	intakeOn = false;
-   //private double  	DrvJoystickRightY = 0.0;
+   private double  	motorSpeed = 0.0;
+   private WsVictor IntakeMotor;
+   
    //private WsServo	Servo_0;
    //private WsServo	Servo_1;
    //private boolean 	DpadXLeft	= false;
@@ -83,10 +86,12 @@ public class Intake implements Subsystem
       //
       //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
+	   
       Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName()).addInputListener(this);
-      //
-      //Servo_0 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_0.getName());
-      //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
+      
+      IntakeMotor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName());
+      
+     //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
 
       //SmartDashboard.putNumber("ServoPos_1", ServoPos_1);
    }
@@ -164,7 +169,7 @@ public class Intake implements Subsystem
 	   
 	   if (intakeOn == true)
 	   {
-		   ((AnalogOutput)Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName())).setValue(.75);
+		   IntakeMotor.setValue(.75);
 	   }
 
        SmartDashboard.putBoolean("intakeOn", intakeOn);
