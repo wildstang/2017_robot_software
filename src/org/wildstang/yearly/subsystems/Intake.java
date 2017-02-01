@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake implements Subsystem
 {
    // add variables here
-   private boolean 	intakeOn;
+   private boolean 	intakeOn = false;
    //private double  	DrvJoystickRightY = 0.0;
    //private WsServo	Servo_0;
    //private WsServo	Servo_1;
