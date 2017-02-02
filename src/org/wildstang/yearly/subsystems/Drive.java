@@ -332,7 +332,7 @@ public class Drive implements Subsystem
       
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftInches - deltaRightInches)) / RADIANS;
+         deltaTheta = (Math.atan2((deltaRightInches - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
       }
       else
       {
