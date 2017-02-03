@@ -209,7 +209,7 @@ public class Shooter implements Subsystem
    {
       // Replaced this with whats below
       // flywheelToggleOn = true;
-      
+
       m_leftFlywheel.setSpeed(targetSpeed);
       m_rightFlywheel.setSpeed(-targetSpeed);
    }
@@ -217,32 +217,33 @@ public class Shooter implements Subsystem
    // Turns off the flywheels w/out buttons for auto
    public void turnFlywheelOff()
    {
-     // flywheelToggleOn = false;
-      
+      // flywheelToggleOn = false;
+
       m_leftFlywheel.setSpeed(0);
       m_rightFlywheel.setSpeed(0);
    }
 
-   // Updates the state of the flywheels based off of the toggle switch and button
+   // Updates the state of the flywheels based off of the toggle switch and
+   // button
    public void updateFlywheels()
    {
       // BENO: We currently have a variable for the speed we want in both
       // the flywheel class, m_speed, and in shooter class, targetSpeed.
-      // Should one of these be removed or should the turn on function be 
-      // scrapped altogether? 
+      // Should one of these be removed or should the turn on function be
+      // scrapped altogether?
       // turnOn and turnOff are now in two places
-      
+
       if (flywheelToggle)
       {
-         //   note: right must run in reverse with left due to motor positioning
-         
+         // note: right must run in reverse with left due to motor positioning
+
          m_leftFlywheel.setSpeed(targetSpeed);
          m_rightFlywheel.setSpeed(-targetSpeed);
 
       }
       else if (!flywheelToggle)
       {
-       // Should this be a setSpeed 0 instead?
+         // Should this be a setSpeed 0 instead?
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
 
@@ -257,11 +258,13 @@ public class Shooter implements Subsystem
       // Tests to see if the left and right flywheel is up to speed and ready to
       // shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
-      
-      // BENO: Should these all be else if's as well? I say no because if left side
-      // is ready to shoot, it will short circuit right side. But does that matter?
 
-      // LEFT SIDE 
+      // BENO: Should these all be else if's as well? I say no because if left
+      // side
+      // is ready to shoot, it will short circuit right side. But does that
+      // matter?
+
+      // LEFT SIDE
       if (m_leftFlywheel.getSpeed() <= highLimitSpeed
             && m_leftFlywheel.getSpeed() >= lowLimitSpeed)
       {
@@ -340,7 +343,7 @@ public class Shooter implements Subsystem
       }
 
       // RIGHT SIDE
-      //   note: right must run in reverse with left due to motor positioning
+      // note: right must run in reverse with left due to motor positioning
       if (rightJoyAxis > 0)
       {
          m_rightFeed.runBackwards();
