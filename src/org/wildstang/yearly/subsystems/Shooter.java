@@ -43,12 +43,34 @@ public class Shooter implements Subsystem
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
 
+   private boolean flywheelToggle = false;
+   private boolean ShooterNow;
+   private boolean ShooterPrev;
+
+   private boolean readyToShootLeft = false;
+   private boolean readyToShootRight = false;
+
+   private double targetSpeed;
+   private double lowLimitSpeed;
+   private double highLimitSpeed;
+
    // Gates
    private WsSolenoid m_leftGateSolenoid;
    private WsSolenoid m_rightGateSolenoid;
 
    private Gate m_leftGate;
    private Gate m_rightGate;
+
+   private boolean leftGateToggleOpen = false;
+   private boolean rightGateToggleOpen = false;
+
+   private boolean leftGateOpen;
+   private boolean leftGateNow;
+   private boolean leftGatePrev;
+
+   private boolean rightGateOpen;
+   private boolean rightGateNow;
+   private boolean rightGatePrev;
 
    // Feeds
    private WsVictor m_leftFeedVictor;
@@ -57,15 +79,15 @@ public class Shooter implements Subsystem
    private Feed m_leftFeed;
    private Feed m_rightFeed;
 
+   private double leftJoyAxis;
+   private double rightJoyAxis;
+
    // PDP
    private PowerDistributionPanel pdp;
    double rightFeedCurrent;
    double leftFeedCurrent;
 
    // Inputs
-   private DigitalInput leftBallReadySwitch;
-   private DigitalInput rightBallReadySwitch;
-
    private DigitalInput flywheelButton;
 
    private DigitalInput leftGateButton;
@@ -75,27 +97,6 @@ public class Shooter implements Subsystem
    private AnalogInput rightBeltJoystick;
 
    // Variables
-   private boolean flywheelToggleOn = false;
-
-   private boolean leftBallReady = false;
-   private boolean rightBallReady = false;
-
-   private boolean readyToShootLeft = false;
-   private boolean readyToShootRight = false;
-
-   private boolean leftGateToggleOpen = false;
-   private boolean rightGateToggleOpen = false;
-
-   private double leftJoyAxis;
-   private double rightJoyAxis;
-
-   // Constants or things to get from WPILIB config
-   private double targetSpeed;
-   private double lowLimitSpeed;
-   private double highLimitSpeed;
-
-   // needs to be changed
-   private double feedThreshold;
 
    @Override
    public void selfTest()
@@ -120,11 +121,11 @@ public class Shooter implements Subsystem
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
 
       // Gates
-      m_leftGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
-      m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
-
       m_leftGate = new Gate(m_leftGateSolenoid);
       m_rightGate = new Gate(m_rightGateSolenoid);
+
+      m_leftGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+      m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
 
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
@@ -135,14 +136,10 @@ public class Shooter implements Subsystem
 
       // PDP
       pdp = new PowerDistributionPanel();
-      leftFeedCurrent = pdp.getCurrent(0);
-      rightFeedCurrent = pdp.getCurrent(1);
+      leftFeedCurrent = pdp.getCurrent(8);
+      rightFeedCurrent = pdp.getCurrent(9);
 
       // Input Listeners
-      leftBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
-      leftBallReadySwitch.addInputListener(this);
-      rightBallReadySwitch = (DigitalInput) Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
-      rightBallReadySwitch.addInputListener(this);
 
       flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
       flywheelButton.addInputListener(this);
@@ -157,46 +154,46 @@ public class Shooter implements Subsystem
       rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName());
       rightBeltJoystick.addInputListener(this);
 
+      // leftBallReadySwitch = (DigitalInput)
+      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
+      // leftBallReadySwitch.addInputListener(this);
+      // rightBallReadySwitch = (DigitalInput)
+      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
+      // rightBallReadySwitch.addInputListener(this);
+
    }
 
    @Override
    public void inputUpdate(Input source)
    {
-      // Joystick for Feed belts
-      if (source == leftBeltJoystick)
-      {
-         leftJoyAxis = leftBeltJoystick.getValue();
-      }
-      if (source == rightBeltJoystick)
-      {
-         rightJoyAxis = rightBeltJoystick.getValue();
-      }
+      ShooterNow = flywheelButton.getValue();
 
-      // Ball in waiting switches
-      if (source == leftBallReadySwitch)
-      {
-         leftBallReady = m_leftFeed.isBallReady(leftBallReadySwitch.getValue());
-      }
-      if (source == rightBallReadySwitch)
-      {
-         rightBallReady = m_rightFeed.isBallReady(rightBallReadySwitch.getValue());
-      }
+      leftGateNow = leftGateButton.getValue();
+      rightGateNow = rightGateButton.getValue();
+
+      leftJoyAxis = leftBeltJoystick.getValue();
+      rightJoyAxis = rightBeltJoystick.getValue();
 
       // Toggle for flywheels
-      if (source == flywheelButton)
+      if (ShooterNow && !ShooterPrev)
       {
-         flywheelToggleOn = !flywheelToggleOn;
+         flywheelToggle = !flywheelToggle;
+         ShooterPrev = ShooterNow;
       }
 
       // Toggle for gates
-      if (source == leftGateButton)
+      else if (leftGateNow && !leftGatePrev)
       {
-         leftGateToggleOpen = !leftGateToggleOpen;
+         leftGateOpen = !leftGateOpen;
+         leftGatePrev = leftGateNow;
       }
-      if (source == rightGateButton)
+
+      else if (rightGateNow && !rightGatePrev)
       {
-         rightGateToggleOpen = !rightGateToggleOpen;
+         rightGateOpen = !rightGateOpen;
+         rightGatePrev = rightGateNow;
       }
+
    }
 
    @Override
@@ -207,22 +204,48 @@ public class Shooter implements Subsystem
       updateFeed();
    }
 
+   // Turns on the flywheels w/out buttons for auto
+   public void turnFlywheelOn()
+   {
+      // Replaced this with whats below
+      // flywheelToggleOn = true;
+      
+      m_leftFlywheel.setSpeed(targetSpeed);
+      m_rightFlywheel.setSpeed(-targetSpeed);
+   }
+
+   // Turns off the flywheels w/out buttons for auto
+   public void turnFlywheelOff()
+   {
+     // flywheelToggleOn = false;
+      
+      m_leftFlywheel.setSpeed(0);
+      m_rightFlywheel.setSpeed(0);
+   }
+
+   // Updates the state of the flywheels based off of the toggle switch and button
    public void updateFlywheels()
    {
-      // Left
-      if (flywheelToggleOn)
+      // BENO: We currently have a variable for the speed we want in both
+      // the flywheel class, m_speed, and in shooter class, targetSpeed.
+      // Should one of these be removed or should the turn on function be 
+      // scrapped altogether? 
+      // turnOn and turnOff are now in two places
+      
+      if (flywheelToggle)
       {
+         //   note: right must run in reverse with left due to motor positioning
+         
          m_leftFlywheel.setSpeed(targetSpeed);
-         m_rightFlywheel.setSpeed(targetSpeed);
+         m_rightFlywheel.setSpeed(-targetSpeed);
+
       }
-      else
+      else if (!flywheelToggle)
       {
+       // Should this be a setSpeed 0 instead?
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
 
-         // the gates will close if the flywheel is off
-         // this is in the Gate Update to prevent the gates from opening
-         // when flywheel isnt running and at speed
       }
 
    }
@@ -234,18 +257,35 @@ public class Shooter implements Subsystem
       // Tests to see if the left and right flywheel is up to speed and ready to
       // shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
+      
+      // BENO: Should these all be else if's as well? I say no because if left side
+      // is ready to shoot, it will short circuit right side. But does that matter?
 
-      // Left Side
-      readyToShootLeft = (m_leftFlywheel.getSpeed() <= highLimitSpeed)
-            && (m_leftFlywheel.getSpeed() >= lowLimitSpeed);
+      // LEFT SIDE 
+      if (m_leftFlywheel.getSpeed() <= highLimitSpeed
+            && m_leftFlywheel.getSpeed() >= lowLimitSpeed)
+      {
+         readyToShootLeft = true;
+      }
+      else
+      {
+         readyToShootLeft = false;
+      }
 
-      // Right Side
-      readyToShootRight = (m_rightFlywheel.getSpeed() <= highLimitSpeed)
-            && (m_rightFlywheel.getSpeed() >= lowLimitSpeed);
+      // RIGHT SIDE
+      if (m_rightFlywheel.getSpeed() <= highLimitSpeed
+            && m_rightFlywheel.getSpeed() >= lowLimitSpeed)
+      {
+         readyToShootRight = true;
+      }
+      else
+      {
+         readyToShootRight = false;
+      }
 
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
-      // Left Side
+      // LEFT SIDE
       if (leftGateToggleOpen && readyToShootLeft)
       {
          m_leftGate.openGate();
@@ -255,7 +295,7 @@ public class Shooter implements Subsystem
          m_leftGate.closeGate();
       }
 
-      // Right Side
+      // RIGHT SIDE
       if (rightGateToggleOpen && readyToShootRight)
       {
          m_rightGate.openGate();
@@ -270,23 +310,27 @@ public class Shooter implements Subsystem
    {
       // Determines whether or not the feeder is jammed and, if so,
       // displays "Is Jammed" on the dash
-      SmartDashboard.putBoolean("Left is Jammed", m_leftFeed.isJammed(leftFeedCurrent));
-      SmartDashboard.putBoolean("Right is Jammed", m_leftFeed.isJammed(rightFeedCurrent));
 
-      // Determine if ball is in feed and ready
-      // Tell driver with Smart Dashboard
-      SmartDashboard.putBoolean("Left has Ball Ready", leftBallReady);
-      SmartDashboard.putBoolean("Right has Ball Ready", rightBallReady);
+      // LEFT SIDE
+      if (m_leftFeed.isJammed(leftFeedCurrent))
+      {
+         SmartDashboard.putBoolean("Left is Jammed", true);
+      }
+
+      // RIGHT SIDE
+      if (m_rightFeed.isJammed(rightFeedCurrent))
+      {
+         SmartDashboard.putBoolean("Right is Jammed", true);
+      }
 
       // Setting left and right talon speed based off of analog joystick input
-      // feedThreshold can be set to different values to give a range for stop
 
-      // Left
-      if (leftJoyAxis > feedThreshold)
+      // LEFT SIDE
+      if (leftJoyAxis > 0)
       {
          m_leftFeed.runForward();
       }
-      else if (leftJoyAxis < (-(feedThreshold)))
+      else if (leftJoyAxis < 0)
       {
          m_leftFeed.runBackwards();
       }
@@ -295,14 +339,15 @@ public class Shooter implements Subsystem
          m_leftFeed.stop();
       }
 
-      // Right
-      if (rightJoyAxis > feedThreshold)
-      {
-         m_rightFeed.runForward();
-      }
-      else if (rightJoyAxis < (-(feedThreshold)))
+      // RIGHT SIDE
+      //   note: right must run in reverse with left due to motor positioning
+      if (rightJoyAxis > 0)
       {
          m_rightFeed.runBackwards();
+      }
+      else if (rightJoyAxis < 0)
+      {
+         m_rightFeed.runForward();
       }
       else
       {
