@@ -309,6 +309,21 @@ public class Shooter implements Subsystem
       }
    }
 
+   // Turns on the belts w/out buttons for auto
+   public void turnFeedOn()
+   {
+
+      m_leftFeed.runBackwards();
+      m_leftFeed.runForward();
+   }
+
+   // Turns off the belts w/out buttons for auto
+   public void turnFeedOff()
+   {
+      m_leftFeed.stop();
+      m_leftFeed.stop();
+   }
+
    public void updateFeed()
    {
       // Determines whether or not the feeder is jammed and, if so,
