@@ -17,6 +17,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class LED implements Subsystem
 {
 
+   private static final int DISABLED_ID = 1;
+   private static final int AUTO_ID = 2;
+   private static final int ALLIANCE_ID = 3;
+   
    // Sent states
    boolean autoDataSent = false;
    boolean m_newDataAvailable = false;
@@ -44,9 +48,10 @@ public class LED implements Subsystem
     */
 
    // Reused commands from year to year
-   LedCmd autoCmd = new LedCmd(0x02, 255, 0, 255);
-   LedCmd redCmd = new LedCmd(0x04, 255, 0, 0);
-   LedCmd blueCmd = new LedCmd(0x47, 0, 0, 255);
+   LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 0, 0);
+   LedCmd autoCmd = new LedCmd(AUTO_ID, 255, 0, 255);
+   LedCmd redAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 0);
+   LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
 
    public LED()
    {
@@ -98,7 +103,7 @@ public class LED implements Subsystem
                      {
                         if (!disableDataSent)
                         {
-                           m_ledOutput.setValue(redCmd.getBytes());
+                           m_ledOutput.setValue(redAllianceCmd.getBytes());
                            disableDataSent = true;
                         }
                      }
@@ -108,7 +113,7 @@ public class LED implements Subsystem
                      {
                         if (!disableDataSent)
                         {
-                           m_ledOutput.setValue(blueCmd.getBytes());
+                           m_ledOutput.setValue(blueAllianceCmd.getBytes());
                            disableDataSent = true;
                         }
                      }
@@ -155,7 +160,7 @@ public class LED implements Subsystem
                {
                   if (!disableDataSent)
                   {
-                     m_ledOutput.setValue(redCmd.getBytes());
+                     m_ledOutput.setValue(redAllianceCmd.getBytes());
                      disableDataSent = true;
                   }
                }
@@ -165,7 +170,7 @@ public class LED implements Subsystem
                {
                   if (!disableDataSent)
                   {
-                     m_ledOutput.setValue(blueCmd.getBytes());
+                     m_ledOutput.setValue(blueAllianceCmd.getBytes());
                      disableDataSent = true;
                   }
                }
@@ -177,6 +182,14 @@ public class LED implements Subsystem
                }
                   break;
             }
+         }
+      }
+      else
+      {
+         if (!disableDataSent)
+         {
+            m_ledOutput.setValue(disabledCmd.getBytes());
+            disableDataSent = true;
          }
       }
    }
