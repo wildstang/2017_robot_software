@@ -101,6 +101,9 @@ org.wildstang.autonomous.steps.drivebase.AutonomousStepDriveDistanceAtSpeed.use_
 org.wildstang.yearly.auto.steps.ShootStep.delayAfterFlywheels=500
 org.wildstang.yearly.auto.steps.ShootStep.delayWhileShooting=4000
 
+// WaitStep Auto
+org.wildstang.yearly.auto.steps.WaitStep.waitStep=5000
+
 //********************************//
 //                                //
 //        Auto Movements          //

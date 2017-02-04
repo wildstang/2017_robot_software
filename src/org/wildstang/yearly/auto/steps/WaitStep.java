@@ -18,7 +18,7 @@ public class WaitStep extends AutoStep
    {
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
       startTime = System.currentTimeMillis();
-      targetTime = Core.getConfigManager().getConfig().getDouble("Wait Step", 5000);
+      targetTime = Core.getConfigManager().getConfig().getDouble("waitStep", 0);
    }
 
    @Override
