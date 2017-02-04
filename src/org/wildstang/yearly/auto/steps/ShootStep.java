@@ -19,14 +19,15 @@ public class ShootStep extends AutoStep
    @Override
    public void update()
    {
-       
+      shooter.turnFlywheelOn();
+      shooter.openBothGate();
+      shooter.turnFeedOn();
+      setFinished(true);
    }
 
    @Override
    public String toString()
    {
-
       return "Shoot Step";
    }
-
 }
