@@ -115,7 +115,7 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      targetSpeed = Core.getConfigManager().getConfig().getDouble("Flywheel Speed", 0);
+      targetSpeed = Core.getConfigManager().getConfig().getDouble("flywheelSpeed", 0);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, targetSpeed);
@@ -131,7 +131,7 @@ public class Shooter implements Subsystem
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
-      feedSpeed = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
+      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedSpeed", 0);
 
       // inverts the left
       m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed, true);

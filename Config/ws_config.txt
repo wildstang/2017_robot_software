@@ -61,6 +61,8 @@ org.wildstang.yearly.subsystems.Shooter.lowSpeedVictorVal=0.70
 org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=2300.0
 org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2050.0
 org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeed=500
+org.wildstang.yearly.subsystems.Shooter.feedSpeed=0.7
 
 //Intake
 org.wildstang.yearly.subsystems.Intake.intakeSpeedIn=-1
@@ -95,6 +97,9 @@ org.wildstang.autonomous.programs.AutonomousProgramDriveAtSpeedForTime.Speed=0.5
 org.wildstang.autonomous.steps.drivebase.AutonomousStepDriveDistanceAtSpeed.drifting_compensation_factor=0.05
 org.wildstang.autonomous.steps.drivebase.AutonomousStepDriveDistanceAtSpeed.use_comp=false
 
+// ShootStep Auto
+org.wildstang.yearly.auto.steps.ShootStep.delayAfterFlywheels=500
+org.wildstang.yearly.auto.steps.ShootStep.delayWhileShooting=4000
 
 //********************************//
 //                                //
