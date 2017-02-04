@@ -14,14 +14,13 @@ public class Feed extends Shooter
 
    private boolean ballReady;
 
-   private double MAX_SPEED = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
-   
+   private double feedSpeed;
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
    // as well as mutated accordingly with the functions below
 
-   public Feed(WsVictor p_victor)
+   public Feed(WsVictor p_victor, double p_speed)
    {
       m_victor = p_victor;
    }
@@ -66,14 +65,14 @@ public class Feed extends Shooter
 
    public void runForward()
    {
-      m_victor.setValue(MAX_SPEED);
+      m_victor.setValue(feedSpeed);
    }
 
    // Basically does the same as the function above, but in reverse
 
    public void runBackwards()
    {
-      m_victor.setValue(-MAX_SPEED);
+      m_victor.setValue(-feedSpeed);
    }
 
    // This function turns the motors off

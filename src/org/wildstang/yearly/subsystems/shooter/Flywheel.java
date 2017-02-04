@@ -23,7 +23,8 @@ public class Flywheel extends Shooter
       m_speed = p_speed;
    }
 
-   // This function starts the flywheel up when called by a flywheel object in the
+   // This function starts the flywheel up when called by a flywheel object in
+   // the
    // shooter class to a mutable speed we can change later in our config page.
    // It also toggles the m_running variable to true for the isRunning function
 
@@ -64,6 +65,15 @@ public class Flywheel extends Shooter
    public void setSpeed(double p_wheelSpeed)
    {
       m_talon.set(p_wheelSpeed);
+      if (p_wheelSpeed != 0)
+      {
+         m_running = true;
+      }
+      else
+      {
+         m_running = false;
+      }
+
    }
 
 }

@@ -73,6 +73,8 @@ public class Shooter implements Subsystem
    private boolean rightGatePrev;
 
    // Feeds
+   private double feedSpeed;
+
    private WsVictor m_leftFeedVictor;
    private WsVictor m_rightFeedVictor;
 
@@ -130,11 +132,13 @@ public class Shooter implements Subsystem
       m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
 
       // Feeds
+      feedSpeed = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
+
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
-      m_leftFeed = new Feed(m_leftFeedVictor);
-      m_rightFeed = new Feed(m_rightFeedVictor);
+      m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed);
+      m_rightFeed = new Feed(m_rightFeedVictor, feedSpeed);
 
       // PDP
       pdp = new PowerDistributionPanel();
