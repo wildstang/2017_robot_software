@@ -7,7 +7,6 @@ import org.wildstang.yearly.subsystems.Gear;
 import org.wildstang.yearly.subsystems.Shooter;
 import org.wildstang.yearly.subsystems.Climber;
 //import org.wildstang.yearly.subsystems.ShooterTest;
-import org.wildstang.yearly.subsystems.TalonTest;
 import org.wildstang.yearly.subsystems.LED;
 
 public enum WSSubsystems implements Subsystems
