@@ -114,11 +114,13 @@ public class Shooter implements Subsystem
    public void init()
    {
       // Flywheels
+      targetSpeed = Core.getConfigManager().getConfig().getDouble("Flywheel Speed", 0);
+
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      m_leftFlywheel = new Flywheel(m_CANFlywheelLeft);
-      m_rightFlywheel = new Flywheel(m_CANFlywheelRight);
+      m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, targetSpeed);
+      m_rightFlywheel = new Flywheel(m_CANFlywheelRight, targetSpeed);
 
       // Gates
       m_leftGate = new Gate(m_leftGateSolenoid);
@@ -207,18 +209,13 @@ public class Shooter implements Subsystem
    // Turns on the flywheels w/out buttons for auto
    public void turnFlywheelOn()
    {
-      // Replaced this with whats below
-      // flywheelToggleOn = true;
-
       m_leftFlywheel.setSpeed(targetSpeed);
-      m_rightFlywheel.setSpeed(-targetSpeed);
+      m_rightFlywheel.setSpeed(targetSpeed);
    }
 
    // Turns off the flywheels w/out buttons for auto
    public void turnFlywheelOff()
    {
-      // flywheelToggleOn = false;
-
       m_leftFlywheel.setSpeed(0);
       m_rightFlywheel.setSpeed(0);
    }
@@ -227,19 +224,11 @@ public class Shooter implements Subsystem
    // button
    public void updateFlywheels()
    {
-      // BENO: We currently have a variable for the speed we want in both
-      // the flywheel class, m_speed, and in shooter class, targetSpeed.
-      // Should one of these be removed or should the turn on function be
-      // scrapped altogether?
-      // turnOn and turnOff are now in two places
 
       if (flywheelToggle)
       {
-         // note: right must run in reverse with left due to motor positioning
-
          m_leftFlywheel.setSpeed(targetSpeed);
-         m_rightFlywheel.setSpeed(-targetSpeed);
-
+         m_rightFlywheel.setSpeed(targetSpeed);
       }
       else if (!flywheelToggle)
       {
@@ -251,6 +240,18 @@ public class Shooter implements Subsystem
 
    }
 
+   public void openBothGate()
+   {
+      m_leftGate.openGate();
+      m_rightGate.openGate();
+   }
+
+   public void closeBothGate()
+   {
+      m_leftGate.closeGate();
+      m_rightGate.closeGate();
+   }
+
    // TODO:
    // make sure flywheels are on when gates open
    public void updateGates()
@@ -258,11 +259,6 @@ public class Shooter implements Subsystem
       // Tests to see if the left and right flywheel is up to speed and ready to
       // shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
-
-      // BENO: Should these all be else if's as well? I say no because if left
-      // side
-      // is ready to shoot, it will short circuit right side. But does that
-      // matter?
 
       // LEFT SIDE
       if (m_leftFlywheel.getSpeed() <= highLimitSpeed

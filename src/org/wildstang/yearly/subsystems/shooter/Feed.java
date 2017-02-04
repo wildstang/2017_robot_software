@@ -15,6 +15,7 @@ public class Feed extends Shooter
    private boolean ballReady;
 
    private double MAX_SPEED = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
+   
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
