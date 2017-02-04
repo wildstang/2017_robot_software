@@ -12,11 +12,13 @@ public class WaitStep extends AutoStep
    private Shooter shooter;
    private long startTime;
    private double timePassed;
+   private double targetTime;
 
    public void initialize()
    {
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
       startTime = System.currentTimeMillis();
+      targetTime = Core.getConfigManager().getConfig().getDouble("Wait Step", 5000);
    }
 
    @Override
@@ -24,7 +26,7 @@ public class WaitStep extends AutoStep
    {
       timePassed = (double) (System.currentTimeMillis() - startTime);
 
-      if (timePassed == 5000)
+      if (timePassed == targetTime)
       {
          setFinished(true);
       }
