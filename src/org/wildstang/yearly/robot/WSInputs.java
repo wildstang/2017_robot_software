@@ -33,7 +33,7 @@ public enum WSInputs implements Inputs
          getLogging()),
    // DRV_BUTTON_1("Driver button 1", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 0), getLogging()),
-   DRV_BUTTON_2("Shooter on", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),
+   DRV_BUTTON_2("Shooter on", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), getLogging()),
    // DRV_BUTTON_3("Driver button 3", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 2), getLogging()),
    // DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new
@@ -47,10 +47,10 @@ public enum WSInputs implements Inputs
    // DRV_BUTTON_8("Driver Turbo", WSInputType.JS_BUTTON, new
    // WsJSButtonInputConfig(0, 7), getLogging()),
    DRV_BUTTON_4("Driver button 4", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), getLogging()),
-   SPEED_UP_50("Speed up 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),
-   SPEED_UP_10("Speed up 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),
-   SPEED_DOWN_50("Speed down 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 6), getLogging()),
-   SPEED_DOWN_10("Speed down 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),
+   SPEED_UP_50("Speed up 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),
+   SPEED_UP_10("Speed up 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),
+   SPEED_DOWN_50("Speed down 50", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),
+   SPEED_DOWN_10("Speed down 10", WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),
    DRV_BUTTON_12_PG("Pistol Grip", WSInputType.JS_BUTTON,
          new WsJSButtonInputConfig(0, 11), getLogging()),
 
