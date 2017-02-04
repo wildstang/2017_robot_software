@@ -20,18 +20,11 @@ public enum WSSubsystems implements Subsystems
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
    DRIVE_BASE("Drive Base",      Drive.class),
-
    INTAKE("Intake Subsystem",    Intake.class),
    GEAR("Gear Subsystem",        Gear.class),
-
-   FEEDER("Feeder Subsystem",    Feeder.class),
-   GATE("Gate Subsystem",        Gate.class),
    SHOOTER("Shooter Subsystem",  Shooter.class),
-
    CLIMBER("Climber Subsystem",  Climber.class),
-
    LED("LEDs",                   LED.class);
-//   SHOOTER_TEST("Shooter Test", ShooterTest.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
    //This keeps the formatter from completely making the enumeration unreadable.
