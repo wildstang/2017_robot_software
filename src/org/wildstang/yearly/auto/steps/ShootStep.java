@@ -20,8 +20,18 @@ public class ShootStep extends AutoStep
    public void update()
    {
       shooter.turnFlywheelOn();
+      // wait 
       shooter.openBothGate();
+      // wait
       shooter.turnFeedOn();
+      // wait
+      
+      shooter.turnFeedOff();
+      // wait
+      shooter.closeBothGate();
+      // wait
+      shooter.turnFlywheelOff();
+      
       setFinished(true);
    }
 
