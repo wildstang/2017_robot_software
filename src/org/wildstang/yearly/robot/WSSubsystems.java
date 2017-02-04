@@ -3,6 +3,7 @@ package org.wildstang.yearly.robot;
 import org.wildstang.framework.core.Subsystems;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.ShooterTest;
+import org.wildstang.yearly.subsystems.TalonTest;
 import org.wildstang.yearly.subsystems.LED;
 
 public enum WSSubsystems implements Subsystems
@@ -13,7 +14,8 @@ public enum WSSubsystems implements Subsystems
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
    DRIVE_BASE("Drive Base", Drive.class),
-   LED("LEDs", LED.class);
+   LED("LEDs", LED.class),
+	TALON_TEST("Shooter Stuff", TalonTest.class);
 //   SHOOTER_TEST("Shooter Test", ShooterTest.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
