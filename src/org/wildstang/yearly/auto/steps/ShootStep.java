@@ -10,6 +10,10 @@ public class ShootStep extends AutoStep
 
    private Shooter shooter;
 
+   private long startTime;
+   private double timePassed;
+   private boolean waiting;
+
    @Override
    public void initialize()
    {
@@ -20,18 +24,19 @@ public class ShootStep extends AutoStep
    public void update()
    {
       shooter.turnFlywheelOn();
-      // wait 
+      timeDelay(5000);
       shooter.openBothGate();
-      // wait
+      timeDelay(5000);
       shooter.turnFeedOn();
-      // wait
       
+      timeDelay(10000);
+
       shooter.turnFeedOff();
-      // wait
+      timeDelay(5000);
       shooter.closeBothGate();
-      // wait
+      timeDelay(5000);
       shooter.turnFlywheelOff();
-      
+
       setFinished(true);
    }
 
@@ -39,5 +44,21 @@ public class ShootStep extends AutoStep
    public String toString()
    {
       return "Shoot Step";
+   }
+
+   private void timeDelay(double time)
+   {
+      waiting = true;
+      startTime = System.currentTimeMillis();
+      
+      while (waiting)
+      {
+         timePassed = (double) (System.currentTimeMillis() - startTime);
+
+         if (timePassed == time)
+         {
+            waiting = false;
+         }
+      }
    }
 }
