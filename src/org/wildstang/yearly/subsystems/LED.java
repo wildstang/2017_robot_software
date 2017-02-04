@@ -32,7 +32,7 @@ public class LED implements Subsystem
 
    boolean m_antiTurbo;
    boolean m_turbo;
-   boolean m_normal;
+   boolean m_normal = true;
    boolean m_shooter;
    boolean m_intake;
 
@@ -79,24 +79,14 @@ public class LED implements Subsystem
 
       DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
 
-      m_normal = !(m_antiTurbo || m_turbo);
+//      m_normal = !(m_antiTurbo || m_turbo);
 
       if (isRobotEnabled)
       {
          if (isRobotTeleop)
          {
-            if (m_newDataAvailable)
-            {
-               if (m_antiTurbo)
-               {
-                  // m_ledOutput.setValue(antiturboCmd.getBytes());
-               }
-               else if (m_turbo)
-               {
-                  // m_ledOutput.setValue(turboCmd.getBytes());
-               }
-               else if (m_normal)
-               {
+//            if (m_newDataAvailable)
+//            {
                   switch (alliance)
                   {
                      case Red:
@@ -125,33 +115,22 @@ public class LED implements Subsystem
                      }
                         break;
                   }
-               }
-               else if (m_shooter)
-               {
-                  // m_ledOutput.setValue(shooter.getBytes());
-               }
-
-               else if (m_intake)
-               {
-                  // m_ledOutput.setValue(intake.getBytes());
-               }
-
-            }
             m_newDataAvailable = false;
+         }
+         else if (isRobotAuton)
+         {
+            if (!autoDataSent)
+            {
+               m_ledOutput.setValue(autoCmd.getBytes());
+               autoDataSent = true;
+            }
          }
          SmartDashboard.putBoolean("Turbo", m_turbo);
          SmartDashboard.putBoolean("Antiturbo", m_antiTurbo);
          SmartDashboard.putBoolean("Shooter", m_shooter);
          SmartDashboard.putBoolean("Intake", m_intake);
       }
-      else if (isRobotAuton)
-      {
-         if (!autoDataSent)
-         {
-            m_ledOutput.setValue(autoCmd.getBytes());
-            autoDataSent = true;
-         }
-      }
+
       else
       {
          if (!disableDataSent)
@@ -160,34 +139,34 @@ public class LED implements Subsystem
             disableDataSent = true;
          }
 
-//         switch (alliance)
-//         {
-//            case Red:
-//            {
-//               if (!disableDataSent)
-//               {
-//                  m_ledOutput.setValue(redAllianceCmd.getBytes());
-//                  disableDataSent = true;
-//               }
-//            }
-//               break;
-//
-//            case Blue:
-//            {
-//               if (!disableDataSent)
-//               {
-//                  m_ledOutput.setValue(blueAllianceCmd.getBytes());
-//                  disableDataSent = true;
-//               }
-//            }
-//               break;
-//
-//            default:
-//            {
-//               disableDataSent = false;
-//            }
-//               break;
-//         }
+         switch (alliance)
+         {
+            case Red:
+            {
+               if (!disableDataSent)
+               {
+                  m_ledOutput.setValue(redAllianceCmd.getBytes());
+                  disableDataSent = true;
+               }
+            }
+               break;
+
+            case Blue:
+            {
+               if (!disableDataSent)
+               {
+                  m_ledOutput.setValue(blueAllianceCmd.getBytes());
+                  disableDataSent = true;
+               }
+            }
+               break;
+
+            default:
+            {
+               disableDataSent = false;
+            }
+               break;
+         }
       }
    }
 
@@ -202,6 +181,7 @@ public class LED implements Subsystem
       m_newDataAvailable = true;
    }
 
+   
    @Override
    public void selfTest()
    {
