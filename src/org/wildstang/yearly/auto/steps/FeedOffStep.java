@@ -5,9 +5,10 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Shooter;
 
-public class FeedOn extends AutoStep
-{
+// This is an autonomous step which turns off the belt/feed 
 
+public class FeedOffStep extends AutoStep
+{
    private Shooter shooter;
 
    public void initialize()
@@ -18,15 +19,13 @@ public class FeedOn extends AutoStep
    @Override
    public void update()
    {
-      // TODO Auto-generated method stub
-
+      shooter.turnFeedOff();
    }
 
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "Feed Off Step";
    }
 
 }
