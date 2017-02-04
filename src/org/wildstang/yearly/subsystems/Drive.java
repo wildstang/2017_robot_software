@@ -68,7 +68,7 @@ public class Drive implements Subsystem
    private static final double ROBOT_WIDTH_INCHES = 22;
    private static final double WHEEL_DIAMETER_INCHES = 4;
    private static final double ENCODER_CPR = 1024;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
    private static final double RADIANS = Math.PI / 180;
    private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    double maxSpeed = 0;
@@ -266,13 +266,13 @@ public class Drive implements Subsystem
       switch (m_driveMode)
       {
          case PATH:
-            collectDriveState();
+            //collectDriveState();
             break;
 
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
-            collectDriveState();
+            //collectDriveState();
             break;
          case FULL_BRAKE:
             break;
@@ -588,10 +588,15 @@ public class Drive implements Subsystem
          {
             fw.close();
          }
-      }
+      }//373x45=>31 ft, 1 inch x 3 ft 9 inches
+      // We got 23 ft 9 inches x 11 ft 4 inches
+      // Our calculations were 7 ft 4 inches too short in the x direction, but
+      // we were 7 ft 7 inches too long in the y direction
       catch (IOException ex)
       {
          ex.printStackTrace();
       }
+      driveStates.clear();
+      
    }
 }

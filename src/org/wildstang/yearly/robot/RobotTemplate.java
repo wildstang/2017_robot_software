@@ -56,6 +56,7 @@ public class RobotTemplate extends IterativeRobot
    
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
+   private double oldTime = System.currentTimeMillis();
 
    static boolean teleopPerodicCalled = false;
    
@@ -280,7 +281,9 @@ public class RobotTemplate extends IterativeRobot
       // Update all inputs, outputs and subsystems
 
       m_core.executeUpdate();
-
+      double time = System.currentTimeMillis(); 
+	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
+	  oldTime = time;
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -309,6 +312,10 @@ public class RobotTemplate extends IterativeRobot
 
    public void teleopPeriodic()
    {
+	   
+	  double time = System.currentTimeMillis(); 
+	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
+	  oldTime = time;
       if (firstRun)
       {
          firstRun = false;
