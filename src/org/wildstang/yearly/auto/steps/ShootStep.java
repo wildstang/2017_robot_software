@@ -21,8 +21,9 @@ public class ShootStep extends AutoStep
    public void initialize()
    {
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
-      delayAfterFlywheels = Core.getConfigManager().getConfig().getDouble("delayAfterFlywheels", 0);
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble("delayWhileShooting", 0);
+      // Default is 10 seconds for testing
+      delayAfterFlywheels = Core.getConfigManager().getConfig().getDouble("delayAfterFlywheels", 10000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getDouble("delayWhileShooting", 10000);
    }
 
    @Override
