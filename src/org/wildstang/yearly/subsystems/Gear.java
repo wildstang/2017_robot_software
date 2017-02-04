@@ -32,6 +32,11 @@ public class Gear implements Subsystem
    private boolean 	buttonPressed;
    private boolean 	gearPistonOn;
    private boolean sensorPressed;
+   private boolean tiltButton;
+   private boolean holdButton;
+   private boolean m_holdGear;
+   private boolean m_tiltGear;
+   
    //private double  	DrvJoystickRightY = 0.0;
    //private WsServo	Servo_0;
    //private WsServo	Servo_1;
@@ -83,6 +88,8 @@ public class Gear implements Subsystem
       //// Register the sensors that this subsystem wants to be notified about
       Core.getInputManager().getInput(WSInputs.GEAR.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.GEAR_IN_POSITION.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.GEAR_WALL_BUTTON.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
       //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_RIGHT.getName()).addInputListener(this);
@@ -114,14 +121,30 @@ public class Gear implements Subsystem
       //   TestSwitchSensor = ((DigitalInput) source).getValue();
       //}
       //
-      if (source.getName().equals(WSInputs.GEAR.getName()))
+//      if (source.getName().equals(WSInputs.GEAR.getName()))
+//      {
+//    	  buttonPressed = ((DigitalInput) source).getValue();
+//      }
+//      
+//      if (source.getName().equals(WSInputs.GEAR_IN_POSITION.getName()))
+//      {
+//    	  sensorPressed = ((DigitalInput) source).getValue();
+//      }
+      
+      if (source.getName().equals(WSInputs.GEAR_WALL_BUTTON.getName()))
       {
-    	  buttonPressed = ((DigitalInput) source).getValue();
+    	  tiltButton = ((DigitalInput) source).getValue();
+    	  
+    	  TiltGearSet(tiltButton);
       }
-      if (source.getName().equals(WSInputs.GEAR_IN_POSITION.getName()))
+      
+      if (source.getName().equals(WSInputs.GEAR_HOLD_BUTTON.getName()))
       {
-    	  sensorPressed = ((DigitalInput) source).getValue();
+    	  holdButton = ((DigitalInput) source).getValue();
+    	  
+    	  HoldGearSet(holdButton);
       }
+      
       //
       //if (source.getName().equals(WSInputs.DRV_DPAD_X_LEFT.getName()))
       //{
@@ -146,17 +169,20 @@ public class Gear implements Subsystem
       //
       // 1. Tell the framework what the updated output values should be set to.
       // 
-       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.GEAR_SHIFTER.getName())).setValue(gearPistonOn);
-       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(sensorPressed);
+       //((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.GEAR_SHIFTER.getName())).setValue(gearPistonOn);
+       //((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(sensorPressed);
+	   ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD_SOL.getName())).setValue(m_holdGear);
+	   ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_WALL_SOL.getName())).setValue(m_tiltGear);
        
        // when sensor is pushed, gear is in position and button is disabled
 	   
-	   if (buttonPressed == true && sensorPressed == false)
-	   {
-		   gearPistonOn = true; 
-	   }
+//	   if (buttonPressed == true && sensorPressed == false)
+//	   {
+//		   gearPistonOn = true; 
+//	   }
+       	 
 
-       SmartDashboard.putBoolean("sensorPressed", sensorPressed);
+ //      SmartDashboard.putBoolean("sensorPressed", sensorPressed);
        //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
        //SmartDashboard.putNumber("ServoPos_0", ServoPos_0);
        //
@@ -164,5 +190,19 @@ public class Gear implements Subsystem
        //
        //Servo_0.setValue(ServoPos_0);
        //Servo_1.setValue(ServoPos_1);
+   }
+   
+   public void HoldGearSet(boolean p_holdGear)
+   {
+      
+	  m_holdGear = p_holdGear;
+      
+   }
+   
+   public void TiltGearSet(boolean p_tiltGear)
+   {
+     
+	   m_tiltGear = p_tiltGear;
+
    }
 }
