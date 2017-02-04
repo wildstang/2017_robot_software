@@ -286,7 +286,6 @@ public class Shooter implements Subsystem
 
    private boolean checkRange(double speed)
    {
-
       return (speed >= lowLimitSpeed && speed <= highLimitSpeed);
    }
 
