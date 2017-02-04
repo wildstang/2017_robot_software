@@ -215,15 +215,15 @@ public class Shooter implements Subsystem
    // Turns on the flywheels w/out buttons for auto
    public void turnFlywheelOn()
    {
-      m_leftFlywheel.setSpeed(targetSpeed);
-      m_rightFlywheel.setSpeed(targetSpeed);
+      m_leftFlywheel.turnOn();
+      m_rightFlywheel.turnOn();
    }
 
    // Turns off the flywheels w/out buttons for auto
    public void turnFlywheelOff()
    {
-      m_leftFlywheel.setSpeed(0);
-      m_rightFlywheel.setSpeed(0);
+      m_leftFlywheel.turnOff();
+      m_rightFlywheel.turnOff();
    }
 
    // Updates the state of the flywheels based off of the toggle switch and
@@ -233,8 +233,8 @@ public class Shooter implements Subsystem
 
       if (flywheelToggle)
       {
-         m_leftFlywheel.setSpeed(targetSpeed);
-         m_rightFlywheel.setSpeed(targetSpeed);
+         m_leftFlywheel.turnOn();
+         m_rightFlywheel.turnOn();
       }
       else if (!flywheelToggle)
       {

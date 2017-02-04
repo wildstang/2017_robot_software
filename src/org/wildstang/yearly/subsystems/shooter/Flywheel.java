@@ -11,7 +11,7 @@ public class Flywheel extends Shooter
    private CANTalon m_talon;
    private double m_speed;
 
-   private boolean m_running = true;
+   private boolean m_running = false;
 
    // Creating a flywheel object so that both wheels can be declared in the
    // Shooter subclass
@@ -58,22 +58,6 @@ public class Flywheel extends Shooter
    public double getSpeed()
    {
       return m_talon.getSpeed();
-   }
-
-   // This sets the current speed of the flywheel object
-
-   public void setSpeed(double p_wheelSpeed)
-   {
-      m_talon.set(p_wheelSpeed);
-      if (p_wheelSpeed != 0)
-      {
-         m_running = true;
-      }
-      else
-      {
-         m_running = false;
-      }
-
    }
 
 }
