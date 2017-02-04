@@ -61,14 +61,11 @@ public class Shooter implements Subsystem
    private Gate m_leftGate;
    private Gate m_rightGate;
 
-   private boolean leftGateToggleOpen = false;
-   private boolean rightGateToggleOpen = false;
-
-   private boolean leftGateOpen;
+   private boolean leftGateOpen = false;
    private boolean leftGateNow;
    private boolean leftGatePrev;
 
-   private boolean rightGateOpen;
+   private boolean rightGateOpen = false;
    private boolean rightGateNow;
    private boolean rightGatePrev;
 
@@ -284,7 +281,7 @@ public class Shooter implements Subsystem
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
       // LEFT SIDE
-      if (leftGateToggleOpen && readyToShootLeft)
+      if (leftGateOpen && readyToShootLeft)
       {
          m_leftGate.openGate();
       }
@@ -294,7 +291,7 @@ public class Shooter implements Subsystem
       }
 
       // RIGHT SIDE
-      if (rightGateToggleOpen && readyToShootRight)
+      if (rightGateOpen && readyToShootRight)
       {
          m_rightGate.openGate();
       }
