@@ -84,7 +84,7 @@ public class Shooter implements Subsystem
    private double leftJoyAxis;
    private double rightJoyAxis;
    
-   private double feedDeadBand = 0.1;
+   private double feedDeadBand = 0.05;
 
    // PDP
    private PowerDistributionPanel pdp;
