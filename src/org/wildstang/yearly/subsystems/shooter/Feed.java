@@ -9,22 +9,28 @@ public class Feed extends Shooter
 
    private WsVictor m_victor;
    private double feedSpeed;
-   
+
    private double limit;
    private boolean jammed;
 
    private boolean ballReady;
-
-  
+   private boolean invert;
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
    // as well as mutated accordingly with the functions below
 
-   public Feed(WsVictor p_victor, double p_speed)
+   public Feed(WsVictor p_victor, double p_speed, boolean p_invert)
    {
       m_victor = p_victor;
-      feedSpeed = p_speed;
+      if (p_invert)
+      {
+         feedSpeed = p_speed * -1;
+      }
+      else
+      {
+         feedSpeed = p_speed;
+      }
    }
 
    // This function is setup in the shooter class to determine whether or not
@@ -65,7 +71,7 @@ public class Feed extends Shooter
    {
       m_victor.setValue(0);
    }
-   
+
    // This function may or may not be used. Either way, the purpose of this
    // function is
    // to determine whether or not a ball is ready based on possible sensors

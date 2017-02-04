@@ -133,8 +133,9 @@ public class Shooter implements Subsystem
 
       feedSpeed = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
 
-      m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed);
-      m_rightFeed = new Feed(m_rightFeedVictor, feedSpeed);
+      // inverts the left
+      m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed, true);
+      m_rightFeed = new Feed(m_rightFeedVictor, feedSpeed, false);
 
       // PDP
       pdp = new PowerDistributionPanel();
@@ -180,22 +181,21 @@ public class Shooter implements Subsystem
       if (ShooterNow && !ShooterPrev)
       {
          flywheelToggle = !flywheelToggle;
-         ShooterPrev = ShooterNow;
       }
+      ShooterPrev = ShooterNow;
 
       // Toggle for gates
-      else if (leftGateNow && !leftGatePrev)
+      if (leftGateNow && !leftGatePrev)
       {
          leftGateOpen = !leftGateOpen;
-         leftGatePrev = leftGateNow;
       }
+      leftGatePrev = leftGateNow;
 
-      else if (rightGateNow && !rightGatePrev)
+      if (rightGateNow && !rightGatePrev)
       {
          rightGateOpen = !rightGateOpen;
-         rightGatePrev = rightGateNow;
       }
-
+      rightGatePrev = rightGateNow;
    }
 
    @Override
@@ -257,27 +257,10 @@ public class Shooter implements Subsystem
       // Sets a conditional toggle to true if that flywheel is ready.
 
       // LEFT SIDE
-      if (m_leftFlywheel.getSpeed() <= highLimitSpeed
-            && m_leftFlywheel.getSpeed() >= lowLimitSpeed)
-      {
-         readyToShootLeft = true;
-      }
-      else
-      {
-         readyToShootLeft = false;
-      }
-
+      readyToShootLeft = checkRange(m_leftFlywheel.getSpeed());
       // RIGHT SIDE
-      if (m_rightFlywheel.getSpeed() <= highLimitSpeed
-            && m_rightFlywheel.getSpeed() >= lowLimitSpeed)
-      {
-         readyToShootRight = true;
-      }
-      else
-      {
-         readyToShootRight = false;
-      }
-
+      readyToShootRight = checkRange(m_rightFlywheel.getSpeed());
+      
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
       // LEFT SIDE
@@ -301,10 +284,15 @@ public class Shooter implements Subsystem
       }
    }
 
+   private boolean checkRange(double speed)
+   {
+
+      return (speed >= lowLimitSpeed && speed <= highLimitSpeed);
+   }
+
    // Turns on the belts w/out buttons for auto
    public void turnFeedOn()
    {
-
       m_leftFeed.runBackwards();
       m_leftFeed.runForward();
    }
@@ -336,34 +324,26 @@ public class Shooter implements Subsystem
       // Setting left and right talon speed based off of analog joystick input
 
       // LEFT SIDE
-      if (leftJoyAxis > feedDeadBand)
-      {
-         m_leftFeed.runForward();
-      }
-      else if (leftJoyAxis < -feedDeadBand)
-      {
-         m_leftFeed.runBackwards();
-      }
-      else
-      {
-         m_leftFeed.stop();
-      }
+      runFeedBelt(m_leftFeed, leftJoyAxis);
 
       // RIGHT SIDE
       // note: right must run in reverse with left due to motor positioning
-      if (rightJoyAxis > feedDeadBand)
+      runFeedBelt(m_rightFeed, rightJoyAxis);
+
+   }
+   private void runFeedBelt(Feed feed, double joyAxis){
+      if (joyAxis > feedDeadBand)
       {
-         m_rightFeed.runBackwards();
+         feed.runForward();
       }
-      else if (rightJoyAxis < -feedDeadBand)
+      else if (joyAxis < -feedDeadBand)
       {
-         m_rightFeed.runForward();
+         feed.runBackwards();
       }
       else
       {
-         m_rightFeed.stop();
+         feed.stop();
       }
-
    }
 
 }
