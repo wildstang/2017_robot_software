@@ -23,6 +23,7 @@ public class Feed extends Shooter
    public Feed(WsVictor p_victor, double p_speed)
    {
       m_victor = p_victor;
+      feedSpeed = p_speed;
    }
 
    // This function is setup in the shooter class to determine whether or not

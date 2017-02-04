@@ -83,6 +83,8 @@ public class Shooter implements Subsystem
 
    private double leftJoyAxis;
    private double rightJoyAxis;
+   
+   private double feedDeadBand = 0.1;
 
    // PDP
    private PowerDistributionPanel pdp;
@@ -344,11 +346,11 @@ public class Shooter implements Subsystem
       // Setting left and right talon speed based off of analog joystick input
 
       // LEFT SIDE
-      if (leftJoyAxis > 0)
+      if (leftJoyAxis > feedDeadBand)
       {
          m_leftFeed.runForward();
       }
-      else if (leftJoyAxis < 0)
+      else if (leftJoyAxis < -feedDeadBand)
       {
          m_leftFeed.runBackwards();
       }
@@ -359,11 +361,11 @@ public class Shooter implements Subsystem
 
       // RIGHT SIDE
       // note: right must run in reverse with left due to motor positioning
-      if (rightJoyAxis > 0)
+      if (rightJoyAxis > feedDeadBand)
       {
          m_rightFeed.runBackwards();
       }
-      else if (rightJoyAxis < 0)
+      else if (rightJoyAxis < -feedDeadBand)
       {
          m_rightFeed.runForward();
       }
