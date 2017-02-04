@@ -14,33 +14,36 @@ public class ShootStep extends AutoStep
    private double timePassed;
    private boolean waiting;
 
-   private double delayAfterFlywheels;
    private double delayWhileShooting;
 
    @Override
    public void initialize()
    {
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
-      // Default is 10 seconds for testing
-      delayAfterFlywheels = Core.getConfigManager().getConfig().getDouble("delayAfterFlywheels", 10000);
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble("delayWhileShooting", 10000);
+      // Default is 2 seconds for testing
+      // WS Config sets to 4 seconds
+      delayWhileShooting = Core.getConfigManager().getConfig().getDouble("delayWhileShooting", 2000);
    }
 
    @Override
    public void update()
    {
       shooter.turnFlywheelOn();
-      timeDelay(delayAfterFlywheels);
-      shooter.openBothGate();
-      shooter.turnFeedOn();
-
-      timeDelay(delayWhileShooting);
       
-      shooter.closeBothGate();
-      shooter.turnFeedOff();
-      shooter.turnFlywheelOff();
+      if (shooter.checkRangeForAuto())
+      {
+         shooter.openBothGate();
+         shooter.turnFeedOn();
 
-      setFinished(true);
+         timeDelay(delayWhileShooting);
+
+         shooter.closeBothGate();
+         shooter.turnFeedOff();
+         shooter.turnFlywheelOff();
+
+         setFinished(true);
+      }
+
    }
 
    @Override

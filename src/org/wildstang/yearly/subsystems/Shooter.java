@@ -289,6 +289,10 @@ public class Shooter implements Subsystem
       return (speed >= lowLimitSpeed && speed <= highLimitSpeed);
    }
 
+   public boolean checkRangeForAuto(){
+      return (checkRange(m_leftFlywheel.getSpeed()) && checkRange(m_rightFlywheel.getSpeed()));
+   }
+   
    // Turns on the belts w/out buttons for auto
    public void turnFeedOn()
    {
