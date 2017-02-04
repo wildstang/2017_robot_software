@@ -18,6 +18,10 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/bulldog.beagleboneblack.hardfp.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-2411.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
+<<<<<<< HEAD
 	<classpathentry combineaccessrules="false" kind="src" path="/Core-Framework"/>
+=======
+	<classpathentry combineaccessrules="false" kind="src" path="/core_framework"/>
+>>>>>>> branch 'master' of https://github.com/wildstang/2017_robot_software.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>
