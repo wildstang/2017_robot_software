@@ -73,8 +73,6 @@ public class Shooter implements Subsystem
    private boolean rightGatePrev;
 
    // Feeds
-   private double feedSpeed;
-
    private WsVictor m_leftFeedVictor;
    private WsVictor m_rightFeedVictor;
 
@@ -83,8 +81,9 @@ public class Shooter implements Subsystem
 
    private double leftJoyAxis;
    private double rightJoyAxis;
-   
    private double feedDeadBand = 0.05;
+
+   private double feedSpeed;
 
    // PDP
    private PowerDistributionPanel pdp;
@@ -99,8 +98,6 @@ public class Shooter implements Subsystem
 
    private AnalogInput leftBeltJoystick;
    private AnalogInput rightBeltJoystick;
-
-   // Variables
 
    @Override
    public void selfTest()
@@ -118,10 +115,10 @@ public class Shooter implements Subsystem
    public void init()
    {
       // Flywheels
-      targetSpeed = Core.getConfigManager().getConfig().getDouble("Flywheel Speed", 0);
-
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
+
+      targetSpeed = Core.getConfigManager().getConfig().getDouble("Flywheel Speed", 0);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, targetSpeed);
@@ -134,21 +131,20 @@ public class Shooter implements Subsystem
       m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
 
       // Feeds
-      feedSpeed = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
-
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
+
+      feedSpeed = Core.getConfigManager().getConfig().getDouble("Feed Speed", 0.7);
 
       m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed);
       m_rightFeed = new Feed(m_rightFeedVictor, feedSpeed);
 
       // PDP
       pdp = new PowerDistributionPanel();
-      leftFeedCurrent = pdp.getCurrent(8);
-      rightFeedCurrent = pdp.getCurrent(9);
+      leftFeedCurrent = pdp.getCurrent(11);
+      rightFeedCurrent = pdp.getCurrent(4);
 
       // Input Listeners
-
       flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
       flywheelButton.addInputListener(this);
 
@@ -162,6 +158,7 @@ public class Shooter implements Subsystem
       rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName());
       rightBeltJoystick.addInputListener(this);
 
+      // If we get a swtich for balls waiting
       // leftBallReadySwitch = (DigitalInput)
       // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
       // leftBallReadySwitch.addInputListener(this);
@@ -238,10 +235,8 @@ public class Shooter implements Subsystem
       }
       else if (!flywheelToggle)
       {
-         // Should this be a setSpeed 0 instead?
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
-
       }
 
    }
@@ -258,8 +253,6 @@ public class Shooter implements Subsystem
       m_rightGate.closeGate();
    }
 
-   // TODO:
-   // make sure flywheels are on when gates open
    public void updateGates()
    {
       // Tests to see if the left and right flywheel is up to speed and ready to

@@ -42,12 +42,4 @@ public class Gate extends Shooter
 
    }
 
-   // BeNo: This funcion is not really needed, should consider removing!!
-
-   // public boolean isClosed()
-   // {
-   //
-   // return !isOpen();
-   //
-   // }
 }

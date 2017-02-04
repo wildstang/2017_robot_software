@@ -8,13 +8,14 @@ public class Feed extends Shooter
 {
 
    private WsVictor m_victor;
-
+   private double feedSpeed;
+   
    private double limit;
    private boolean jammed;
 
    private boolean ballReady;
 
-   private double feedSpeed;
+  
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
@@ -44,24 +45,6 @@ public class Feed extends Shooter
       return jammed;
    }
 
-   // This function may or may not be used. Either way, the purpose of this
-   // function is
-   // to determine whether or not a ball is ready based on possible sensors
-   // (emphasis on possible)
-
-   public boolean isBallReady(boolean p_digitalInput)
-   {
-      if (p_digitalInput)
-      {
-         ballReady = true;
-      }
-      else
-      {
-         ballReady = false;
-      }
-      return ballReady;
-   }
-
    // This function makes the motors on the belts run in a positive rotation
 
    public void runForward()
@@ -82,4 +65,23 @@ public class Feed extends Shooter
    {
       m_victor.setValue(0);
    }
+   
+   // This function may or may not be used. Either way, the purpose of this
+   // function is
+   // to determine whether or not a ball is ready based on possible sensors
+   // (emphasis on possible)
+
+   public boolean isBallReady(boolean p_digitalInput)
+   {
+      if (p_digitalInput)
+      {
+         ballReady = true;
+      }
+      else
+      {
+         ballReady = false;
+      }
+      return ballReady;
+   }
+
 }
