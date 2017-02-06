@@ -28,6 +28,7 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
+import org.wildstang.yearly.robot.vision.VisionServer;
 import org.wildstang.yearly.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -51,6 +52,8 @@ public class RobotTemplate extends IterativeRobot
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
+   
+   private VisionServer m_visionServer;
    
    private boolean exceptionThrown = false;
    
@@ -167,6 +170,10 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
+      
+      // 3. Start Vision server
+      m_visionServer = new VisionServer(5000);
+      m_visionServer.startVisionServer();
       
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
