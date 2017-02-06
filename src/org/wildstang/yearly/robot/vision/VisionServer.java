@@ -13,9 +13,8 @@ public class VisionServer implements Runnable
    private boolean m_running;
    private ServerSocket m_serverSocket;
    
-   private VisionMessage m_message;
-   private VisionParams m_params;
-   
+   private int m_currentValue;
+      
    private ArrayList<VisionHandler> m_handlers = new ArrayList<VisionHandler>();
    
    public VisionServer(int p_port)
@@ -53,7 +52,11 @@ public class VisionServer implements Runnable
       return m_running;
    }
    
-   
+   public int getCurrentValue()
+   {
+      return m_currentValue;
+   }
+      
    
    public void run()
    {
@@ -67,7 +70,7 @@ public class VisionServer implements Runnable
             s = m_serverSocket.accept();
 
             // Create new VisionHandler for requests
-            VisionHandler handler = new VisionHandler(s);
+            VisionHandler handler = new VisionHandler(this, s);
             SmartDashboard.putString("Vision server connected to", s.getInetAddress().getHostAddress());
 
             if (s.getInetAddress().getHostAddress().equals("10.1.11.10"))
@@ -92,6 +95,11 @@ public class VisionServer implements Runnable
       }
    }
    
+   
+   public void updateValue(int p_value)
+   {
+      m_currentValue = p_value;
+   }
 
    public void shutdown()
    {

@@ -18,13 +18,14 @@ public class VisionHandler implements Runnable
    private boolean m_running;
    private InputStream m_inputStream;
    private OutputStream m_outputStream;
+   private VisionServer m_visionServer;
    
    private long m_lastMsgReceived;
    
-   public VisionHandler(Socket p_socket)
+   public VisionHandler(VisionServer p_server, Socket p_socket)
    {
       m_socket = p_socket;
-      
+      m_visionServer = p_server;
    }
 
    public boolean isRunning()
@@ -37,6 +38,8 @@ public class VisionHandler implements Runnable
    {
       BufferedReader in = null;
       PrintWriter out = null;
+      String line = null;
+      int readValue;
       
       try
       {
@@ -55,11 +58,29 @@ public class VisionHandler implements Runnable
       {
          SmartDashboard.putBoolean("Camera connection", true);
 
+         // We've just connected - send the required HSV values to the client
          sendPreferences(out);
          
          while (m_running)
          {
-            
+            // read the value sent from the client and update the current value to be used
+            try
+            {
+               if ((line = in.readLine()) != null)
+               {
+                  readValue = Integer.parseInt(line);
+                  m_lastMsgReceived = System.currentTimeMillis();
+                  m_visionServer.updateValue(readValue);
+               }
+            }
+            catch (NumberFormatException e)
+            {
+               e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+               e.printStackTrace();
+            }
          }
       }
       else
