@@ -90,4 +90,10 @@ public class Feed extends Shooter
       return ballReady;
    }
 
+   // gets speed for testing.
+   public double getSpeed()
+   {
+      return m_victor.getValue();
+   }
+
 }

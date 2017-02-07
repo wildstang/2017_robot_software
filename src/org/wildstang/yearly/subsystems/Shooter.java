@@ -210,6 +210,7 @@ public class Shooter implements Subsystem
       updateFlywheels();
       updateGates();
       updateFeed();
+      testWithDashboard();
    }
 
    // Turns on the flywheels w/out buttons for auto
@@ -358,7 +359,19 @@ public class Shooter implements Subsystem
          feed.stop();
       }
    }
-   
-   
+
+   // Shows speeds and states for testing
+   private void testWithDashboard()
+   {
+      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
+      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
+
+      SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
+      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen());
+
+      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
+      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
+      ;
+   }
 
 }
