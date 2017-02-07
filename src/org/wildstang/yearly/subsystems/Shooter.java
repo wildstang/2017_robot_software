@@ -78,7 +78,7 @@ public class Shooter implements Subsystem
 
    private double leftJoyAxis;
    private double rightJoyAxis;
-   private double feedDeadBand = 0.05;
+   private double feedDeadBand;
 
    private double feedSpeed;
 
@@ -115,25 +115,31 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      targetSpeed = Core.getConfigManager().getConfig().getDouble("flywheelSpeed", 0);
+      // Reads from the Ws Config
+      // defaults are nonsensical for testing
+      targetSpeed = Core.getConfigManager().getConfig().getDouble("flywheelSpeed", 10);
+      lowLimitSpeed = Core.getConfigManager().getConfig().getDouble("highLimitSpeed", 10);
+      highLimitSpeed = Core.getConfigManager().getConfig().getDouble("lowLimitSpeed", 20);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, targetSpeed);
 
       // Gates
-      m_leftGate = new Gate(m_leftGateSolenoid);
-      m_rightGate = new Gate(m_rightGateSolenoid);
-
       m_leftGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
       m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
+
+      m_leftGate = new Gate(m_leftGateSolenoid);
+      m_rightGate = new Gate(m_rightGateSolenoid);
 
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
-      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedSpeed", 0);
+      // Reads from Ws Config File, Default is nonsensical for testing
+      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedSpeed", 0.1);
+      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedDeadBand", 0.1);
 
-      // inverts the left
+      // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed, true);
       m_rightFeed = new Feed(m_rightFeedVictor, feedSpeed, false);
 
@@ -260,7 +266,7 @@ public class Shooter implements Subsystem
       readyToShootLeft = checkRange(m_leftFlywheel.getSpeed());
       // RIGHT SIDE
       readyToShootRight = checkRange(m_rightFlywheel.getSpeed());
-      
+
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
       // LEFT SIDE
@@ -289,22 +295,24 @@ public class Shooter implements Subsystem
       return (speed >= lowLimitSpeed && speed <= highLimitSpeed);
    }
 
-   public boolean checkRangeForAuto(){
-      return (checkRange(m_leftFlywheel.getSpeed()) && checkRange(m_rightFlywheel.getSpeed()));
+   public boolean checkRangeForAuto()
+   {
+      return (checkRange(m_leftFlywheel.getSpeed())
+            && checkRange(m_rightFlywheel.getSpeed()));
    }
-   
+
    // Turns on the belts w/out buttons for auto
    public void turnFeedOn()
    {
       m_leftFeed.runForward();
-      m_rightFeed.runForward();
+      m_leftFeed.runForward();
    }
 
    // Turns off the belts w/out buttons for auto
    public void turnFeedOff()
    {
       m_leftFeed.stop();
-      m_rightFeed.stop();
+      m_leftFeed.stop();
    }
 
    public void updateFeed()
@@ -334,7 +342,9 @@ public class Shooter implements Subsystem
       runFeedBelt(m_rightFeed, rightJoyAxis);
 
    }
-   private void runFeedBelt(Feed feed, double joyAxis){
+
+   private void runFeedBelt(Feed feed, double joyAxis)
+   {
       if (joyAxis > feedDeadBand)
       {
          feed.runForward();
@@ -348,5 +358,7 @@ public class Shooter implements Subsystem
          feed.stop();
       }
    }
+   
+   
 
 }

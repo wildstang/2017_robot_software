@@ -62,7 +62,11 @@ org.wildstang.yearly.subsystems.Shooter.expectedHighFlywheelRate=2300.0
 org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2050.0
 org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
 org.wildstang.yearly.subsystems.Shooter.flywheelSpeed=500
+org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=475
+org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=525
 org.wildstang.yearly.subsystems.Shooter.feedSpeed=0.7
+org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.1
+
 
 //Intake
 org.wildstang.yearly.subsystems.Intake.intakeSpeedIn=-1
