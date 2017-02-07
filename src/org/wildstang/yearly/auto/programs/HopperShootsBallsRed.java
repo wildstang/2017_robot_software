@@ -26,7 +26,7 @@ public class HopperShootsBallsRed extends AutoProgram
    public String toString()
    {
       // TODO Auto-generated method stub
-      return null;
+      return "Hopper-Shoot Red";
    }
 
 }

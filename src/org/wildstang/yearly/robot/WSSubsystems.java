@@ -22,7 +22,7 @@ public enum WSSubsystems implements Subsystems
    INTAKE("Intake Subsystem",    Intake.class),
    GEAR("Gear Subsystem",        Gear.class),
 
-   SHOOTER("Shooter Subsystem",  Shooter.class),
+   SHOOTER("Shooter",  Shooter.class),
 
    CLIMBER("Climber Subsystem",  Climber.class),
    IMU("IMU", IMUTest.class),
