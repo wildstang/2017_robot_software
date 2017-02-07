@@ -61,12 +61,16 @@ public class VisionHandler implements Runnable
          // We've just connected - send the required HSV values to the client
          sendPreferences(out);
          
+         m_running = true;
+         
          while (m_running)
          {
             // read the value sent from the client and update the current value to be used
             try
             {
-               if ((line = in.readLine()) != null)
+               line = in.readLine();
+               
+               if (line != null)
                {
                   readValue = Integer.parseInt(line);
                   m_lastMsgReceived = System.currentTimeMillis();
@@ -109,13 +113,8 @@ public class VisionHandler implements Runnable
       buf.append(prefs.getInt("V_max", VisionConstants.V_MAX));
       buf.append("\n");
       
-      p_out.write(buf.toString());
-   }
-   
-   
-   public void start()
-   {
-      m_running = true;
+      p_out.println(buf.toString());
+      p_out.flush();
    }
    
    public void stop()

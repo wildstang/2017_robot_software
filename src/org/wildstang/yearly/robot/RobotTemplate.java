@@ -172,7 +172,7 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
       
       // 3. Start Vision server
-      m_visionServer = new VisionServer(5000);
+      m_visionServer = new VisionServer(5080);
       m_visionServer.startVisionServer();
       
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");

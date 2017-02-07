@@ -20,8 +20,6 @@ public class VisionServer implements Runnable
    public VisionServer(int p_port)
    {
       m_port = p_port;
-      
-      startVisionServer();
    }
    
    
