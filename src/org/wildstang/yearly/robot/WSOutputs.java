@@ -6,14 +6,9 @@ import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
-import org.wildstang.hardware.crio.outputs.WsRelayState;
-import org.wildstang.hardware.crio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
-import org.wildstang.hardware.crio.outputs.config.WsRelayConfig;
-import org.wildstang.hardware.crio.outputs.config.WsServoConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
-import org.wildstang.hardware.crio.outputs.config.WsTalonConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
 
 import edu.wpi.first.wpilibj.I2C;
