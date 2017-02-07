@@ -5,6 +5,7 @@ import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.Gear;
 import org.wildstang.yearly.subsystems.Shooter;
+import org.wildstang.yearly.subsystems.Subsystem_Test;
 import org.wildstang.yearly.subsystems.Climber;
 import org.wildstang.yearly.subsystems.LED;
 
@@ -19,6 +20,7 @@ public enum WSSubsystems implements Subsystems
    INTAKE("Intake Subsystem",    Intake.class),
    GEAR("Gear Subsystem",        Gear.class),
    SHOOTER("Shooter Subsystem",  Shooter.class),
+   SUBSYSTEM_TEST_PP("Poppe Subsystem Test",  Subsystem_Test.class),
    CLIMBER("Climber Subsystem",  Climber.class),
    LED("LEDs",                   LED.class);
    

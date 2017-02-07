@@ -85,8 +85,8 @@ public enum WSInputs implements Inputs
    INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),     // Intake Subsystem
    //DRV_BUTTON_8("Driver button 8",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), getLogging()),
    //DRV_BUTTON_9("Driver button 9",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), getLogging()),
-   //DRV_BUTTON_10("Driver button 10",             WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), getLogging()),
-   //DRV_BUTTON_11("Driver button 11",             WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
+   MAN_TEST("Manual Test Button",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), getLogging()),
+   AUTO_TEST("Auto Test Button",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
 
 
    // ********************************             
