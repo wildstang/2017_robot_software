@@ -175,33 +175,44 @@ public class Shooter implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      ShooterNow = flywheelButton.getValue();
-
-      leftGateNow = leftGateButton.getValue();
-      rightGateNow = rightGateButton.getValue();
-
-      leftJoyAxis = leftBeltJoystick.getValue();
-      rightJoyAxis = rightBeltJoystick.getValue();
-
-      // Toggle for flywheels
-      if (ShooterNow && !ShooterPrev)
+      if (source == flywheelButton)
       {
-         flywheelToggle = !flywheelToggle;
+         ShooterNow = flywheelButton.getValue();
+         // Toggle for flywheels
+         if (ShooterNow && !ShooterPrev)
+         {
+            flywheelToggle = !flywheelToggle;
+         }
+         ShooterPrev = ShooterNow;
       }
-      ShooterPrev = ShooterNow;
-
-      // Toggle for gates
-      if (leftGateNow && !leftGatePrev)
+      else if (source == leftGateButton)
       {
-         leftGateOpen = !leftGateOpen;
+         leftGateNow = leftGateButton.getValue();
+         // Toggle for gates
+         if (leftGateNow && !leftGatePrev)
+         {
+            leftGateOpen = !leftGateOpen;
+         }
+         leftGatePrev = leftGateNow;
       }
-      leftGatePrev = leftGateNow;
-
-      if (rightGateNow && !rightGatePrev)
+      else if (source == rightGateButton)
       {
-         rightGateOpen = !rightGateOpen;
+         rightGateNow = rightGateButton.getValue();
+         if (rightGateNow && !rightGatePrev)
+         {
+            rightGateOpen = !rightGateOpen;
+         }
+         rightGatePrev = rightGateNow;
       }
-      rightGatePrev = rightGateNow;
+      else if (source == leftBeltJoystick)
+      {
+         leftJoyAxis = leftBeltJoystick.getValue();
+      }
+      else if (source == rightBeltJoystick)
+      {
+         rightJoyAxis = rightBeltJoystick.getValue();
+      }
+
    }
 
    @Override
@@ -271,7 +282,7 @@ public class Shooter implements Subsystem
       // Opens the gate if the flywheel is up to speed and the button is pressed
 
       // LEFT SIDE
-      if (leftGateOpen && readyToShootLeft)
+      if (leftGateOpen)// && readyToShootLeft)
       {
          m_leftGate.openGate();
       }
@@ -281,7 +292,7 @@ public class Shooter implements Subsystem
       }
 
       // RIGHT SIDE
-      if (rightGateOpen && readyToShootRight)
+      if (rightGateOpen) // && readyToShootRight)
       {
          m_rightGate.openGate();
       }
@@ -306,14 +317,14 @@ public class Shooter implements Subsystem
    public void turnFeedOn()
    {
       m_leftFeed.runForward();
-      m_leftFeed.runForward();
+      m_rightFeed.runForward();
    }
 
    // Turns off the belts w/out buttons for auto
    public void turnFeedOff()
    {
       m_leftFeed.stop();
-      m_leftFeed.stop();
+      m_rightFeed.stop();
    }
 
    public void updateFeed()

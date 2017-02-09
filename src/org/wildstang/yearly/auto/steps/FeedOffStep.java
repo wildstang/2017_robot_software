@@ -20,6 +20,7 @@ public class FeedOffStep extends AutoStep
    public void update()
    {
       shooter.turnFeedOff();
+      setFinished(true);
    }
 
    @Override
