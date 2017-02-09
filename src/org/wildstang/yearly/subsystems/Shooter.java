@@ -137,7 +137,7 @@ public class Shooter implements Subsystem
 
       // Reads from Ws Config File, Default is nonsensical for testing
       feedSpeed = Core.getConfigManager().getConfig().getDouble("feedSpeed", 0.1);
-      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedDeadBand", 0.1);
+      feedDeadBand = Core.getConfigManager().getConfig().getDouble("feedDeadBand", 0.1);
 
       // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed, true);
@@ -188,7 +188,7 @@ public class Shooter implements Subsystem
       else if (source == leftGateButton)
       {
          leftGateNow = leftGateButton.getValue();
-         // Toggle for gates
+         // Toggle for gate left
          if (leftGateNow && !leftGatePrev)
          {
             leftGateOpen = !leftGateOpen;
@@ -198,6 +198,7 @@ public class Shooter implements Subsystem
       else if (source == rightGateButton)
       {
          rightGateNow = rightGateButton.getValue();
+         // Toggle for gate right
          if (rightGateNow && !rightGatePrev)
          {
             rightGateOpen = !rightGateOpen;
@@ -286,7 +287,7 @@ public class Shooter implements Subsystem
       {
          m_leftGate.openGate();
       }
-      else
+      else 
       {
          m_leftGate.closeGate();
       }
@@ -374,14 +375,14 @@ public class Shooter implements Subsystem
    // Shows speeds and states for testing
    private void testWithDashboard()
    {
-      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
-      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
-
+//      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
+//      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
+//
       SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
-      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen());
+      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen() );
 
-      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
-      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
+//      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
+//      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
       ;
    }
 
