@@ -205,6 +205,7 @@ public class Shooter implements Subsystem
          }
          rightGatePrev = rightGateNow;
       }
+      // TODO make toggle method when jou>deadband, set to some speed x (+/-)
       else if (source == leftBeltJoystick)
       {
          leftJoyAxis = leftBeltJoystick.getValue();
