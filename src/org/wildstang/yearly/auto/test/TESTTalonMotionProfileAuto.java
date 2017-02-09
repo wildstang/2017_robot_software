@@ -1,6 +1,7 @@
 package org.wildstang.yearly.auto.test;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.yearly.auto.steps.PathFollowerStep;
 
 public class TESTTalonMotionProfileAuto extends AutoProgram
 {
