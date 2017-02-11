@@ -16,11 +16,11 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
-import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
-import org.wildstang.hardware.crio.outputs.WsServo;
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
+//import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
+//import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+//import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
+//import org.wildstang.hardware.crio.outputs.WsServo;
+//import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
@@ -32,6 +32,7 @@ public class Subsystem_Test implements Subsystem
    private boolean 	   m_ledManOn     = false;
    private boolean 	   m_ledAutoOn    = false;
    private boolean 	   m_buttonAutoOn = false;
+   private boolean 	   m_buttonManOn  = false;
    
    private DigitalOutput   m_testManLed;
    private DigitalOutput   m_testAutoLed;
@@ -104,6 +105,8 @@ public class Subsystem_Test implements Subsystem
       {
          testManButton = ((DigitalInput) source).getValue();
 
+         m_buttonManOn = testManButton;
+
          manLedSet(testManButton);
       }
 
@@ -111,6 +114,8 @@ public class Subsystem_Test implements Subsystem
       {
          m_buttonAutoOn = ((DigitalInput) source).getValue();
       }
+
+//      System.out.
    }
 
    @Override
@@ -128,6 +133,7 @@ public class Subsystem_Test implements Subsystem
       m_testAutoLed.setValue(m_ledAutoOn);
 
       SmartDashboard.putBoolean("m_buttonAutoOn", m_buttonAutoOn);
+      SmartDashboard.putBoolean("m_buttonManOn", m_buttonManOn);
       SmartDashboard.putBoolean("m_ledAutoOn", m_ledAutoOn);
       SmartDashboard.putBoolean("m_ledManOn", m_ledManOn);
 
@@ -148,7 +154,7 @@ public class Subsystem_Test implements Subsystem
 
    public boolean autoButtonPressed()
    {
-      //return m_buttonAutoOn;
-      return true;
+      return m_buttonAutoOn;
+      //return true;
    }
 }

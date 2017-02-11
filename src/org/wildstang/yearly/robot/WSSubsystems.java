@@ -16,13 +16,13 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
-   DRIVE_BASE("Drive Base",      Drive.class),
-   INTAKE("Intake Subsystem",    Intake.class),
-   GEAR("Gear Subsystem",        Gear.class),
-   SHOOTER("Shooter Subsystem",  Shooter.class),
-   SUBSYSTEM_TEST_PP("Poppe Subsystem Test",  Subsystem_Test.class),
-   CLIMBER("Climber Subsystem",  Climber.class),
-   LED("LEDs",                   LED.class);
+   DRIVE_BASE("Drive Base",      	Drive.class),
+   INTAKE("Intake",    				Intake.class),
+   GEAR("Gear",        				Gear.class),
+   SHOOTER("Shooter",  				Shooter.class),
+   SUBSYSTEM_TEST_PP("Subsystem_Test",  Subsystem_Test.class),
+   CLIMBER("Climber",  				Climber.class),
+   LED("LEDs",                   	LED.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
    //This keeps the formatter from completely making the enumeration unreadable.

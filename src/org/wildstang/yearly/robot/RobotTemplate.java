@@ -28,6 +28,7 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
+import org.wildstang.yearly.auto.test.autoprogram_test;
 import org.wildstang.yearly.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -167,6 +168,7 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
+      AutoManager.getInstance().addProgram(new autoprogram_test());
       
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
