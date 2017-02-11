@@ -11,5 +11,4 @@ org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.1
 org.wildstang.yearly.auto.steps.ShootStep.delayWhileShooting=4000.0
 
 //WaitStep
-org.wildstang.yearly.auto.programs.HopperShootBallsRed.waitStep=5000.0
-org.wildstang.yearly.auto.steps.WaitStep.waitStep=5000.0
+org.wildstang.yearly.auto.programs.HopperShootsBallsRed.hopperWaitTime=5000.0

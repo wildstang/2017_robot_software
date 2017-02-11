@@ -385,9 +385,11 @@ public class Shooter implements Subsystem
       SmartDashboard.putBoolean("left flywheel is running", m_leftFlywheel.isRunning());
       SmartDashboard.putBoolean("right flywheel is running", m_rightFlywheel.isRunning());
 
-     // SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
-      //SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
-      
+      // SmartDashboard.putNumber("left flywheel speed",
+      // m_leftFlywheel.getSpeed());
+      // SmartDashboard.putNumber("right flywheel speed",
+      // m_rightFlywheel.getSpeed());
+
       SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
       SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen());
 
@@ -398,6 +400,8 @@ public class Shooter implements Subsystem
       SmartDashboard.putNumber("flywheel target speed", targetSpeed);
       SmartDashboard.putNumber("flywheel low limit speed", lowLimitSpeed);
       SmartDashboard.putNumber("flywheel high limit speed", highLimitSpeed);
+      SmartDashboard.putNumber("feed speed constant", feedSpeed);
+      SmartDashboard.putNumber("feed dead band", feedDeadBand);
    }
 
 }

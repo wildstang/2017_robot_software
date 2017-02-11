@@ -5,6 +5,8 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class ShootStep extends AutoStep
 {
 
@@ -67,6 +69,7 @@ public class ShootStep extends AutoStep
       while (waiting)
       {
          timePassed = (double) (System.currentTimeMillis() - startTime);
+         SmartDashboard.putNumber("time passed ShootStep", timePassed);
 
          if (timePassed >= time)
          {

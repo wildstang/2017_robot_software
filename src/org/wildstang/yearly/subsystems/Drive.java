@@ -43,7 +43,7 @@ public class Drive implements Subsystem
    private double m_throttleValue;
    private double m_headingValue;
    private boolean m_quickTurn;
-   
+
    private boolean m_shifterCurrent = false;
    private boolean m_shifterPrev = false;
    private boolean m_highGear = false;
@@ -65,7 +65,8 @@ public class Drive implements Subsystem
 
    private static final double ROBOT_WIDTH_INCHES = 38;
    private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / 1024;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI
+         / 1024;
    private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
@@ -73,7 +74,7 @@ public class Drive implements Subsystem
 
    // TODO Remove this
    private PowerDistributionPanel pdp;
-   
+
    // While this is really a temporary variable, declared here to prevent
    // constant stack allocation
    private DriveSignal m_driveSignal;
@@ -88,18 +89,18 @@ public class Drive implements Subsystem
       Core.getStateTracker().addIOInfo("Left 2 current", "Drive", "Input", null);
       Core.getStateTracker().addIOInfo("Right 1 current", "Drive", "Input", null);
       Core.getStateTracker().addIOInfo("Right 2 current", "Drive", "Input", null);
-      
+
       // Drive
       m_headingInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName());
       m_headingInput.addInputListener(this);
 
       m_throttleInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName());
       m_throttleInput.addInputListener(this);
-      
-      m_shifterInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.SHIFT.getName());
+
+      m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
 
-      m_quickTurnInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
+      m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
       m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
@@ -127,7 +128,7 @@ public class Drive implements Subsystem
 
       m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
       m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
-      
+
       m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
       m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
 
@@ -146,7 +147,7 @@ public class Drive implements Subsystem
       {
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
-      //m_leftMaster.reverseSensor(false);
+      // m_leftMaster.reverseSensor(false);
 
       m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_rightMaster.configEncoderCodesPerRev(256);
@@ -159,7 +160,7 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
-      //m_rightMaster.reverseSensor(true);
+      // m_rightMaster.reverseSensor(true);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit
@@ -243,7 +244,8 @@ public class Drive implements Subsystem
    {
 
       // Set shifter output before driving
-      // NOTE: The state of m_highGear needs to be set prior to update being called.  This is either in inputUpdate() (for teleop)
+      // NOTE: The state of m_highGear needs to be set prior to update being
+      // called. This is either in inputUpdate() (for teleop)
       // or by an auto program by calling setHighGear()
       if (m_highGear)
       {
@@ -253,7 +255,7 @@ public class Drive implements Subsystem
       {
          m_shifterSolenoid.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
       }
-      
+
       switch (m_driveMode)
       {
          case PATH:
@@ -276,7 +278,7 @@ public class Drive implements Subsystem
 
       Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
       Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
-      
+
       Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
       Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
       Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
@@ -295,14 +297,17 @@ public class Drive implements Subsystem
    private void collectDriveState()
    {
       // Calculate all changes in DriveState
-      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
-      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaLeftTicks = m_leftMaster.getEncPosition()
+            - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks = m_rightMaster.getEncPosition()
+            - absoluteDriveState.getDeltaRightEncoderTicks();
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
-      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
+      double deltaTime = System.currentTimeMillis()
+            - absoluteDriveState.getDeltaTime();
 
       SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
       SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
-      
+
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();
 
@@ -312,7 +317,8 @@ public class Drive implements Subsystem
       double deltaTheta;
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks - deltaRightTicks));
+         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks
+               - deltaRightTicks));
       }
       else
       {
@@ -327,12 +333,14 @@ public class Drive implements Subsystem
       // double deltaYLeft;
       if (deltaTheta < 0)
       {
-         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
+         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES)
+               / (deltaLeftTicks - deltaRightTicks));
 
       }
       else if (deltaTheta > 0)
       {
-         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
+         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES)
+               / (deltaRightTicks - deltaLeftTicks));
 
       }
       else
@@ -344,19 +352,21 @@ public class Drive implements Subsystem
       rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
                                       // larger turn radius.
 
-      System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
+      // System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
 
       // Add the DriveState to the list
       driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
-      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
-      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
-      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
-      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
-
-      
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime()
+            + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks()
+            + deltaRightTicks);
+      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks()
+            + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle()
+            + deltaHeading);
 
    }
 
@@ -413,8 +423,9 @@ public class Drive implements Subsystem
 
       // Go as fast as possible
       setHighGear(true);
-      
-      // Use brake mode to stop quickly at end of path, since Talons will put output to neutral
+
+      // Use brake mode to stop quickly at end of path, since Talons will put
+      // output to neutral
       setBrakeMode(true);
    }
 
