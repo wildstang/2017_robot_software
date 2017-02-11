@@ -116,10 +116,14 @@ public class Shooter implements Subsystem
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
       // Reads from the Ws Config
-      // defaults are nonsensical for testing
-      targetSpeed = Core.getConfigManager().getConfig().getDouble("flywheelSpeed", 10);
-      lowLimitSpeed = Core.getConfigManager().getConfig().getDouble("highLimitSpeed", 10);
-      highLimitSpeed = Core.getConfigManager().getConfig().getDouble("lowLimitSpeed", 20);
+
+      // Reads values from Ws Config, defaults are nonsensical for testing
+      targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".flywheelSpeed", 10.0);
+      lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".lowLimitSpeed", 5.0);
+      highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".highLimitSpeed", 15.0);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, targetSpeed);
@@ -136,8 +140,10 @@ public class Shooter implements Subsystem
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
       // Reads from Ws Config File, Default is nonsensical for testing
-      feedSpeed = Core.getConfigManager().getConfig().getDouble("feedSpeed", 0.1);
-      feedDeadBand = Core.getConfigManager().getConfig().getDouble("feedDeadBand", 0.1);
+      feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".feedSpeed", 0.4);
+      feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".feedDeadBand", 0.1);
 
       // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, feedSpeed, true);
@@ -288,7 +294,7 @@ public class Shooter implements Subsystem
       {
          m_leftGate.openGate();
       }
-      else 
+      else
       {
          m_leftGate.closeGate();
       }
@@ -376,15 +382,19 @@ public class Shooter implements Subsystem
    // Shows speeds and states for testing
    private void testWithDashboard()
    {
-//      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
-//      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
-//
-      SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
-      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen() );
+      SmartDashboard.putBoolean("left flywheel is running", m_leftFlywheel.isRunning());
+      SmartDashboard.putBoolean("right flywheel is running", m_rightFlywheel.isRunning());
 
-//      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
-//      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
-      ;
+      SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
+      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen());
+
+      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
+      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
+
+      // WS config
+      SmartDashboard.putNumber("flywheel target speed", targetSpeed);
+      SmartDashboard.putNumber("flywheel low limit speed", lowLimitSpeed);
+      SmartDashboard.putNumber("flywheel high limit speed", highLimitSpeed);
    }
 
 }

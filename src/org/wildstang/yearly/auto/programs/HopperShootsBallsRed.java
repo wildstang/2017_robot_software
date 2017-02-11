@@ -5,6 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.WaitStep;
+import org.wildstang.yearly.auto.steps.ShootStep;
 
 public class HopperShootsBallsRed extends AutoProgram
 {
@@ -13,13 +14,15 @@ public class HopperShootsBallsRed extends AutoProgram
    protected void defineSteps()
    {
       // Default is 10 seconds for testing
-      long hopperWaitTime = Core.getConfigManager().getConfig().getInt("waitStep", 5000);
+      long hopperWaitTime = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + ".waitStep", 10000);
 
       // TODO Add path to hopper here
       addStep(new FeedOnStep());
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
       // TODO Add path to boiler here
+      addStep(new ShootStep());
    }
 
    @Override

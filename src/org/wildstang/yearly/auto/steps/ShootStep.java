@@ -22,7 +22,9 @@ public class ShootStep extends AutoStep
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
       // Default is 2 seconds for testing
       // WS Config sets to 4 seconds
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble("delayWhileShooting", 2000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".delayWhileShooting", 2000);
+      
    }
 
    @Override

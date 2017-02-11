@@ -22,7 +22,8 @@ public class WaitStep extends AutoStep
       startTime = System.currentTimeMillis();
       // Default is 2 seconds for testing
       // WS config sets to 5 seconds
-      targetTime = Core.getConfigManager().getConfig().getDouble("waitStep", 2000);
+      targetTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".waitStep", 2000);
 
    }
 
