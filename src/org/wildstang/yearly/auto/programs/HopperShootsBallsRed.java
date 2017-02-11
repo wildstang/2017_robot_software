@@ -14,13 +14,18 @@ import org.wildstang.yearly.robot.WSSubsystems;
 
 public class HopperShootsBallsRed extends AutoProgram
 {
+   private String someString = this.getClass().getName() + ".hopperWaitTime";
 
-   private double hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-         + ".hopperWaitTime", 10000);
+   private double hopperWaitTime;
 
    @Override
    protected void defineSteps()
    {
+
+      hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".hopperWaitTime", 10000);
+      SmartDashboard.putString("someString", someString);
+      SmartDashboard.putNumber("hopper wait time", hopperWaitTime);
 
       // TODO Add path to hopper here
 
