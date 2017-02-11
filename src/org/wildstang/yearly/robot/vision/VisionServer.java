@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionServer implements Runnable
@@ -16,6 +17,7 @@ public class VisionServer implements Runnable
    private int m_currentValue;
       
    private ArrayList<VisionHandler> m_handlers = new ArrayList<VisionHandler>();
+   
    
    public VisionServer(int p_port)
    {

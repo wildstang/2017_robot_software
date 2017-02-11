@@ -19,6 +19,7 @@ public class VisionHandler implements Runnable
    private InputStream m_inputStream;
    private OutputStream m_outputStream;
    private VisionServer m_visionServer;
+   private Preferences visionPrefs;
    
    private long m_lastMsgReceived;
    
@@ -98,19 +99,22 @@ public class VisionHandler implements Runnable
    private void sendPreferences(PrintWriter p_out)
    {
       StringBuffer buf = new StringBuffer();
-      Preferences prefs = Preferences.getInstance();
       
-      buf.append(prefs.getInt("H_min", VisionConstants.H_MIN));
+      buf.append(visionPrefs.getInt("H Min", 0));
       buf.append("|");
-      buf.append(prefs.getInt("S_min", VisionConstants.H_MIN));
+      buf.append(visionPrefs.getInt("S Min", 0));
       buf.append("|");
-      buf.append(prefs.getInt("V_min", VisionConstants.H_MIN));
+      buf.append(visionPrefs.getInt("V Min", 245));
       buf.append("|");
-      buf.append(prefs.getInt("H_max", VisionConstants.H_MIN));
+      buf.append(visionPrefs.getInt("H Max", 0));
       buf.append("|");
-      buf.append(prefs.getInt("S_max", VisionConstants.H_MIN));
+      buf.append(visionPrefs.getInt("S Max", 0));
       buf.append("|");
-      buf.append(prefs.getInt("V_max", VisionConstants.V_MAX));
+      buf.append(visionPrefs.getInt("V Max", 255));
+      buf.append("|");
+      buf.append(visionPrefs.getInt("X Offset", 0));
+      buf.append("|");
+      buf.append(visionPrefs.getInt("Threshold Size(per side)", 50));
       buf.append("\n");
       
       p_out.println(buf.toString());
