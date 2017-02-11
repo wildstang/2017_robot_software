@@ -3,19 +3,18 @@ package org.wildstang.yearly.auto.steps;
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 
-
 public class WaitStep extends AutoStep
 {
-   private long startTime;
+   private double startTime;
    private double timePassed;
    private double targetTime;
    private boolean firstRun = true;
-   
-   public WaitStep(long waitTime)
+
+   public WaitStep(double waitTime)
    {
       targetTime = waitTime;
    }
-   
+
    public void initialize()
    {
 
@@ -32,11 +31,11 @@ public class WaitStep extends AutoStep
    {
       if (firstRun)
       {
-         startTime = System.currentTimeMillis();
+         startTime = (double) System.currentTimeMillis();
          firstRun = false;
       }
 
-      timePassed = (double) (System.currentTimeMillis() - startTime);
+      timePassed = ((double) System.currentTimeMillis() - startTime);
 
       if (timePassed >= targetTime)
       {

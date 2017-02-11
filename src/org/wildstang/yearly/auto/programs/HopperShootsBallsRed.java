@@ -14,7 +14,7 @@ public class HopperShootsBallsRed extends AutoProgram
    protected void defineSteps()
    {
       // Default is 10 seconds for testing
-      long hopperWaitTime = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+      double hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + ".waitStep", 10000);
 
       // TODO Add path to hopper here

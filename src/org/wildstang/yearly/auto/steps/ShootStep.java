@@ -10,7 +10,7 @@ public class ShootStep extends AutoStep
 
    private Shooter shooter;
 
-   private long startTime;
+   private double startTime;
    private double timePassed;
    private boolean waiting;
 
@@ -24,14 +24,14 @@ public class ShootStep extends AutoStep
       // WS Config sets to 4 seconds
       delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + ".delayWhileShooting", 2000);
-      
+
    }
 
    @Override
    public void update()
    {
       shooter.turnFlywheelOn();
-      
+
       if (shooter.checkRangeForAuto())
       {
          shooter.openBothGate();
@@ -57,13 +57,13 @@ public class ShootStep extends AutoStep
    private void timeDelay(double time)
    {
       waiting = true;
-      startTime = System.currentTimeMillis();
+      startTime = (double) System.currentTimeMillis();
 
       while (waiting)
       {
          timePassed = (double) (System.currentTimeMillis() - startTime);
 
-         if (timePassed == time)
+         if (timePassed >= time)
          {
             waiting = false;
          }
