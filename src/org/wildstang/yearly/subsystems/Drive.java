@@ -11,6 +11,7 @@ import org.wildstang.framework.logger.StateTracker;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -55,10 +56,10 @@ public class Drive implements Subsystem
    private boolean m_rawMode = false;
 
    // Talons for output
-   private CANTalon m_leftMaster;
-   private CANTalon m_rightMaster;
-   private CANTalon m_leftFollower;
-   private CANTalon m_rightFollower;
+   private WsVictor m_leftMaster;
+   private WsVictor m_rightMaster;
+   private WsVictor m_leftFollower;
+   private WsVictor m_rightFollower;
 
    // State information
    private DriveType m_driveMode = DriveType.CHEESY;
@@ -108,6 +109,11 @@ public class Drive implements Subsystem
       m_quickTurnInput.addInputListener(this);
 
       m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
+      
+      m_leftMaster = (WsVictor)Core.getOutputManager().getOutput(WSOutputs.DRIVE_1_LEFT.getName());
+      m_leftFollower = (WsVictor)Core.getOutputManager().getOutput(WSOutputs.DRIVE_2_LEFT.getName());
+      m_rightMaster = (WsVictor)Core.getOutputManager().getOutput(WSOutputs.DRIVE_3_RIGHT.getName());
+      m_rightFollower = (WsVictor)Core.getOutputManager().getOutput(WSOutputs.DRIVE_4_RIGHT.getName());
 
       initDriveTalons();
       
@@ -116,93 +122,93 @@ public class Drive implements Subsystem
 
    public void initDriveTalons()
    {
-      m_leftMaster = new CANTalon(CANConstants.LEFT_MASTER_TALON_ID);
-      m_leftFollower = new CANTalon(CANConstants.LEFT_FOLLOWER_TALON_ID);
-      m_rightMaster = new CANTalon(CANConstants.RIGHT_MASTER_TALON_ID);
-      m_rightFollower = new CANTalon(CANConstants.RIGHT_FOLLOWER_TALON_ID);
-
-      // Start in open loop mode
-      m_leftMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-      m_leftMaster.set(0);
-      m_leftFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-      m_leftFollower.set(CANConstants.LEFT_MASTER_TALON_ID);
-
-      m_rightMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-      m_rightMaster.set(0);
-      m_rightFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-      m_rightFollower.set(CANConstants.RIGHT_MASTER_TALON_ID);
-
-      m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
-      m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
-      
-      m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
-      m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
-
-      setBrakeMode(true);
-
-      // TODO: Enable when encoders are mounted
-
-      // Set up the encoders
-      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-      m_leftMaster.configEncoderCodesPerRev(256);
-      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
-      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
-      {
-         SmartDashboard.putBoolean("LeftEncPresent", false);
-      }
-      else
-      {
-         SmartDashboard.putBoolean("LeftEncPresent", true);
-      }
-      //m_leftMaster.reverseSensor(false);
-
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-      m_rightMaster.configEncoderCodesPerRev(256);
-      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
-      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
-      {
-         SmartDashboard.putBoolean("RightEncPresent", false);
-      }
-      else
-      {
-         SmartDashboard.putBoolean("RightEncPresent", true);
-      }
-
-      //m_rightMaster.reverseSensor(false);
-
-      // TODO: When gearboxes are constructed and motor direction is determined,
-      // update to suit
-      // m_leftMaster.reverseOutput(false);
-      // m_leftFollower.reverseOutput(false);
-      // m_rightMaster.reverseOutput(true);
-      // m_rightFollower.reverseOutput(false);
-
-      // Load PID profiles
-      // Path following profile
-      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
-      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
-      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
-      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
-
-      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
-      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
-      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
-      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
-
-      // Base lock profile
-      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
-      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
-      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
-      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
-
-      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
-      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
-      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
-      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
+//      m_leftMaster = new CANTalon(CANConstants.LEFT_MASTER_TALON_ID);
+//      m_leftFollower = new CANTalon(CANConstants.LEFT_FOLLOWER_TALON_ID);
+//      m_rightMaster = new CANTalon(CANConstants.RIGHT_MASTER_TALON_ID);
+//      m_rightFollower = new CANTalon(CANConstants.RIGHT_FOLLOWER_TALON_ID);
+//
+//      // Start in open loop mode
+//      m_leftMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+//      m_leftMaster.set(0);
+//      m_leftFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+//      m_leftFollower.set(CANConstants.LEFT_MASTER_TALON_ID);
+//
+//      m_rightMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+//      m_rightMaster.set(0);
+//      m_rightFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+//      m_rightFollower.set(CANConstants.RIGHT_MASTER_TALON_ID);
+//
+//      m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
+//      m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
+//      
+//      m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
+//      m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
+//
+//      setBrakeMode(true);
+//
+//      // TODO: Enable when encoders are mounted
+//
+//      // Set up the encoders
+//      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//      m_leftMaster.configEncoderCodesPerRev(256);
+//      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
+//      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+//      {
+//         SmartDashboard.putBoolean("LeftEncPresent", false);
+//      }
+//      else
+//      {
+//         SmartDashboard.putBoolean("LeftEncPresent", true);
+//      }
+//      //m_leftMaster.reverseSensor(false);
+//
+//      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//      m_rightMaster.configEncoderCodesPerRev(256);
+//      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
+//      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+//      {
+//         SmartDashboard.putBoolean("RightEncPresent", false);
+//      }
+//      else
+//      {
+//         SmartDashboard.putBoolean("RightEncPresent", true);
+//      }
+//
+//      //m_rightMaster.reverseSensor(false);
+//
+//      // TODO: When gearboxes are constructed and motor direction is determined,
+//      // update to suit
+//      // m_leftMaster.reverseOutput(false);
+//      // m_leftFollower.reverseOutput(false);
+//      // m_rightMaster.reverseOutput(true);
+//      // m_rightFollower.reverseOutput(false);
+//
+//      // Load PID profiles
+//      // Path following profile
+//      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+//      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
+//      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
+//      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
+//      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
+//
+//      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+//      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
+//      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
+//      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
+//      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
+//
+//      // Base lock profile
+//      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
+//      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
+//      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
+//      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
+//
+//      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
+//      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
+//      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
+//      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
 
    }
 
@@ -282,12 +288,12 @@ public class Drive implements Subsystem
             m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
       }
-      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
-      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
-      
-      
-      Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
-      Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
+//      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
+//      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
+//      
+//      
+//      Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
+//      Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
       
       Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
       Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
@@ -307,77 +313,77 @@ public class Drive implements Subsystem
 
    private void collectDriveState()
    {
-      // Calculate all changes in DriveState
-      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
-      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
-      double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
-      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
-
-      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
-      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
-      }
-      
-      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
-      
-      
-      /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
-      long startTime = System.nanoTime();
-
-      double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
-      double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
-      double deltaTheta;
-      double straightLineInches = 0;
-      
-      if (deltaLeftTicks != deltaRightTicks)
-      {
-         deltaTheta = (Math.atan2((deltaRightInches - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
-      }
-      else
-      {
-    	 straightLineInches = deltaLeftInches; 
-         deltaTheta = 0;
-      }
-
-      double c;
-      double rLong;
-      // double deltaXRight; // delta X and Y relative to the robots position
-      // double deltaXLeft;
-      // double deltaYRight;
-      // double deltaYLeft;
-      if (deltaTheta < 0)
-      {
-         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
-
-      }
-      else if (deltaTheta > 0)
-      {
-         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
-
-      }
-      else
-      {
-         c = (double) Integer.MAX_VALUE;
-
-      }
-
-      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
-                                      // larger turn radius.
-
-      System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
-      /*********************************/
-      
-      // Add the DriveState to the list
-      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
-
-      // reset the absolute DriveState for the next cycle
-      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
-      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
-      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
-      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
-
-      
+//      // Calculate all changes in DriveState
+//      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
+//      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
+//      double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
+//      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
+//
+//      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
+//    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
+//      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
+//    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
+//      }
+//      
+//      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+//      
+//      
+//      /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
+//      long startTime = System.nanoTime();
+//
+//      double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
+//      double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
+//      double deltaTheta;
+//      double straightLineInches = 0;
+//      
+//      if (deltaLeftTicks != deltaRightTicks)
+//      {
+//         deltaTheta = (Math.atan2((deltaRightInches - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
+//      }
+//      else
+//      {
+//    	 straightLineInches = deltaLeftInches; 
+//         deltaTheta = 0;
+//      }
+//
+//      double c;
+//      double rLong;
+//      // double deltaXRight; // delta X and Y relative to the robots position
+//      // double deltaXLeft;
+//      // double deltaYRight;
+//      // double deltaYLeft;
+//      if (deltaTheta < 0)
+//      {
+//         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
+//
+//      }
+//      else if (deltaTheta > 0)
+//      {
+//         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
+//
+//      }
+//      else
+//      {
+//         c = (double) Integer.MAX_VALUE;
+//
+//      }
+//
+//      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
+//                                      // larger turn radius.
+//
+//      System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
+//      /*********************************/
+//      
+//      // Add the DriveState to the list
+//      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
+//
+//      // reset the absolute DriveState for the next cycle
+//      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+//      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+//      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+//      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
+//
+//      
 
    }
    private void calculateRawMode()
@@ -402,10 +408,10 @@ public class Drive implements Subsystem
    {
       if (m_brakeMode != p_brakeOn)
       {
-         m_leftMaster.enableBrakeMode(p_brakeOn);
-         m_leftFollower.enableBrakeMode(p_brakeOn);
-         m_rightMaster.enableBrakeMode(p_brakeOn);
-         m_rightFollower.enableBrakeMode(p_brakeOn);
+//         m_leftMaster.enableBrakeMode(p_brakeOn);
+//         m_leftFollower.enableBrakeMode(p_brakeOn);
+//         m_rightMaster.enableBrakeMode(p_brakeOn);
+//         m_rightFollower.enableBrakeMode(p_brakeOn);
          m_brakeMode = p_brakeOn;
       }
 
@@ -414,8 +420,10 @@ public class Drive implements Subsystem
    public void setMotorSpeeds(DriveSignal p_signal)
    {
       // Set left and right speeds
-      m_leftMaster.set(p_signal.leftMotor);
-      m_rightMaster.set(p_signal.rightMotor);
+      m_leftMaster.setValue(p_signal.leftMotor);
+      m_leftFollower.setValue(p_signal.leftMotor);
+      m_rightMaster.setValue(p_signal.rightMotor);
+      m_rightFollower.setValue(p_signal.rightMotor);
    }
 
    public void setPathFollowingMode()
@@ -425,11 +433,11 @@ public class Drive implements Subsystem
       m_driveMode = DriveType.PATH;
 
       // Configure motor controller modes for path following
-      m_leftMaster.changeControlMode(TalonControlMode.MotionProfile);
-      m_leftMaster.setProfile(0);
-
-      m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
-      m_rightMaster.setProfile(0);
+//      m_leftMaster.changeControlMode(TalonControlMode.MotionProfile);
+//      m_leftMaster.setProfile(0);
+//
+//      m_rightMaster.changeControlMode(TalonControlMode.MotionProfile);
+//      m_rightMaster.setProfile(0);
 
       // Go as fast as possible
       setHighGear(true);
@@ -440,8 +448,8 @@ public class Drive implements Subsystem
    
    public void resetEncoders()
    {
-      m_leftMaster.setPosition(0);
-      m_rightMaster.setPosition(0);
+//      m_leftMaster.setPosition(0);
+//      m_rightMaster.setPosition(0);
    }
 
    public void setOpenLoopDrive()
@@ -457,8 +465,8 @@ public class Drive implements Subsystem
       m_driveMode = DriveType.CHEESY;
 
       // Reconfigure motor controllers
-      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
-      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
+//      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
+//      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
    }
 
    public void setRawDrive()
@@ -484,15 +492,15 @@ public class Drive implements Subsystem
       {
          // Set up Talons to hold their current position as close as possible
 
-         m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-         m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-         m_leftMaster.set(m_leftMaster.getPosition());
-
-         m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
-         m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
-         m_rightMaster.set(m_rightMaster.getPosition());
+//         m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+//         m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+//         m_leftMaster.set(m_leftMaster.getPosition());
+//
+//         m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+//         m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
+//         m_rightMaster.set(m_rightMaster.getPosition());
 
          m_driveMode = DriveType.FULL_BRAKE;
 
@@ -512,7 +520,7 @@ public class Drive implements Subsystem
       }
 
       System.out.println("Drive.setPath(): Creating new PathFollower");
-      m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
+//      m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 
    public PathFollower getPathFollower()

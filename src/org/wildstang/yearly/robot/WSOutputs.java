@@ -23,10 +23,10 @@ public enum WSOutputs implements Outputs
    // ********************************
    // Talon Motors (PLACE HOLDERS)
    // ********************************
-   //DRIVE_1_LEFT("Drive 1 Left",              WSOutputType.TALON,    new WsTalonConfig(1, 0.0), getLogging()),     // CAN ID 1 Driver Subsystem
-   //DRIVE_2_LEFT("Drive 2 Left",              WSOutputType.TALON,    new WsTalonConfig(2, 0.0), getLogging()),     // CAN ID 2 Driver Subsystem
-   //DRIVE_3_RIGHT("Drive 3 Right",            WSOutputType.TALON,    new WsTalonConfig(3, 0.0), getLogging()),     // CAN ID 3 Driver Subsystem
-   //DRIVE_4_RIGHT("Drive 4 Right",            WSOutputType.TALON,    new WsTalonConfig(4, 0.0), getLogging()),     // CAN ID 4 Driver Subsystem
+   DRIVE_1_LEFT("Drive 1 Left",              WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),     // CAN ID 1 Driver Subsystem
+   DRIVE_2_LEFT("Drive 2 Left",              WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),     // CAN ID 2 Driver Subsystem
+   DRIVE_3_RIGHT("Drive 3 Right",            WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),     // CAN ID 3 Driver Subsystem
+   DRIVE_4_RIGHT("Drive 4 Right",            WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),     // CAN ID 4 Driver Subsystem
    //FLYWHEEL_LEFT("Flywheel Motor Left",      WSOutputType.TALON,    new WsTalonConfig(5, 0.0), getLogging()),     // CAN ID 5 Driver Subsystem
    //FLYWHEEL_RIGHT("Flywheel Motor Left",     WSOutputType.TALON,    new WsTalonConfig(6, 0.0), getLogging()),     // CAN ID 6 Driver Subsystem
    
@@ -36,11 +36,12 @@ public enum WSOutputs implements Outputs
    //---------------------------------             
    // Motors
    //---------------------------------             
-   FEEDER_LEFT("Left Feeder Motor",          WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),   // Shooter Subsystem
-   FEEDER_RIGHT("Right Feeder Motor",        WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),   // Shooter Subsystem
-   INTAKE("Intake Motor",                    WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),   // Intake Subsystem
-   WINCH("Winch motor",                      WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),   // Winch Subsystem
-                                             
+
+//   FEEDER_LEFT("Left Feeder Motor",          WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),   // Shooter Subsystem
+//   FEEDER_RIGHT("Right Feeder Motor",        WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),   // Shooter Subsystem
+//   INTAKE("Intake Motor",                    WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),   // Intake Subsystem
+//   WINCH("Winch motor",                      WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),   // Winch Subsystem
+//                                             
    //---------------------------------             
    // Servos
    //---------------------------------             
@@ -63,7 +64,7 @@ public enum WSOutputs implements Outputs
    // ********************************
    // Solenoids
    // ********************************
-   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
+   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(0, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
    GATE_LEFT("Gate Left",                    WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), getLogging()),                                  // Ctrl 1, Pin  2                            Shooter Subsystem
    GATE_RIGHT("Gate Right",                  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),                                  // Ctrl 1, Pin  3                            Shooter Subsystem
    GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
