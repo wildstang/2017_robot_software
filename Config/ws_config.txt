@@ -1,3 +1,13 @@
+//The Wildstang config file
+org.wildstang.logger.Logger.logIp=10.1.11.22
+org.wildstang.logger.Logger.port=17654
+org.wildstang.logger.Logger.logToServer=false
+org.wildstang.logger.Logger.logToStdout=true
+org.wildstang.logger.Logger.logLevel="DEBUG"
+
+// 2017 Path Following Paths
+boiler.to.hopper.auto.red=/home/lvuser/path.test.txt
+boiler.to.hopper.auto.blue="/home/lvuser/path.test.txt"
 
 //Shooter
 org.wildstang.yearly.subsystems.Shooter.flywheelSpeed=500.0

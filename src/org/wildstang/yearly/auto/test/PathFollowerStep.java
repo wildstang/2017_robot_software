@@ -43,6 +43,7 @@ public class PathFollowerStep extends AutoStep
       m_path.setRight(rightTrajectory);
       
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
+      m_drive.setHighGear(true);
    }
 
    @Override
@@ -52,14 +53,16 @@ public class PathFollowerStep extends AutoStep
       {
          if (!m_started)
          {
-            System.out.println("Step.update() called first time");
-   
+            // TODO: Can next 3 lines be moved to init() ??
             m_drive.setPathFollowingMode();
             m_drive.setPath(m_path);
             m_pathFollower = m_drive.getPathFollower();
             m_drive.startFollowingPath();
-         
+            m_drive.resetEncoders();
+            
             m_started = true;
+            
+            
             
          }
          else
@@ -70,7 +73,6 @@ public class PathFollowerStep extends AutoStep
             }
             else
             {
-               System.out.println("Step.update(): path now inactive");
                m_drive.pathCleanup();
                setFinished(true);
             }

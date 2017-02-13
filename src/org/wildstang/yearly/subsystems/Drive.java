@@ -23,8 +23,10 @@ import org.wildstang.yearly.subsystems.drive.Path;
 import org.wildstang.yearly.subsystems.drive.PathFollower;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -63,11 +65,14 @@ public class Drive implements Subsystem
    private PathFollower m_pathFollower;
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
-   private static final double ROBOT_WIDTH_INCHES = 38;
+   private static final double ROBOT_WIDTH_INCHES = 22;
    private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI
-         / 1024;
-   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0);
+   private static final double ENCODER_CPR = 1024;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
+   private static final double RADIANS = Math.PI / 180;
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
+   double maxSpeed = 0;
+
    private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
 
    private boolean m_brakeMode = true;
@@ -106,6 +111,8 @@ public class Drive implements Subsystem
       m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
+      
+      resetEncoders();
    }
 
    public void initDriveTalons()
@@ -139,6 +146,7 @@ public class Drive implements Subsystem
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_leftMaster.configEncoderCodesPerRev(256);
+      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
@@ -151,6 +159,7 @@ public class Drive implements Subsystem
 
       m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
       m_rightMaster.configEncoderCodesPerRev(256);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
@@ -160,7 +169,7 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
-      // m_rightMaster.reverseSensor(true);
+      //m_rightMaster.reverseSensor(false);
 
       // TODO: When gearboxes are constructed and motor direction is determined,
       // update to suit
@@ -204,12 +213,12 @@ public class Drive implements Subsystem
 
       if (p_source == m_throttleInput)
       {
-         m_throttleValue = -m_throttleInput.getValue();
+         m_throttleValue = m_throttleInput.getValue();
          SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
       {
-         m_headingValue = -m_headingInput.getValue();
+         m_headingValue = m_headingInput.getValue();
          // headingValue *= -1;
          SmartDashboard.putNumber("heading value", m_headingValue);
       }
@@ -247,7 +256,7 @@ public class Drive implements Subsystem
       // NOTE: The state of m_highGear needs to be set prior to update being
       // called. This is either in inputUpdate() (for teleop)
       // or by an auto program by calling setHighGear()
-      if (m_highGear)
+      if (!m_highGear)
       {
          m_shifterSolenoid.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
       }
@@ -259,13 +268,13 @@ public class Drive implements Subsystem
       switch (m_driveMode)
       {
          case PATH:
-            collectDriveState();
+            //collectDriveState();
             break;
 
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
-            collectDriveState();
+            //collectDriveState();
             break;
          case FULL_BRAKE:
             break;
@@ -275,7 +284,10 @@ public class Drive implements Subsystem
             m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
       }
-
+      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
+      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
+      
+      
       Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
       Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
 
@@ -292,6 +304,7 @@ public class Drive implements Subsystem
          m_highGear = !m_highGear;
       }
       m_shifterPrev = m_shifterCurrent;
+      maxSpeed = 0; // Easy way to reset max speed.
    }
 
    private void collectDriveState()
@@ -305,23 +318,30 @@ public class Drive implements Subsystem
       double deltaTime = System.currentTimeMillis()
             - absoluteDriveState.getDeltaTime();
 
-      SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
-      SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
-
+      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
+      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
+    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
+      }
+      
+      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+      
+      
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();
 
       double deltaLeftInches = deltaLeftTicks * TICKS_TO_INCHES;
       double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
-
       double deltaTheta;
+      double straightLineInches = 0;
+      
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = Math.atan2(ROBOT_WIDTH_INCHES, (deltaLeftTicks
-               - deltaRightTicks));
+         deltaTheta = (Math.atan2((deltaRightInches - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
       }
       else
       {
+    	 straightLineInches = deltaLeftInches; 
          deltaTheta = 0;
       }
 
@@ -354,9 +374,9 @@ public class Drive implements Subsystem
 
       // System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
-
+      
       // Add the DriveState to the list
-      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, c, deltaTheta));
+      driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
       absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime()
@@ -369,7 +389,6 @@ public class Drive implements Subsystem
             + deltaHeading);
 
    }
-
    private void calculateRawMode()
    {
       if (m_rawModeCurrent && !m_rawModePrev)
@@ -410,7 +429,7 @@ public class Drive implements Subsystem
 
    public void setPathFollowingMode()
    {
-      System.out.println("Drive.setPathFollowingMode() called");
+	   DriverStation.getInstance().reportWarning("Set Path Following Mode", false);
 
       m_driveMode = DriveType.PATH;
 
@@ -428,9 +447,16 @@ public class Drive implements Subsystem
       // output to neutral
       setBrakeMode(true);
    }
+   
+   public void resetEncoders()
+   {
+      m_leftMaster.setPosition(0);
+      m_rightMaster.setPosition(0);
+   }
 
    public void setOpenLoopDrive()
    {
+	   DriverStation.getInstance().reportWarning("Set Open Loop Drive", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -455,6 +481,7 @@ public class Drive implements Subsystem
 
    public void setFullBrakeMode()
    {
+	   DriverStation.getInstance().reportWarning("Set Full Brake Mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -527,9 +554,11 @@ public class Drive implements Subsystem
    }
 
    public void pathCleanup()
-   {
-      m_pathFollower.stop();
-      m_pathFollower = null;
+   { 
+	  if(m_pathFollower != null) { 
+		  m_pathFollower.stop();
+          m_pathFollower = null;
+	  }
    }
 
    @Override
@@ -537,6 +566,7 @@ public class Drive implements Subsystem
    {
       return "Drive Base";
    }
+   
 
    public void writeDriveStatesToFile(String fileName)
    {
@@ -568,10 +598,15 @@ public class Drive implements Subsystem
          {
             fw.close();
          }
-      }
+      }//373x45=>31 ft, 1 inch x 3 ft 9 inches
+      // We got 23 ft 9 inches x 11 ft 4 inches
+      // Our calculations were 7 ft 4 inches too short in the x direction, but
+      // we were 7 ft 7 inches too long in the y direction
       catch (IOException ex)
       {
          ex.printStackTrace();
       }
+      driveStates.clear();
+      
    }
 }

@@ -31,6 +31,7 @@ import org.wildstang.yearly.auto.programs.HopperShootsBallsRed;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
 import org.wildstang.yearly.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -56,11 +57,11 @@ public class RobotTemplate extends IterativeRobot
    
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
+   private double oldTime = System.currentTimeMillis();
 
    static boolean teleopPerodicCalled = false;
    
-   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
-   
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";   
    private void startloggingState()
    {
       Writer outputWriter = null;
@@ -241,15 +242,31 @@ public class RobotTemplate extends IterativeRobot
    public void disabledPeriodic()
    {
       // If we are finished with teleop, finish and close the log file
-//      ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
+	  
+	  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null) {
+		  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive()) {
+			  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+		  }
+    }
+      
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
       }
+      resetRobotState();
+   }
+
+   
+   /**
+    * This should be called to reset any robot state between runs, without having to restart robot code.
+    * 
+    */
+   private void resetRobotState()
+   {
       AutoFirstRun = true;
       firstRun = true;
    }
-
+   
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
@@ -266,12 +283,11 @@ public class RobotTemplate extends IterativeRobot
       // Update all inputs, outputs and subsystems
 
       m_core.executeUpdate();
-
+      double time = System.currentTimeMillis(); 
+	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
+	  oldTime = time;
       if (AutoFirstRun)
       {
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(true);
          AutoFirstRun = false;
       }
    }
@@ -282,9 +298,8 @@ public class RobotTemplate extends IterativeRobot
    public void teleopInit()
    {
       //Write all DriveState objects to a file from auto
-      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
-      
-      // Remove the AutoManager from the Core
+      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);     
+       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
@@ -299,14 +314,13 @@ public class RobotTemplate extends IterativeRobot
 
    public void teleopPeriodic()
    {
+	   
+	  double time = System.currentTimeMillis(); 
+	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
+	  oldTime = time;
       if (firstRun)
       {
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetLeftEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).resetRightEncoder();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setSuperDriveOverride(false);
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).stopStraightMoveWithMotionProfile();
-//         ((DriveBase) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).setLeftDrive(0);
-//         firstRun = false;
+         firstRun = false;
       }
 
       try{
@@ -316,7 +330,7 @@ public class RobotTemplate extends IterativeRobot
 
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-
+      
       long cycleEndTime = System.currentTimeMillis();
       long cycleLength = cycleEndTime - cycleStartTime;
       // System.out.println("Cycle time: " + cycleLength);
