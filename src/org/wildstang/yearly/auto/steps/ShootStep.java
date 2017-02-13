@@ -32,7 +32,7 @@ public class ShootStep extends AutoStep
    @Override
    public void update()
    {
-      shooter.testShooterWithDashboard();
+      shooter.updateDashboardData();
       shooter.turnFlywheelOn();
 
 //      if (shooter.checkRangeForAuto())
@@ -40,7 +40,7 @@ public class ShootStep extends AutoStep
          shooter.openBothGate();
          shooter.turnFeedOn();
          
-         shooter.testShooterWithDashboard();
+         shooter.updateDashboardData();
          
          timeDelay(delayWhileShooting);
 
@@ -48,7 +48,7 @@ public class ShootStep extends AutoStep
          shooter.turnFeedOff();
          shooter.turnFlywheelOff();
          
-         shooter.testShooterWithDashboard();
+         shooter.updateDashboardData();
 
          setFinished(true);
       //}

@@ -10,8 +10,8 @@ public class Feed extends Shooter
    private WsVictor m_victor;
    private double feedSpeed;
 
-   private double limit;
-   private boolean jammed;
+   private double limit = 30;
+   private boolean jammed = false;
 
    private boolean ballReady;
    private boolean invert;

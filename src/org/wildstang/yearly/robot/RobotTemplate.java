@@ -1,11 +1,11 @@
 package org.wildstang.yearly.robot;
 /*----------------------------------------------------------------------------*/
+
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -52,29 +52,30 @@ public class RobotTemplate extends IterativeRobot
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
-   
+
    private boolean exceptionThrown = false;
-   
+
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
    private double oldTime = System.currentTimeMillis();
 
    static boolean teleopPerodicCalled = false;
-   
-   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";   
+
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
+
    private void startloggingState()
    {
       Writer outputWriter = null;
 
       outputWriter = getFileWriter();
-//       outputWriter = getNetworkWriter("10.1.11.12", 17654);
+      // outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
-      
+
       // Set the interval between writes to the file. Try 100ms
-//      m_stateLogger.setWriteInterval(100);
+      // m_stateLogger.setWriteInterval(100);
       m_stateLogger.start();
-      
+
       Thread t = new Thread(m_stateLogger);
       t.start();
    }
@@ -108,21 +109,21 @@ public class RobotTemplate extends IterativeRobot
 
       try
       {
-    	  File outputFile;
-    	  String osname = System.getProperty("os.name");
-          if (osname.startsWith("Windows"))
-          {
-        	  outputFile = new File("./../../log.txt");
-          }
-          else if (osname.startsWith("Mac"))
-          {
-        	  outputFile = new File ("./../../log.txt");
-          }
-          else
-          {
-        	  outputFile = new File("/home/lvuser/log.txt");
-          }
-          if (outputFile.exists())
+         File outputFile;
+         String osname = System.getProperty("os.name");
+         if (osname.startsWith("Windows"))
+         {
+            outputFile = new File("./../../log.txt");
+         }
+         else if (osname.startsWith("Mac"))
+         {
+            outputFile = new File("./../../log.txt");
+         }
+         else
+         {
+            outputFile = new File("/home/lvuser/log.txt");
+         }
+         if (outputFile.exists())
          {
             outputFile.delete();
          }
@@ -169,28 +170,28 @@ public class RobotTemplate extends IterativeRobot
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
       AutoManager.getInstance().addProgram(new HopperShootsBallsRed());
-      
+
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
       startupTimer.endTimingSection();
-      
+
    }
 
    private void loadConfig()
    {
-	   File configFile;
-	   String osname = System.getProperty("os.name");
-       if (osname.startsWith("Windows"))
-       {
-    	   configFile = new File("./Config/ws_config.txt");
-       }
-       else if (osname.startsWith("Mac"))
-       {
-    	   configFile = new File("./Config/ws_config.txt");
-       }
-       else
-       {
-    	   configFile = new File("/ws_config.txt");
-       }
+      File configFile;
+      String osname = System.getProperty("os.name");
+      if (osname.startsWith("Windows"))
+      {
+         configFile = new File("./Config/ws_config.txt");
+      }
+      else if (osname.startsWith("Mac"))
+      {
+         configFile = new File("./Config/ws_config.txt");
+      }
+      else
+      {
+         configFile = new File("/ws_config.txt");
+      }
 
       BufferedReader reader = null;
 
@@ -242,13 +243,15 @@ public class RobotTemplate extends IterativeRobot
    public void disabledPeriodic()
    {
       // If we are finished with teleop, finish and close the log file
-	  
-	  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null) {
-		  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive()) {
-			  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
-		  }
-    }
-      
+
+      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
+      {
+         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
+         {
+            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+         }
+      }
+
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
@@ -256,9 +259,9 @@ public class RobotTemplate extends IterativeRobot
       resetRobotState();
    }
 
-   
    /**
-    * This should be called to reset any robot state between runs, without having to restart robot code.
+    * This should be called to reset any robot state between runs, without
+    * having to restart robot code.
     * 
     */
    private void resetRobotState()
@@ -266,7 +269,7 @@ public class RobotTemplate extends IterativeRobot
       AutoFirstRun = true;
       firstRun = true;
    }
-   
+
    public void autonomousInit()
    {
       Core.getSubsystemManager().init();
@@ -283,9 +286,9 @@ public class RobotTemplate extends IterativeRobot
       // Update all inputs, outputs and subsystems
 
       m_core.executeUpdate();
-      double time = System.currentTimeMillis(); 
-	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
-	  oldTime = time;
+      double time = System.currentTimeMillis();
+      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+      oldTime = time;
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -297,47 +300,48 @@ public class RobotTemplate extends IterativeRobot
     */
    public void teleopInit()
    {
-      //Write all DriveState objects to a file from auto
-      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);     
-       // Remove the AutoManager from the Core
+      // Write all DriveState objects to a file from auto
+      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
+      // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
       Core.getSubsystemManager().init();
-      
+
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
-//      
-//      driveBase.stopStraightMoveWithMotionProfile();
+      //
+      // driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }
 
    public void teleopPeriodic()
    {
-	   
-	  double time = System.currentTimeMillis(); 
-	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
-	  oldTime = time;
+
+      double time = System.currentTimeMillis();
+      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+      oldTime = time;
       if (firstRun)
       {
          firstRun = false;
       }
 
-      try{
-      teleopPerodicCalled = true;
+      try
+      {
+         teleopPerodicCalled = true;
 
-      long cycleStartTime = System.currentTimeMillis();
+         long cycleStartTime = System.currentTimeMillis();
 
-      // Update all inputs, outputs and subsystems
-      m_core.executeUpdate();
-      
-      long cycleEndTime = System.currentTimeMillis();
-      long cycleLength = cycleEndTime - cycleStartTime;
-      // System.out.println("Cycle time: " + cycleLength);
-      lastCycleTime = cycleEndTime;
-      // Watchdog.getInstance().feed();
+         // Update all inputs, outputs and subsystems
+         m_core.executeUpdate();
+
+         long cycleEndTime = System.currentTimeMillis();
+         long cycleLength = cycleEndTime - cycleStartTime;
+         // System.out.println("Cycle time: " + cycleLength);
+         lastCycleTime = cycleEndTime;
+         // Watchdog.getInstance().feed();
       }
-      catch(Throwable e)
+      catch (Throwable e)
       {
          SmartDashboard.putString("Exception thrown", e.toString());
          exceptionThrown = true;
