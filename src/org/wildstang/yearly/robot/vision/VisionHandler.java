@@ -100,21 +100,21 @@ public class VisionHandler implements Runnable
    {
       StringBuffer buf = new StringBuffer();
       
-      buf.append(visionPrefs.getInt("H Min", 0));
+      buf.append(visionPrefs.getInt("H Min", VisionConstants.H_MIN));
       buf.append("|");
-      buf.append(visionPrefs.getInt("S Min", 0));
+      buf.append(visionPrefs.getInt("S Min", VisionConstants.S_MIN));
       buf.append("|");
-      buf.append(visionPrefs.getInt("V Min", 245));
+      buf.append(visionPrefs.getInt("V Min", VisionConstants.V_MIN));
       buf.append("|");
-      buf.append(visionPrefs.getInt("H Max", 0));
+      buf.append(visionPrefs.getInt("H Max", VisionConstants.H_MAX));
       buf.append("|");
-      buf.append(visionPrefs.getInt("S Max", 0));
+      buf.append(visionPrefs.getInt("S Max", VisionConstants.S_MAX));
       buf.append("|");
-      buf.append(visionPrefs.getInt("V Max", 255));
+      buf.append(visionPrefs.getInt("V Max", VisionConstants.V_MAX));
       buf.append("|");
-      buf.append(visionPrefs.getInt("X Offset", 0));
+      buf.append(visionPrefs.getInt("X Offset", VisionConstants.X_OFFSET));
       buf.append("|");
-      buf.append(visionPrefs.getInt("Threshold Size(per side)", 50));
+      buf.append(visionPrefs.getInt("Threshold Size(per side)", VisionConstants.THRESHOLD));
       buf.append("\n");
       
       p_out.println(buf.toString());
