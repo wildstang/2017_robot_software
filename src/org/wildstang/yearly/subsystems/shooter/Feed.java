@@ -14,7 +14,6 @@ public class Feed extends Shooter
    private boolean jammed = false;
 
    private boolean ballReady;
-   private boolean invert;
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass

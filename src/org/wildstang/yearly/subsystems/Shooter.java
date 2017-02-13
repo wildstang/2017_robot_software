@@ -390,7 +390,7 @@ public class Shooter implements Subsystem
       // RIGHT SIDE
       if (!m_rightFeed.isJammed(m_rightFeedCurrent))
       {
-         runFeedBelt(m_rightFeed, m_leftFeedDirection);
+         runFeedBelt(m_rightFeed, m_rightFeedDirection);
          SmartDashboard.putBoolean("Right is Jammed", false);
       }
       else
