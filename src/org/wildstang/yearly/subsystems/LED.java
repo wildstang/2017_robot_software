@@ -9,7 +9,6 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -82,7 +81,6 @@ public class LED implements Subsystem
       boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
 
-      DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
 
       m_normal = !m_turbo;
 
