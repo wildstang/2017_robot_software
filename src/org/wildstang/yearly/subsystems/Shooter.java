@@ -219,10 +219,34 @@ public class Shooter implements Subsystem
       else if (p_source == m_leftBeltJoystick)
       {
          m_leftJoyAxis = m_leftBeltJoystick.getValue();
+         if (m_leftJoyAxis > m_feedDeadBand)
+         {
+            m_leftFeedDirection = FeedDirection.SHOOT;
+         }
+         else if (m_leftJoyAxis < -m_feedDeadBand)
+         {
+            m_leftFeedDirection = FeedDirection.REVERSE;
+         }
+         else
+         {
+            m_leftFeedDirection = FeedDirection.STOP;
+         }
       }
       else if (p_source == m_rightBeltJoystick)
       {
          m_rightJoyAxis = m_rightBeltJoystick.getValue();
+         if (m_rightJoyAxis > m_feedDeadBand)
+         {
+            m_rightFeedDirection = FeedDirection.SHOOT;
+         }
+         else if (m_rightJoyAxis < -m_feedDeadBand)
+         {
+            m_rightFeedDirection = FeedDirection.REVERSE;
+         }
+         else
+         {
+            m_rightFeedDirection = FeedDirection.STOP;
+         }
       }
       else if (p_source == m_overrideButton)
       {
