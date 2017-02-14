@@ -7,7 +7,8 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
-
+import org.wildstang.yearly.robot.WSSubsystems;
+import org.wildstang.yearly.subsystems.Shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -41,6 +42,8 @@ public class LED implements Subsystem
    boolean m_normal = true;
    boolean m_shooter;
    boolean m_intake;
+   
+   private Shooter shooter;
 
 
    // Reused commands from year to year
@@ -68,6 +71,8 @@ public class LED implements Subsystem
       autoDataSent = false;
       disableDataSent = false;
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
+      
+      shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
 
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);

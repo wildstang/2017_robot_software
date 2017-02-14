@@ -6,14 +6,9 @@ import org.wildstang.framework.hardware.OutputConfig;
 import org.wildstang.framework.io.outputs.OutputType;
 import org.wildstang.hardware.crio.outputs.WSOutputType;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
-import org.wildstang.hardware.crio.outputs.WsRelayState;
-import org.wildstang.hardware.crio.outputs.config.WsDigitalOutputConfig;
 import org.wildstang.hardware.crio.outputs.config.WsDoubleSolenoidConfig;
 import org.wildstang.hardware.crio.outputs.config.WsI2COutputConfig;
-import org.wildstang.hardware.crio.outputs.config.WsRelayConfig;
-import org.wildstang.hardware.crio.outputs.config.WsServoConfig;
 import org.wildstang.hardware.crio.outputs.config.WsSolenoidConfig;
-import org.wildstang.hardware.crio.outputs.config.WsTalonConfig;
 import org.wildstang.hardware.crio.outputs.config.WsVictorConfig;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -63,11 +58,11 @@ public enum WSOutputs implements Outputs
    // ********************************
    // Solenoids
    // ********************************
-   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
-   GATE_LEFT("Gate Left",                    WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), getLogging()),                                  // Ctrl 1, Pin  2                            Shooter Subsystem
-   GATE_RIGHT("Gate Right",                  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),                                  // Ctrl 1, Pin  3                            Shooter Subsystem
-   GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
-   WINCH_BRKE("Winch Brake",                 WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),                                  // Ctrl 1, Pin  5                            Climber Subsystem
+   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(0, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
+   GATE_LEFT("Gate Left",                    WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 2, false), getLogging()),                                  // Ctrl 1, Pin  2                            Shooter Subsystem
+   GATE_RIGHT("Gate Right",                  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 3, false), getLogging()),                                  // Ctrl 1, Pin  3                            Shooter Subsystem
+   GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
+   WINCH_BRKE("Winch Brake",                 WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), getLogging()),                                  // Ctrl 1, Pin  5                            Climber Subsystem
 
    // ********************************
    // Relays

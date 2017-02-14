@@ -54,12 +54,13 @@ public class RobotTemplate extends IterativeRobot
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
-   
+
    private VisionServer m_visionServer;
    
    private boolean exceptionThrown = false;
 
    private boolean m_firstDisabled = true;
+
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
    private double oldTime = System.currentTimeMillis();
@@ -78,7 +79,7 @@ public class RobotTemplate extends IterativeRobot
       m_stateLogger.setWriter(outputWriter);
 
       // Set the interval between writes to the file. Try 100ms
-      m_stateLogger.setWriteInterval(100);
+      // m_stateLogger.setWriteInterval(100);
       m_stateLogger.start();
 
       Thread t = new Thread(m_stateLogger);
@@ -273,6 +274,14 @@ public class RobotTemplate extends IterativeRobot
       }
 
       // If we are finished with teleop, finish and close the log file
+      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
+      {
+         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
+         {
+            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+         }
+      }
+
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
