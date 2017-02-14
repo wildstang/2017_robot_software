@@ -404,27 +404,26 @@ public class Shooter implements Subsystem
       if (!checkLeftFeedJammed())
       {
          SmartDashboard.putBoolean("Left is Jammed", false);
+         runFeedBelt(m_leftFeed, m_leftFeedDirection);
       }
       else
       {
-         m_leftFeed.stop();
+         
          SmartDashboard.putBoolean("Left is Jammed", true);
+         m_leftFeed.stop();
       }
 
       // RIGHT SIDE
       if (!checkRightFeedJammed())
       {
          SmartDashboard.putBoolean("Right is Jammed", false);
+         runFeedBelt(m_rightFeed, m_rightFeedDirection);
       }
       else
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
          m_rightFeed.stop();
       }
-
-      // Runs the feed belts (even if belt is jammed)
-      runFeedBelt(m_leftFeed, m_leftFeedDirection);
-      runFeedBelt(m_rightFeed, m_rightFeedDirection);
 
    }
 
