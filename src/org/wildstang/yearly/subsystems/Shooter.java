@@ -51,7 +51,7 @@ public class Shooter implements Subsystem
    private boolean readyToShootRight = false;
 
    private boolean m_shootOverride = false;
-   
+
    private double m_targetSpeed;
    private double m_lowLimitSpeed;
    private double m_highLimitSpeed;
@@ -80,10 +80,10 @@ public class Shooter implements Subsystem
 
    private double m_leftJoyAxis;
    private double m_rightJoyAxis;
-   
+
    private FeedDirection m_leftFeedDirection;
    private FeedDirection m_rightFeedDirection;
-   
+
    private double m_feedDeadBand;
    private double m_feedSpeed;
 
@@ -123,11 +123,16 @@ public class Shooter implements Subsystem
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
       // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 10.0);
-      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 5.0);
-      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 15.0);
-      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.4);
-      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.1);
+      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".flywheelSpeed", 10.0);
+      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".lowLimitSpeed", 5.0);
+      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".highLimitSpeed", 15.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".feedSpeed", 0.4);
+      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".feedDeadBand", 0.1);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
@@ -146,7 +151,7 @@ public class Shooter implements Subsystem
       // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed, true);
       m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed, false);
-      
+
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
 
@@ -169,9 +174,9 @@ public class Shooter implements Subsystem
       m_rightBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName());
       m_rightBeltJoystick.addInputListener(this);
 
-      m_overrideButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
+      m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
-      
+
       // If we get a swtich for balls waiting
       // leftBallReadySwitch = (DigitalInput)
       // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
@@ -344,7 +349,7 @@ public class Shooter implements Subsystem
    {
       return isReadyToShoot(m_CANFlywheelLeft);
    }
-   
+
    public boolean isRightReadyToShoot()
    {
       return isReadyToShoot(m_CANFlywheelRight);
@@ -379,7 +384,6 @@ public class Shooter implements Subsystem
       // LEFT SIDE
       if (!m_leftFeed.isJammed(m_leftFeedCurrent))
       {
-         runFeedBelt(m_leftFeed, m_leftFeedDirection);
          SmartDashboard.putBoolean("Left is Jammed", false);
       }
       else
@@ -390,13 +394,16 @@ public class Shooter implements Subsystem
       // RIGHT SIDE
       if (!m_rightFeed.isJammed(m_rightFeedCurrent))
       {
-         runFeedBelt(m_rightFeed, m_rightFeedDirection);
          SmartDashboard.putBoolean("Right is Jammed", false);
       }
       else
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
       }
+
+      // Runs the feed belts (even if belt is jammed)
+      runFeedBelt(m_leftFeed, m_leftFeedDirection);
+      runFeedBelt(m_rightFeed, m_rightFeedDirection);
 
    }
 
@@ -418,11 +425,9 @@ public class Shooter implements Subsystem
 
    enum FeedDirection
    {
-      SHOOT,
-      REVERSE,
-      STOP;
+      SHOOT, REVERSE, STOP;
    }
-   
+
    // Shows speeds and states for testing
    public void updateDashboardData()
    {
