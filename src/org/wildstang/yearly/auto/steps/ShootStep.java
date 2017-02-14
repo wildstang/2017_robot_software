@@ -35,8 +35,8 @@ public class ShootStep extends AutoStep
       shooter.updateDashboardData();
       shooter.turnFlywheelOn();
 
-//      if (shooter.checkRangeForAuto())
-//      {
+      if (shooter.isLeftReadyToShoot() && shooter.isRightReadyToShoot())
+      {
          shooter.openBothGate();
          shooter.turnFeedOn();
          
@@ -51,7 +51,7 @@ public class ShootStep extends AutoStep
          shooter.updateDashboardData();
 
          setFinished(true);
-      //}
+      }
 
    }
 

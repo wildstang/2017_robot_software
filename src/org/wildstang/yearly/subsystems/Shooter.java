@@ -43,15 +43,17 @@ public class Shooter implements Subsystem
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
 
+   // For the toggle
    private boolean m_flywheelOn = false;
    private boolean m_shooterCurrent;
    private boolean m_shooterPrev;
 
+   // For checking if the gates should open when flywheels are up to speed
    private boolean readyToShootLeft = false;
    private boolean readyToShootRight = false;
-
+   // Can override the flywheel speed checker and open gates anyway
    private boolean m_shootOverride = false;
-
+   // Limits for range flywheels should be at before opening gates
    private double m_targetSpeed;
    private double m_lowLimitSpeed;
    private double m_highLimitSpeed;
@@ -63,6 +65,7 @@ public class Shooter implements Subsystem
    private Gate m_leftGate;
    private Gate m_rightGate;
 
+   // For toggling
    private boolean m_leftGateOpen = false;
    private boolean m_leftGateCurrent;
    private boolean m_leftGatePrev;
@@ -80,14 +83,15 @@ public class Shooter implements Subsystem
 
    private double m_leftJoyAxis;
    private double m_rightJoyAxis;
-
-   private FeedDirection m_leftFeedDirection;
-   private FeedDirection m_rightFeedDirection;
-
+   // Deadband so nothing happens if joystick is bumped on accident
    private double m_feedDeadBand;
    private double m_feedSpeed;
 
-   // PDP
+   // Enumeration variable for SHOOT, REVERSE, and STOP
+   private FeedDirection m_leftFeedDirection;
+   private FeedDirection m_rightFeedDirection;
+
+   // PDP for checking if Feeds are jammed
    private PowerDistributionPanel pdp;
    double m_rightFeedCurrent;
    double m_leftFeedCurrent;
@@ -119,6 +123,7 @@ public class Shooter implements Subsystem
    public void init()
    {
       // Flywheels
+      // CAN talons
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
@@ -220,7 +225,7 @@ public class Shooter implements Subsystem
          }
          m_rightGatePrev = m_rightGateCurrent;
       }
-      // TODO make toggle method when jou>deadband, set to some speed x (+/-)
+      // Sets feed enumaration based on joystick
       else if (p_source == m_leftBeltJoystick)
       {
          m_leftJoyAxis = m_leftBeltJoystick.getValue();
@@ -270,6 +275,7 @@ public class Shooter implements Subsystem
       updateDashboardData();
    }
 
+   // Flywheel stuff
    // Turns on the flywheels w/out buttons for auto
    public void turnFlywheelOn()
    {
@@ -300,6 +306,7 @@ public class Shooter implements Subsystem
 
    }
 
+   // Gate Opens
    public void openBothGate()
    {
       m_leftGateOpen = true;
@@ -312,11 +319,29 @@ public class Shooter implements Subsystem
       m_rightGateOpen = false;
    }
 
+   public boolean isLeftReadyToShoot()
+   {
+      return isReadyToShoot(m_CANFlywheelLeft);
+   }
+
+   public boolean isRightReadyToShoot()
+   {
+      return isReadyToShoot(m_CANFlywheelRight);
+   }
+
+   public boolean isReadyToShoot(CANTalon p_talon)
+   {
+      double speed = p_talon.getSpeed();
+
+      return (speed >= m_lowLimitSpeed && speed <= m_highLimitSpeed);
+   }
+   
    public void updateGates()
    {
       // Tests to see if the left and right flywheel is up to speed and ready to
       // shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
+      // Can be overriden so gates can open even if flywheel isn't up to speed
 
       // LEFT SIDE
       readyToShootLeft = isLeftReadyToShoot() || m_shootOverride;
@@ -344,24 +369,8 @@ public class Shooter implements Subsystem
          m_rightGate.closeGate();
       }
    }
-
-   public boolean isLeftReadyToShoot()
-   {
-      return isReadyToShoot(m_CANFlywheelLeft);
-   }
-
-   public boolean isRightReadyToShoot()
-   {
-      return isReadyToShoot(m_CANFlywheelRight);
-   }
-
-   public boolean isReadyToShoot(CANTalon p_talon)
-   {
-      double speed = p_talon.getSpeed();
-
-      return (speed >= m_lowLimitSpeed && speed <= m_highLimitSpeed);
-   }
-
+   
+   // Feed Stuff
    // Turns on the belts w/out buttons for auto
    public void turnFeedOn()
    {
@@ -375,7 +384,15 @@ public class Shooter implements Subsystem
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
    }
+   
+   private boolean checkLeftFeedJammed (){
+      return m_leftFeed.isJammed(m_leftFeedCurrent);
+   }
 
+   private boolean checkRightFeedJammed (){
+      return m_rightFeed.isJammed(m_rightFeedCurrent);
+   }
+   
    public void updateFeed()
    {
       // Determines whether or not the feeder is jammed and, if so,
