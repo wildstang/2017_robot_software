@@ -27,12 +27,15 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
-import org.wildstang.yearly.auto.programs.HopperShootsBallsRed;
+import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
+import org.wildstang.yearly.robot.vision.VisionServer;
 import org.wildstang.yearly.subsystems.Drive;
+import org.wildstang.yearly.subsystems.LED;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import edu.wpi.first.wpilibj.Watchdog;
@@ -48,12 +51,15 @@ public class RobotTemplate extends IterativeRobot
 {
 
    private static long lastCycleTime = 0;
-   private static int session;
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
+   private VisionServer m_visionServer;
+   
    private boolean exceptionThrown = false;
+
+   private boolean m_firstDisabled = true;
 
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
@@ -139,15 +145,6 @@ public class RobotTemplate extends IterativeRobot
       return output;
    }
 
-   public void testInit()
-   {
-
-   }
-
-   /**
-    * This function is run when the robot is first started up and should be used
-    * for any initialization code.
-    */
    public void robotInit()
    {
       startupTimer.startTimingSection();
@@ -165,13 +162,17 @@ public class RobotTemplate extends IterativeRobot
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 
-      startloggingState();
+       startloggingState();
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
-      AutoManager.getInstance().addProgram(new HopperShootsBallsRed());
-
+      
+      // 3. Start Vision server
+      m_visionServer = new VisionServer(5080);
+      m_visionServer.startVisionServer();
+      
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
+
       startupTimer.endTimingSection();
 
    }
@@ -233,8 +234,6 @@ public class RobotTemplate extends IterativeRobot
 
       loadConfig();
 
-      Core.getSubsystemManager().init();
-
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
 
@@ -242,8 +241,39 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
-      // If we are finished with teleop, finish and close the log file
 
+      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
+      {
+         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
+         {
+            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+         }
+      }
+
+      if (m_firstDisabled)
+      {
+         // Send alliance colour to LEDs
+         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+         }
+         m_firstDisabled = false;
+      }
+      else
+      {
+         // Send rainbow colour to LEDs
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
+      }
+
+      // If we are finished with teleop, finish and close the log file
       if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
       {
          if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
@@ -256,6 +286,7 @@ public class RobotTemplate extends IterativeRobot
       {
          m_stateLogger.stop();
       }
+
       resetRobotState();
    }
 
@@ -272,23 +303,18 @@ public class RobotTemplate extends IterativeRobot
 
    public void autonomousInit()
    {
-      Core.getSubsystemManager().init();
-
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
 
-   /**
-    * This function is called periodically during autonomous
-    */
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
 
       m_core.executeUpdate();
-      double time = System.currentTimeMillis();
-      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-      oldTime = time;
+//      double time = System.currentTimeMillis();
+//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+//      oldTime = time;
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -305,12 +331,8 @@ public class RobotTemplate extends IterativeRobot
       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
-      Core.getSubsystemManager().init();
-
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
-      //
-      // driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }
@@ -318,27 +340,27 @@ public class RobotTemplate extends IterativeRobot
    public void teleopPeriodic()
    {
 
-      double time = System.currentTimeMillis();
-      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-      oldTime = time;
+//      double time = System.currentTimeMillis();
+//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+//      oldTime = time;
       if (firstRun)
       {
+         teleopPerodicCalled = true;
          firstRun = false;
       }
 
       try
       {
-         teleopPerodicCalled = true;
 
-         long cycleStartTime = System.currentTimeMillis();
+//         long cycleStartTime = System.currentTimeMillis();
 
          // Update all inputs, outputs and subsystems
          m_core.executeUpdate();
 
-         long cycleEndTime = System.currentTimeMillis();
-         long cycleLength = cycleEndTime - cycleStartTime;
+//         long cycleEndTime = System.currentTimeMillis();
+//         long cycleLength = cycleEndTime - cycleStartTime;
          // System.out.println("Cycle time: " + cycleLength);
-         lastCycleTime = cycleEndTime;
+//         lastCycleTime = cycleEndTime;
          // Watchdog.getInstance().feed();
       }
       catch (Throwable e)
@@ -351,6 +373,11 @@ public class RobotTemplate extends IterativeRobot
       {
          SmartDashboard.putBoolean("ExceptionThrown", exceptionThrown);
       }
+   }
+
+   public void testInit()
+   {
+
    }
 
    /**
