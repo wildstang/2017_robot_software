@@ -29,10 +29,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Subsystem_Test implements Subsystem
 {
    // add variables here
-   private boolean 	   m_ledManOn     = false;
-   private boolean 	   m_ledAutoOn    = false;
-   private boolean 	   m_buttonAutoOn = false;
-   private boolean 	   m_buttonManOn  = false;
+   private boolean 	   m_ledManOn           = false;
+   private boolean 	   m_ledAutoOn          = false;
+   private boolean 	   m_buttonAutoOn       = false;
+   private boolean 	   m_buttonManOn        = false;
+   private boolean 	   m_limitSwitchPressed = true;
    
    private DigitalOutput   m_testManLed;
    private DigitalOutput   m_testAutoLed;
@@ -77,6 +78,7 @@ public class Subsystem_Test implements Subsystem
       // Register the sensors that this subsystem wants to be notified about
       Core.getInputManager().getInput(WSInputs.MAN_TEST.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.AUTO_TEST.getName()).addInputListener(this);
+      Core.getInputManager().getInput(WSInputs.LIMIT_SWITCH.getName()).addInputListener(this);
 
       m_testManLed = (DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.MAN_TEST_LED.getName());
       m_testAutoLed = (DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.AUTO_TEST_LED.getName());
@@ -115,6 +117,11 @@ public class Subsystem_Test implements Subsystem
          m_buttonAutoOn = ((DigitalInput) source).getValue();
       }
 
+      if (source.getName().equals(WSInputs.LIMIT_SWITCH.getName()))
+      {
+         m_limitSwitchPressed = !((DigitalInput) source).getValue();
+      }
+
 //      System.out.
    }
 
@@ -130,12 +137,13 @@ public class Subsystem_Test implements Subsystem
       //
       // 1. Tell the framework what the updated output values should be set to.
       m_testManLed.setValue(m_ledManOn);
-      m_testAutoLed.setValue(m_ledAutoOn);
+      m_testAutoLed.setValue(m_buttonAutoOn);
 
-      SmartDashboard.putBoolean("m_buttonAutoOn", m_buttonAutoOn);
-      SmartDashboard.putBoolean("m_buttonManOn", m_buttonManOn);
-      SmartDashboard.putBoolean("m_ledAutoOn", m_ledAutoOn);
-      SmartDashboard.putBoolean("m_ledManOn", m_ledManOn);
+      SmartDashboard.putBoolean("m_limitSwitchPressed",  m_limitSwitchPressed);
+      SmartDashboard.putBoolean("m_buttonAutoOn",        m_buttonAutoOn);
+      SmartDashboard.putBoolean("m_buttonManOn",         m_buttonManOn);
+      SmartDashboard.putBoolean("m_ledAutoOn",           m_ledAutoOn);
+      SmartDashboard.putBoolean("m_ledManOn",            m_ledManOn);
 
       //SmartDashboard.putBoolean("DpadXLeft", DpadXLeft);
        //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
@@ -155,6 +163,10 @@ public class Subsystem_Test implements Subsystem
    public boolean autoButtonPressed()
    {
       return m_buttonAutoOn;
-      //return true;
+   }
+
+   public boolean autoLimitSwitchPressed()
+   {
+      return m_limitSwitchPressed;
    }
 }

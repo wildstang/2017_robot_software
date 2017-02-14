@@ -25,15 +25,18 @@ public class autostep_test extends AutoStep {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
+		boolean limitSwitchPressed;
 		boolean buttonPressed;
 
+		limitSwitchPressed = m_subsystemTest.autoLimitSwitchPressed();
 		buttonPressed = m_subsystemTest.autoButtonPressed();
 
 		SmartDashboard.putBoolean("buttonPressed", buttonPressed);
+		SmartDashboard.putBoolean("limitPressed", limitSwitchPressed);
 
 		SmartDashboard.putBoolean("Step Test", buttonPressed);
 
-		if (buttonPressed) {
+		if (buttonPressed || limitSwitchPressed) {
 			m_subsystemTest.autoLedSet(true);
 			//setFinished(true);
 		} else {
