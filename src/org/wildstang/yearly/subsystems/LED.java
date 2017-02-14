@@ -54,7 +54,7 @@ public class LED implements Subsystem
    public static LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
    public static LedCmd purpleAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 255);
    public static LedCmd turboCmd = new LedCmd(TURBO_ID, 0, 0, 0);
-   public static LedCmd shooterOnCmd = new LedCmd(SHOOTER_ON_ID, 0, 0, 0);
+   public static LedCmd shooterOnCmd = new LedCmd(SHOOTER_ON_ID, 255, 255, 0);
    public static LedCmd shootingCmd = new LedCmd(SHOOTING_ID, 0, 0, 0);
    public static LedCmd climbingCmd = new LedCmd(CLIMBING_ID, 0, 0, 0);
    public static LedCmd leftFeedCmd = new LedCmd(LEFTJAM_ID, 0, 0, 255);
