@@ -7,7 +7,8 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
-
+import org.wildstang.yearly.robot.WSSubsystems;
+import org.wildstang.yearly.subsystems.Shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -35,6 +36,8 @@ public class LED implements Subsystem
    boolean m_normal;
    boolean m_shooter;
    boolean m_intake;
+   
+   private Shooter shooter;
 
    /*
     * | Function | Cmd | PL 1 | PL 2 | -------------------------------------- |
@@ -64,6 +67,8 @@ public class LED implements Subsystem
       autoDataSent = false;
       disableDataSent = false;
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
+      
+      shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
 
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
@@ -134,6 +139,14 @@ public class LED implements Subsystem
                else if (m_intake)
                {
                   // m_ledOutput.setValue(intake.getBytes());
+               }
+               else if (shooter.checkLeftFeedJammed())
+               {
+                  // m_ledOutput.setValue(intake.getBytes());
+               }
+               else if (shooter.checkRightFeedJammed())
+               {
+                  
                }
 
             }

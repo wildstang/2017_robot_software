@@ -335,7 +335,7 @@ public class Shooter implements Subsystem
 
       return (speed >= m_lowLimitSpeed && speed <= m_highLimitSpeed);
    }
-   
+
    public void updateGates()
    {
       // Tests to see if the left and right flywheel is up to speed and ready to
@@ -369,7 +369,7 @@ public class Shooter implements Subsystem
          m_rightGate.closeGate();
       }
    }
-   
+
    // Feed Stuff
    // Turns on the belts w/out buttons for auto
    public void turnFeedOn()
@@ -384,38 +384,42 @@ public class Shooter implements Subsystem
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
    }
-   
-   private boolean checkLeftFeedJammed (){
+
+   public boolean checkLeftFeedJammed()
+   {
       return m_leftFeed.isJammed(m_leftFeedCurrent);
    }
 
-   private boolean checkRightFeedJammed (){
+   public boolean checkRightFeedJammed()
+   {
       return m_rightFeed.isJammed(m_rightFeedCurrent);
    }
-   
+
    public void updateFeed()
    {
       // Determines whether or not the feeder is jammed and, if so,
       // displays "Is Jammed" on the dash
 
       // LEFT SIDE
-      if (!m_leftFeed.isJammed(m_leftFeedCurrent))
+      if (!checkLeftFeedJammed())
       {
          SmartDashboard.putBoolean("Left is Jammed", false);
       }
       else
       {
+         m_leftFeed.stop();
          SmartDashboard.putBoolean("Left is Jammed", true);
       }
 
       // RIGHT SIDE
-      if (!m_rightFeed.isJammed(m_rightFeedCurrent))
+      if (!checkRightFeedJammed())
       {
          SmartDashboard.putBoolean("Right is Jammed", false);
       }
       else
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
+         m_rightFeed.stop();
       }
 
       // Runs the feed belts (even if belt is jammed)
