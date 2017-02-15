@@ -16,9 +16,11 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.io.outputs.AnalogOutput;
 import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
 import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
 import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
+import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.hardware.crio.outputs.WsServo;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.WSInputs;
@@ -29,14 +31,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber implements Subsystem
 {
    // add variables here
-   //private boolean 	TestSwitchSensor;
-   //private double  	DrvJoystickRightY = 0.0;
-   //private WsServo	Servo_0;
-   //private WsServo	Servo_1;
-   //private boolean 	DpadXLeft	= false;
-   //private boolean 	DpadXRight	= false;
-   //private double  	ServoPos_0	= 0.0;
-   //private double  	ServoPos_1	= 0.0;
+   private boolean DPadUp;
+   
+   //private boolean DPadDown;
+   
+   private double motorspeed = .8;
+   
+   private boolean running;
+   
+  // private boolean pressedyet;
+   
+  // private boolean brakestate;
+   
+   private DigitalInput upbutton;
+   
+ //  private DigitalInput downbutton;
+   
+   // private boolean canrun;
+   
+   //private boolean winch_running;
+   
+   //Outputs
+  // private WsSolenoid w_brake;
+   
+   private WsVictor w_motor;
+   
+   
+   
+   
+   
 
    @Override
    public void selfTest()
@@ -64,102 +87,62 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
-      //*********************************************************************************************
-      // This method must exist even if it does nothing. It is called once and only once when the 
-      // framework is started. It is used to setup local variables to initial values and to register
-      // with the framework which inputs the framework should call the inputUpdate() method for.
-      //*********************************************************************************************
-
-      // Setup any local variables with intial values
       
-      //TestSwitchSensor 	= false;
-      //DrvJoystickRightY	= 0.0;
-      //
-      //// Register the sensors that this subsystem wants to be notified about
-      //Core.getInputManager().getInput(WSInputs.TEST_SWITCH_SENSOR.getName()).addInputListener(this);
-      //
-      //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_RIGHT.getName()).addInputListener(this);
-      //
-      //Servo_0 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_0.getName());
-      //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
+      DPadUp = false; 
+     
+      motorspeed = .8; //Speed for motor
+ 
+      running = false;
 
-      //SmartDashboard.putNumber("ServoPos_1", ServoPos_1);
+      //Output
+      
+      w_motor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH.getName());
+      
+      //Inputs
+      
+      upbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_UP.getName());
+      upbutton.addInputListener(this);
+      
    }
 
    @Override
    public void inputUpdate(Input source)
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
-      //*********************************************************************************************
-      // This method is called any time one of the registered inputs has changed. The software in 
-      // this method should do the following:
-      // 
-      // 1. Determine which registered input this method is being called with
-      // 2. Read the updated value and store so it can be used in the update() method
-      // 3. Update any variables based on the input variables
-      //*********************************************************************************************
-
-      // This section reads the input sensors and places them into local variables
-      //if (source.getName().equals(WSInputs.TEST_SWITCH_SENSOR.getName()))
-      //{
-      //   TestSwitchSensor = ((DigitalInput) source).getValue();
-      //}
-      //
-      //if (source.getName().equals(WSInputs.DRV_RIGHT_Y.getName()))
-      //{
-      //    // -1.0 <= TestJoystickLeft<= 1.0
-      //    DrvJoystickRightY= ((AnalogInput) source).getValue();
-      //}
-      //
-      //if (source.getName().equals(WSInputs.DRV_DPAD_X_LEFT.getName()))
-      //{
-      //    DpadXLeft= ((DigitalInput) source).getValue();
-      //}
-      //
-      //if (source.getName().equals(WSInputs.DRV_DPAD_X_RIGHT.getName()))
-      //{
-      //    DpadXRight= ((DigitalInput) source).getValue();
-      //}
+      if(source == upbutton)
+      {
+         DPadUp = upbutton.getValue();
+      }
+      
    }
 
    @Override
    public void update()
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
-      //*********************************************************************************************
-      // This method is called after all of the registered updates have gone through the inputUpdate()
-      // method. The software in this method should do the following:
-      //
-      // 1. Tell the framework what the updated output values should be set to.
-      // 
-//       ((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.TEST_LED.getName())).setValue(TestSwitchSensor);
-       //if (DpadXLeft == true)
-       //{
-       //    ServoPos_0 = 90.0;
-       //}
-       //else if (DpadXRight == true)
-       //{
-       //    ServoPos_0 = 45.0;
-       //}
-       //else
-       //    ServoPos_0 = 0.0;
-
-       //SmartDashboard.putBoolean("DpadXLeft", DpadXLeft);
-       //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
-       //SmartDashboard.putNumber("ServoPos_0", ServoPos_0);
-       //
-       //ServoPos_1 = SmartDashboard.getNumber("ServoPos_1", 90);
-       //
-       //Servo_0.setValue(ServoPos_0);
-       //Servo_1.setValue(ServoPos_1);
+      
+      if (DPadUp == true) //Checks if the dpad button is being pushed
+      {
+         running = true; // for Smart Dashboard
+         
+         w_motor.setValue(motorspeed); //Sets the motor speed to .8
+      }
+      else if (DPadUp == false) // Checks to see if the button is not being pushed
+      {
+         running = false; // For smart dashboard
+         
+         w_motor.setValue(0); // When not pushed the motor speed is 0.
+      }
+      
+      SmartDashboard.putBoolean("Winch Running", running);
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+  
    }
 }
