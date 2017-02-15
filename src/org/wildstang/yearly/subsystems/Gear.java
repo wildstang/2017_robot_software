@@ -36,21 +36,10 @@ public class Gear implements Subsystem
    private boolean holdButton;
    private boolean m_holdGear;
    private boolean m_tiltGear;
-   
-   //private double  	DrvJoystickRightY = 0.0;
-   //private WsServo	Servo_0;
-   //private WsServo	Servo_1;
-   //private boolean 	DpadXLeft	= false;
-   //private boolean 	DpadXRight	= false;
-   //private double  	ServoPos_0	= 0.0;
-   //private double  	ServoPos_1	= 0.0;
 
    @Override
    public void selfTest()
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
       //*********************************************************************************************
       // This method must exist but for the time being, leave it empty. 
       //*********************************************************************************************
@@ -58,10 +47,7 @@ public class Gear implements Subsystem
 
    @Override
    public String getName()
-   {
-      // 
-      // TODO Auto-generated method stub
-      // 
+   { 
       //*********************************************************************************************
       // This method should return the name of the subsystem.
       //*********************************************************************************************
@@ -71,9 +57,6 @@ public class Gear implements Subsystem
    @Override
    public void init()
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
       //*********************************************************************************************
       // This method must exist even if it does nothing. It is called once and only once when the 
       // framework is started. It is used to setup local variables to initial values and to register
@@ -82,30 +65,16 @@ public class Gear implements Subsystem
 
       // Setup any local variables with intial values
       
-      //TestSwitchSensor 	= false;
-      //DrvJoystickRightY	= 0.0;
-      //
-      //// Register the sensors that this subsystem wants to be notified about
+	   // Register the sensors that this subsystem wants to be notified about
       Core.getInputManager().getInput(WSInputs.GEAR.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.GEAR_IN_POSITION.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.GEAR_WALL_BUTTON.getName()).addInputListener(this);
       Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_RIGHT_Y.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_LEFT.getName()).addInputListener(this);
-      //Core.getInputManager().getInput(WSInputs.DRV_DPAD_X_RIGHT.getName()).addInputListener(this);
-      //
-      //Servo_0 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_0.getName());
-      //Servo_1 = (WsServo) Core.getOutputManager().getOutput(WSOutputs.TEST_SERVO_1.getName());
-
-      //SmartDashboard.putNumber("ServoPos_1", ServoPos_1);
    }
 
    @Override
    public void inputUpdate(Input source)
-   {
-      // 
-      // TODO Auto-generated method stub
-      // 
+   { 
       //*********************************************************************************************
       // This method is called any time one of the registered inputs has changed. The software in 
       // this method should do the following:
@@ -116,20 +85,6 @@ public class Gear implements Subsystem
       //*********************************************************************************************
 
       // This section reads the input sensors and places them into local variables
-      //if (source.getName().equals(WSInputs.TEST_SWITCH_SENSOR.getName()))
-      //{
-      //   TestSwitchSensor = ((DigitalInput) source).getValue();
-      //}
-      //
-//      if (source.getName().equals(WSInputs.GEAR.getName()))
-//      {
-//    	  buttonPressed = ((DigitalInput) source).getValue();
-//      }
-//      
-//      if (source.getName().equals(WSInputs.GEAR_IN_POSITION.getName()))
-//      {
-//    	  sensorPressed = ((DigitalInput) source).getValue();
-//      }
       
       if (source.getName().equals(WSInputs.GEAR_WALL_BUTTON.getName()))
       {
@@ -144,52 +99,20 @@ public class Gear implements Subsystem
     	  
     	  HoldGearSet(holdButton);
       }
-      
-      //
-      //if (source.getName().equals(WSInputs.DRV_DPAD_X_LEFT.getName()))
-      //{
-      //    DpadXLeft= ((DigitalInput) source).getValue();
-      //}
-      //
-      //if (source.getName().equals(WSInputs.DRV_DPAD_X_RIGHT.getName()))
-      //{
-      //    DpadXRight= ((DigitalInput) source).getValue();
-      //}
    }
 
    @Override
    public void update()
    {
-      // 
-      // TODO Auto-generated method stub
-      // 
+       
       //*********************************************************************************************
       // This method is called after all of the registered updates have gone through the inputUpdate()
       // method. The software in this method should do the following:
       //
-      // 1. Tell the framework what the updated output values should be set to.
+      // Tell the framework what the updated output values should be set to.
       // 
-       //((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.GEAR_SHIFTER.getName())).setValue(gearPistonOn);
-       //((DigitalOutput)Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(sensorPressed);
-	   ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD_SOL.getName())).setValue(m_holdGear);
+       ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD_SOL.getName())).setValue(m_holdGear);
 	   ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_WALL_SOL.getName())).setValue(m_tiltGear);
-       
-       // when sensor is pushed, gear is in position and button is disabled
-	   
-//	   if (buttonPressed == true && sensorPressed == false)
-//	   {
-//		   gearPistonOn = true; 
-//	   }
-       	 
-
- //      SmartDashboard.putBoolean("sensorPressed", sensorPressed);
-       //SmartDashboard.putBoolean("DpadXRight", DpadXRight);
-       //SmartDashboard.putNumber("ServoPos_0", ServoPos_0);
-       //
-       //ServoPos_1 = SmartDashboard.getNumber("ServoPos_1", 90);
-       //
-       //Servo_0.setValue(ServoPos_0);
-       //Servo_1.setValue(ServoPos_1);
    }
    
    public void HoldGearSet(boolean p_holdGear)
