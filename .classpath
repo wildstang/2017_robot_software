@@ -9,6 +9,10 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-2411.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/core_framework"/>
+<<<<<<< HEAD
 	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
+=======
+	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
+>>>>>>> refs/remotes/origin/Intake_Subsystem
 	<classpathentry kind="output" path="bin"/>
 </classpath>

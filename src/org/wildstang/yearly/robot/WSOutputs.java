@@ -58,12 +58,13 @@ public enum WSOutputs implements Outputs
    // ********************************
    // Solenoids
    // ********************************
-   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(0, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
-   GATE_LEFT("Gate Left",                    WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 2, false), getLogging()),                                  // Ctrl 1, Pin  2                            Shooter Subsystem
-   GATE_RIGHT("Gate Right",                  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 3, false), getLogging()),                                  // Ctrl 1, Pin  3                            Shooter Subsystem
-   GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
-   WINCH_BRKE("Winch Brake",                 WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), getLogging()),                                  // Ctrl 1, Pin  5                            Climber Subsystem
-
+   SHIFTER("Shifter double solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsDoubleSolenoidConfig(1, 0, 1, WsDoubleSolenoidState.FORWARD), getLogging()), // Ctrl 1, Pins 0 & 1 (2 DIO pins are used): Driver Subsystem
+   GATE_LEFT("Gate Left",                    WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), getLogging()),                                  // Ctrl 1, Pin  2                            Shooter Subsystem
+   GATE_RIGHT("Gate Right",                  WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),                                  // Ctrl 1, Pin  3                            Shooter Subsystem
+   GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
+  // WINCH_BRKE("Winch Brake",                 WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),                                // Ctrl 1, Pin  5                            Climber Subsystem
+   GEAR_HOLD_SOL("Gear Hold",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),                                  // Ctrl 1, Pin  5                            Gear Subsystem
+   GEAR_TILT_SOL("Gear Wall",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), getLogging()),                                  // Ctrl 1, Pin  6                            Gear Subsystem
    // ********************************
    // Relays
    // ********************************
