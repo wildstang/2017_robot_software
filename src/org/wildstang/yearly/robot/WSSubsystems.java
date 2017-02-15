@@ -4,6 +4,7 @@ import org.wildstang.framework.core.Subsystems;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.Gear;
+import org.wildstang.yearly.subsystems.IMUTest;
 import org.wildstang.yearly.subsystems.Shooter;
 import org.wildstang.yearly.subsystems.Subsystem_Test;
 import org.wildstang.yearly.subsystems.Climber;
@@ -16,13 +17,13 @@ public enum WSSubsystems implements Subsystems
    //This keeps the formatter from completely making the enumeration unreadable.
    // @formatter::off
 //   MONITOR("Monitor", Monitor.class),
-   DRIVE_BASE("Drive Base",      	Drive.class),
-   INTAKE("Intake",    				Intake.class),
-   GEAR("Gear",        				Gear.class),
-   SHOOTER("Shooter",  				Shooter.class),
+   DRIVE_BASE("Drive Base",      Drive.class),
+   INTAKE("Intake",              Intake.class),
+   GEAR("Gear",                  Gear.class),
+   SHOOTER("Shooter",            Shooter.class),
+   CLIMBER("Climber",            Climber.class),
    SUBSYSTEM_TEST_PP("Subsystem_Test",  Subsystem_Test.class),
-   CLIMBER("Climber",  				Climber.class),
-   LED("LEDs",                   	LED.class);
+   LED("LED",                    LED.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
    //This keeps the formatter from completely making the enumeration unreadable.

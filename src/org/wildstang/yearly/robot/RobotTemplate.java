@@ -1,11 +1,11 @@
 package org.wildstang.yearly.robot;
 /*----------------------------------------------------------------------------*/
+
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,12 +27,17 @@ import org.wildstang.framework.logger.StateLogger;
 import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
+import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
 import org.wildstang.yearly.auto.test.autoprogram_test;
+import org.wildstang.yearly.robot.vision.VisionServer;
+
 import org.wildstang.yearly.subsystems.Drive;
+import org.wildstang.yearly.subsystems.LED;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import edu.wpi.first.wpilibj.Watchdog;
@@ -48,33 +53,37 @@ public class RobotTemplate extends IterativeRobot
 {
 
    private static long lastCycleTime = 0;
-   private static int session;
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
+
+   private VisionServer m_visionServer;
    
    private boolean exceptionThrown = false;
-   
+
+   private boolean m_firstDisabled = true;
+
    private boolean firstRun = true;
    private boolean AutoFirstRun = true;
    private double oldTime = System.currentTimeMillis();
 
    static boolean teleopPerodicCalled = false;
-   
-   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";   
+
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
+
    private void startloggingState()
    {
       Writer outputWriter = null;
 
       outputWriter = getFileWriter();
-//       outputWriter = getNetworkWriter("10.1.11.12", 17654);
+      // outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
-      
+
       // Set the interval between writes to the file. Try 100ms
-      m_stateLogger.setWriteInterval(100);
+      // m_stateLogger.setWriteInterval(100);
       m_stateLogger.start();
-      
+
       Thread t = new Thread(m_stateLogger);
       t.start();
    }
@@ -108,21 +117,21 @@ public class RobotTemplate extends IterativeRobot
 
       try
       {
-    	  File outputFile;
-    	  String osname = System.getProperty("os.name");
-          if (osname.startsWith("Windows"))
-          {
-        	  outputFile = new File("./../../log.txt");
-          }
-          else if (osname.startsWith("Mac"))
-          {
-        	  outputFile = new File ("./../../log.txt");
-          }
-          else
-          {
-        	  outputFile = new File("/home/lvuser/log.txt");
-          }
-          if (outputFile.exists())
+         File outputFile;
+         String osname = System.getProperty("os.name");
+         if (osname.startsWith("Windows"))
+         {
+            outputFile = new File("./../../log.txt");
+         }
+         else if (osname.startsWith("Mac"))
+         {
+            outputFile = new File("./../../log.txt");
+         }
+         else
+         {
+            outputFile = new File("/home/lvuser/log.txt");
+         }
+         if (outputFile.exists())
          {
             outputFile.delete();
          }
@@ -138,15 +147,6 @@ public class RobotTemplate extends IterativeRobot
       return output;
    }
 
-   public void testInit()
-   {
-
-   }
-
-   /**
-    * This function is run when the robot is first started up and should be used
-    * for any initialization code.
-    */
    public void robotInit()
    {
       startupTimer.startTimingSection();
@@ -164,33 +164,38 @@ public class RobotTemplate extends IterativeRobot
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 
-//      startloggingState();
+       startloggingState();
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
       AutoManager.getInstance().addProgram(new autoprogram_test());
       
-      s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
-      startupTimer.endTimingSection();
+      // 3. Start Vision server
+      m_visionServer = new VisionServer(5080);
+      m_visionServer.startVisionServer();
       
+      s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
+
+      startupTimer.endTimingSection();
+
    }
 
    private void loadConfig()
    {
-	   File configFile;
-	   String osname = System.getProperty("os.name");
-       if (osname.startsWith("Windows"))
-       {
-    	   configFile = new File("./Config/ws_config.txt");
-       }
-       else if (osname.startsWith("Mac"))
-       {
-    	   configFile = new File("./Config/ws_config.txt");
-       }
-       else
-       {
-    	   configFile = new File("/ws_config.txt");
-       }
+      File configFile;
+      String osname = System.getProperty("os.name");
+      if (osname.startsWith("Windows"))
+      {
+         configFile = new File("./Config/ws_config.txt");
+      }
+      else if (osname.startsWith("Mac"))
+      {
+         configFile = new File("./Config/ws_config.txt");
+      }
+      else
+      {
+         configFile = new File("/ws_config.txt");
+      }
 
       BufferedReader reader = null;
 
@@ -232,8 +237,6 @@ public class RobotTemplate extends IterativeRobot
 
       loadConfig();
 
-      Core.getSubsystemManager().init();
-
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
 
@@ -241,24 +244,58 @@ public class RobotTemplate extends IterativeRobot
 
    public void disabledPeriodic()
    {
+
+      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
+      {
+         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
+         {
+            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+         }
+      }
+
+      if (m_firstDisabled)
+      {
+         // Send alliance colour to LEDs
+         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+         }
+         m_firstDisabled = false;
+      }
+      else
+      {
+         // Send rainbow colour to LEDs
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
+      }
+
       // If we are finished with teleop, finish and close the log file
-	  
-	  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null) {
-		  if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive()) {
-			  ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
-		  }
-    }
-      
+      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
+      {
+         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
+         {
+            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
+         }
+      }
+
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
       }
+
       resetRobotState();
    }
 
-   
    /**
-    * This should be called to reset any robot state between runs, without having to restart robot code.
+    * This should be called to reset any robot state between runs, without
+    * having to restart robot code.
     * 
     */
    private void resetRobotState()
@@ -266,26 +303,21 @@ public class RobotTemplate extends IterativeRobot
       AutoFirstRun = true;
       firstRun = true;
    }
-   
+
    public void autonomousInit()
    {
-      Core.getSubsystemManager().init();
-
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
 
-   /**
-    * This function is called periodically during autonomous
-    */
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
 
       m_core.executeUpdate();
-      double time = System.currentTimeMillis(); 
-	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
-	  oldTime = time;
+//      double time = System.currentTimeMillis();
+//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+//      oldTime = time;
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -297,47 +329,44 @@ public class RobotTemplate extends IterativeRobot
     */
    public void teleopInit()
    {
-      //Write all DriveState objects to a file from auto
-      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);     
-       // Remove the AutoManager from the Core
+      // Write all DriveState objects to a file from auto
+      ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).writeDriveStatesToFile(DRIVER_STATES_FILENAME);
+      // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
-      Core.getSubsystemManager().init();
-      
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
-//      
-//      driveBase.stopStraightMoveWithMotionProfile();
 
       periodTimer.startTimingSection();
    }
 
    public void teleopPeriodic()
    {
-	   
-	  double time = System.currentTimeMillis(); 
-	  SmartDashboard.putNumber("Cycle Time", time - oldTime);
-	  oldTime = time;
+
+//      double time = System.currentTimeMillis();
+//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
+//      oldTime = time;
       if (firstRun)
       {
+         teleopPerodicCalled = true;
          firstRun = false;
       }
 
-      try{
-      teleopPerodicCalled = true;
+      try
+      {
 
-      long cycleStartTime = System.currentTimeMillis();
+//         long cycleStartTime = System.currentTimeMillis();
 
-      // Update all inputs, outputs and subsystems
-      m_core.executeUpdate();
-      
-      long cycleEndTime = System.currentTimeMillis();
-      long cycleLength = cycleEndTime - cycleStartTime;
-      // System.out.println("Cycle time: " + cycleLength);
-      lastCycleTime = cycleEndTime;
-      // Watchdog.getInstance().feed();
+         // Update all inputs, outputs and subsystems
+         m_core.executeUpdate();
+
+//         long cycleEndTime = System.currentTimeMillis();
+//         long cycleLength = cycleEndTime - cycleStartTime;
+         // System.out.println("Cycle time: " + cycleLength);
+//         lastCycleTime = cycleEndTime;
+         // Watchdog.getInstance().feed();
       }
-      catch(Throwable e)
+      catch (Throwable e)
       {
          SmartDashboard.putString("Exception thrown", e.toString());
          exceptionThrown = true;
@@ -347,6 +376,11 @@ public class RobotTemplate extends IterativeRobot
       {
          SmartDashboard.putBoolean("ExceptionThrown", exceptionThrown);
       }
+   }
+
+   public void testInit()
+   {
+
    }
 
    /**

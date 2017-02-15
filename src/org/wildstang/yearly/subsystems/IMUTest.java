@@ -52,7 +52,7 @@ public class IMUTest implements Subsystem{
 		CompassHeading = (double)((HeadingBytes[0] * 100) + HeadingBytes[1]);
 		SmartDashboard.putNumber("Low Byte", HeadingBytes[1]);
 		SmartDashboard.putNumber("High Byte", (HeadingBytes[0] * 100));
-		SmartDashboard.putNumber("IMU Heading", CompassHeading);
+		SmartDashboard.putNumber("IMU Test Heading", CompassHeading);
 	}
 
 	@Override
