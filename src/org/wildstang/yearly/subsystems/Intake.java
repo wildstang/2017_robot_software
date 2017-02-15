@@ -63,8 +63,10 @@ public class Intake implements Subsystem
       // Setup any local variables with intial values
 	   
       Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName()).addInputListener(this);
+      motorSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".IntakeMotor", 0.0);
       
       IntakeMotor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName());
+      
    }
 
    @Override
@@ -105,10 +107,11 @@ public class Intake implements Subsystem
 	   
 	   if (intakeOn == true)
 	   {
-		   IntakeMotor.setValue(.75);
+		   //IntakeMotor.setValue(motorSpeed);
 	   }
-
+		   
        SmartDashboard.putBoolean("intakeOn", intakeOn);
+       SmartDashboard.putNumber("motorSpeed", motorSpeed);
 	   
    }
 }

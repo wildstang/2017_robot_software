@@ -18,12 +18,12 @@ public enum WSSubsystems implements Subsystems
 //   MONITOR("Monitor", Monitor.class),
    DRIVE_BASE("Drive Base",      Drive.class),
 
-   INTAKE("Intake Subsystem",    Intake.class),
-   GEAR("Gear Subsystem",        Gear.class),
+   INTAKE("Intake",    Intake.class),
+   GEAR("Gear",        Gear.class),
 
-   SHOOTER("Shooter Subsystem",  Shooter.class),
+   SHOOTER("Shooter",  Shooter.class),
 
-   CLIMBER("Climber Subsystem",  Climber.class),
+   CLIMBER("Climber",  Climber.class),
 
    LED("LEDs",                   LED.class);
 //   SHOOTER_TEST("Shooter Test", ShooterTest.class);

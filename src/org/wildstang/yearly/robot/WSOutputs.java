@@ -69,7 +69,7 @@ public enum WSOutputs implements Outputs
    GEAR_SHIFTER("Gear Shifter",              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 4, false), getLogging()),                                  // Ctrl 1, Pin  4                            Shooter Subsystem
   // WINCH_BRKE("Winch Brake",                 WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),                                // Ctrl 1, Pin  5                            Climber Subsystem
    GEAR_HOLD_SOL("Gear Hold",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 5, false), getLogging()),                                  // Ctrl 1, Pin  5                            Gear Subsystem
-   GEAR_WALL_SOL("Gear Wall",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), getLogging()),                                  // Ctrl 1, Pin  6                            Gear Subsystem
+   GEAR_TILT_SOL("Gear Wall",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 6, false), getLogging()),                                  // Ctrl 1, Pin  6                            Gear Subsystem
     
    // ********************************
    // Relays

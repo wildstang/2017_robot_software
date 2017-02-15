@@ -111,7 +111,7 @@ public enum WSInputs implements Inputs
    //---------------------------------             
    // Manipulator Buttons                          
    //---------------------------------             
-   GEAR_WALL_BUTTON("Gear Wall",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
+   GEAR_TILT_BUTTON("Gear Wall",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
    GEAR_HOLD_BUTTON("Gear Hold",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), getLogging()),      // Gear Subsystem
    //MAN_BUTTON_2("Manipulator button 2",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), getLogging()),
    //MAN_BUTTON_3("Manipulator button 3",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), getLogging()),

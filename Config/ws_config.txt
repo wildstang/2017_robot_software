@@ -63,8 +63,7 @@ org.wildstang.yearly.subsystems.Shooter.expectedLowFlywheelRate=2050.0
 org.wildstang.yearly.subsystems.Shooter.onSpeedDiff=100
 
 //Intake
-org.wildstang.yearly.subsystems.Intake.intakeSpeedIn=-1
-org.wildstang.yearly.subsystems.Intake.intakeSpeedOut=1
+org.wildstang.yearly.subsystems.Intake.IntakeMotor=0.75
 
 //Climber
 org.wildstang.subsystems.Climber.arm_up_out_speed=.4
