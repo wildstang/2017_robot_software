@@ -52,6 +52,8 @@ public enum WSOutputs implements Outputs
    //DIO_O_5("Test Digital Output 5",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(5, false), getLogging()), // Channel 5, Initially Low 
    //DIO_O_6("Test Digital Output 6",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(6, false), getLogging()), // Channel 6, Initially Low 
    //DIO_O_7("Test Digital Output 7",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(7, false), getLogging()), // Channel 7, Initially Low 
+   MAN_TEST_LED("Manual TEST LED 8",           WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(8, false), getLogging()), // Channel 8, Initially Low
+   AUTO_TEST_LED("Auto TEST LED 9",            WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(9, false), getLogging()), // Channel 9, Initially Low
    //DIO_O_8("Test Digital Output 8",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(8, false), getLogging()), // Channel 8, Initially Low 
    //DIO_O_9("Test Digital Output 9",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(9, false), getLogging()), // Channel 9, Initially Low 
    

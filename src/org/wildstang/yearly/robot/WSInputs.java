@@ -85,8 +85,8 @@ public enum WSInputs implements Inputs
    INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),     // Intake Subsystem
    //DRV_BUTTON_8("Driver button 8",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 8), getLogging()),
    //DRV_BUTTON_9("Driver button 9",               WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 9), getLogging()),
-   //DRV_BUTTON_10("Driver button 10",             WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), getLogging()),
-   //DRV_BUTTON_11("Driver button 11",             WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
+   MAN_TEST("Manual Test Button",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 10), getLogging()),
+   AUTO_TEST("Auto Test Button",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 11), getLogging()),
 
 
    // ********************************             
@@ -134,6 +134,7 @@ public enum WSInputs implements Inputs
    //DIO_I_4("Digital Input 4",                    WSInputType.SWITCH, new WsDigitalInputConfig(4, true), getLogging()),	// Digital IO Channel 4
    //DIO_I_5("Digital Input 5",                    WSInputType.SWITCH, new WsDigitalInputConfig(5, true), getLogging()),	// Digital IO Channel 5
    //DIO_I_6("Digital Input 6",                    WSInputType.SWITCH, new WsDigitalInputConfig(6, true), getLogging()),	// Digital IO Channel 6
+   LIMIT_SWITCH("Limit Switch",                    WSInputType.SWITCH, new WsDigitalInputConfig(7, true), getLogging()),	// Digital IO Channel 7
    //DIO_I_7("Digital Input 7",                    WSInputType.SWITCH, new WsDigitalInputConfig(7, true), getLogging()),	// Digital IO Channel 7
    //DIO_I_8("Digital Input 8",                    WSInputType.SWITCH, new WsDigitalInputConfig(8, true), getLogging()),	// Digital IO Channel 8
    //DIO_I_9("Digital Input 9",                    WSInputType.SWITCH, new WsDigitalInputConfig(9, true), getLogging()),	// Digital IO Channel 9
