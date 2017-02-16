@@ -160,7 +160,7 @@ public class Shooter implements Subsystem
       m_flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
       m_flywheelButton.addInputListener(this);
 
-      m_gateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_LEFT.getName());
+      m_gateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE.getName());
       m_gateButton.addInputListener(this);
 
       m_leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName());
