@@ -136,7 +136,7 @@ public class Shooter implements Subsystem
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
 
       // Gates
-      m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
+      m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE.getName());
 
       m_gate = new Gate(m_gateSolenoid);
 
