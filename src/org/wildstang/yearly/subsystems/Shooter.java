@@ -154,8 +154,8 @@ public class Shooter implements Subsystem
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
       // inverts the left, may change
-      m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed, true);
-      m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed, false);
+      m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
+      m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
 
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
