@@ -344,9 +344,9 @@ public class Shooter implements Subsystem
       // Can be overriden so gates can open even if flywheel isn't up to speed
 
       // LEFT SIDE
-      readyToShootLeft = isLeftReadyToShoot() || m_shootOverride;
+      readyToShootLeft = isLeftReadyToShoot(); // || m_shootOverride;
       // RIGHT SIDE
-      readyToShootRight = isRightReadyToShoot() || m_shootOverride;
+      readyToShootRight = isRightReadyToShoot(); // || m_shootOverride;
 
       // Opens the gate if the flywheel is up to speed and the button is pressed
       // LEFT SIDE
