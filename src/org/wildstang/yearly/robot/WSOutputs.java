@@ -58,7 +58,7 @@ public enum WSOutputs implements Outputs
    // ********************************
    // Solenoids
    // ********************************
-   SHIFTER("Shifter single solenoid",        WSOutputType.SOLENOID_DOUBLE, new WsSolenoidConfig(1, 0, false), getLogging()),  // Ctrl 1, Pins 0 Driver Subsystem
+   SHIFTER("Shifter single solenoid",        WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 0, false), getLogging()),  // Ctrl 1, Pins 0 Driver Subsystem
    GATE("Gate",                              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 1, false), getLogging()),  // Ctrl 1, Pin  1 Shooter Subsystem
    GEAR_HOLD_SOL("Gear Doors",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 2, false), getLogging()),  // Ctrl 1, Pin  2 Gear Subsystem
    GEAR_TILT_SOL("Gear Tilt",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(1, 3, false), getLogging()),  // Ctrl 1, Pin  3 Gear Subsystem
