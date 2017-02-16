@@ -1,25 +1,12 @@
 package org.wildstang.yearly.subsystems;
 
 import org.wildstang.framework.config.Config;
-/* Please edit!!!
- *
- * This class is an example of a subsystem. For the moment, it reads a digital sensor 
- * and drives a digital output which turns on or off an LED.
- *
- * Continue...
- */
-//expand this and edit if trouble with Ws
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
-import org.wildstang.framework.io.outputs.AnalogOutput;
-import org.wildstang.framework.io.outputs.DigitalOutput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
-import org.wildstang.hardware.crio.outputs.WsDigitalOutput;
-import org.wildstang.hardware.crio.outputs.WsServo;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
@@ -276,7 +263,6 @@ public class Shooter implements Subsystem
    // button
    public void updateFlywheels()
    {
-
       if (m_flywheelOn)
       {
          m_leftFlywheel.turnOn();
@@ -287,7 +273,6 @@ public class Shooter implements Subsystem
          m_leftFlywheel.turnOff();
          m_rightFlywheel.turnOff();
       }
-
    }
 
    // Gate Opens
@@ -397,6 +382,7 @@ public class Shooter implements Subsystem
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);
+      runFeedBelt(m_rightFeed, m_rightFeedDirection);
 
    }
 
@@ -411,6 +397,9 @@ public class Shooter implements Subsystem
             p_feed.runBackwards();
             break;
          case STOP:
+            p_feed.stop();
+            break;
+         default:
             p_feed.stop();
             break;
       }

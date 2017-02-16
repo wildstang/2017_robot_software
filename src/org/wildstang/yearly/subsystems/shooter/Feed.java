@@ -1,7 +1,6 @@
 package org.wildstang.yearly.subsystems.shooter;
 
 import org.wildstang.yearly.subsystems.Shooter;
-import org.wildstang.framework.core.Core;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 
 public class Feed extends Shooter
@@ -22,6 +21,7 @@ public class Feed extends Shooter
    public Feed(WsVictor p_victor, double p_speed)
    {
       m_victor = p_victor;
+      feedSpeed = p_speed;
    }
 
    // This function is setup in the shooter class to determine whether or not
