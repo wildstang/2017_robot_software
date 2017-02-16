@@ -19,17 +19,9 @@ public class Feed extends Shooter
    // Shooter subclass
    // as well as mutated accordingly with the functions below
 
-   public Feed(WsVictor p_victor, double p_speed, boolean p_invert)
+   public Feed(WsVictor p_victor, double p_speed)
    {
       m_victor = p_victor;
-      if (p_invert)
-      {
-         feedSpeed = p_speed * -1;
-      }
-      else
-      {
-         feedSpeed = p_speed;
-      }
    }
 
    // This function is setup in the shooter class to determine whether or not

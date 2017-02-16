@@ -58,21 +58,15 @@ public class Shooter implements Subsystem
    private double m_lowLimitSpeed;
    private double m_highLimitSpeed;
 
-   // Gates
-   private WsSolenoid m_leftGateSolenoid;
-   private WsSolenoid m_rightGateSolenoid;
+   // Gate
+   private WsSolenoid m_gateSolenoid;
 
-   private Gate m_leftGate;
-   private Gate m_rightGate;
+   private Gate m_gate;
 
    // For toggling
-   private boolean m_leftGateOpen = false;
-   private boolean m_leftGateCurrent;
-   private boolean m_leftGatePrev;
-
-   private boolean m_rightGateOpen = false;
-   private boolean m_rightGateCurrent;
-   private boolean m_rightGatePrev;
+   private boolean m_gateOpen = false;
+   private boolean m_gateCurrent;
+   private boolean m_gatePrev;
 
    // Feeds
    private WsVictor m_leftFeedVictor;
@@ -99,8 +93,7 @@ public class Shooter implements Subsystem
    // Inputs
    private DigitalInput m_flywheelButton;
 
-   private DigitalInput m_leftGateButton;
-   private DigitalInput m_rightGateButton;
+   private DigitalInput m_gateButton;
 
    private DigitalInput m_overrideButton;
 
@@ -143,19 +136,17 @@ public class Shooter implements Subsystem
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
 
       // Gates
-      m_leftGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
-      m_rightGateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_RIGHT.getName());
+      m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE_LEFT.getName());
 
-      m_leftGate = new Gate(m_leftGateSolenoid);
-      m_rightGate = new Gate(m_rightGateSolenoid);
+      m_gate = new Gate(m_gateSolenoid);
 
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
       // inverts the left, may change
-      m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed, true);
-      m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed, false);
+      m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
+      m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
 
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
@@ -169,10 +160,8 @@ public class Shooter implements Subsystem
       m_flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
       m_flywheelButton.addInputListener(this);
 
-      m_leftGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_LEFT.getName());
-      m_leftGateButton.addInputListener(this);
-      m_rightGateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_RIGHT.getName());
-      m_rightGateButton.addInputListener(this);
+      m_gateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE_LEFT.getName());
+      m_gateButton.addInputListener(this);
 
       m_leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName());
       m_leftBeltJoystick.addInputListener(this);
@@ -205,25 +194,15 @@ public class Shooter implements Subsystem
          }
          m_shooterPrev = m_shooterCurrent;
       }
-      else if (p_source == m_leftGateButton)
+      else if (p_source == m_gateButton)
       {
-         m_leftGateCurrent = m_leftGateButton.getValue();
+         m_gateCurrent = m_gateButton.getValue();
          // Toggle for gate left
-         if (m_leftGateCurrent && !m_leftGatePrev)
+         if (m_gateCurrent && !m_gatePrev)
          {
-            m_leftGateOpen = !m_leftGateOpen;
+            m_gateOpen = !m_gateOpen;
          }
-         m_leftGatePrev = m_leftGateCurrent;
-      }
-      else if (p_source == m_rightGateButton)
-      {
-         m_rightGateCurrent = m_rightGateButton.getValue();
-         // Toggle for gate right
-         if (m_rightGateCurrent && !m_rightGatePrev)
-         {
-            m_rightGateOpen = !m_rightGateOpen;
-         }
-         m_rightGatePrev = m_rightGateCurrent;
+         m_gatePrev = m_gateCurrent;
       }
       // Sets feed enumaration based on joystick
       else if (p_source == m_leftBeltJoystick)
@@ -309,14 +288,12 @@ public class Shooter implements Subsystem
    // Gate Opens
    public void openBothGate()
    {
-      m_leftGateOpen = true;
-      m_rightGateOpen = true;
+      m_gateOpen = true;
    }
 
    public void closeBothGate()
    {
-      m_leftGateOpen = false;
-      m_rightGateOpen = false;
+      m_gateOpen = false;
    }
 
    public boolean isLeftReadyToShoot()
@@ -344,30 +321,21 @@ public class Shooter implements Subsystem
       // Can be overriden so gates can open even if flywheel isn't up to speed
 
       // LEFT SIDE
-      readyToShootLeft = isLeftReadyToShoot() || m_shootOverride;
+      readyToShootLeft = isLeftReadyToShoot(); // || m_shootOverride;
       // RIGHT SIDE
-      readyToShootRight = isRightReadyToShoot() || m_shootOverride;
+      readyToShootRight = isRightReadyToShoot(); // || m_shootOverride;
 
       // Opens the gate if the flywheel is up to speed and the button is pressed
       // LEFT SIDE
-      if (m_leftGateOpen && readyToShootLeft)
+      if (m_gateOpen && readyToShootLeft)
       {
-         m_leftGate.openGate();
+         m_gate.openGate();
       }
       else
       {
-         m_leftGate.closeGate();
+         m_gate.closeGate();
       }
 
-      // RIGHT SIDE
-      if (m_rightGateOpen && readyToShootRight)
-      {
-         m_rightGate.openGate();
-      }
-      else
-      {
-         m_rightGate.closeGate();
-      }
    }
 
    // Feed Stuff
@@ -457,8 +425,7 @@ public class Shooter implements Subsystem
       SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
       SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
 
-      SmartDashboard.putBoolean("left gate is open", m_leftGate.isOpen());
-      SmartDashboard.putBoolean("right gate is open", m_rightGate.isOpen());
+      SmartDashboard.putBoolean("Gates is open", m_gate.isOpen());
 
       SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
       SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
