@@ -17,6 +17,8 @@ import org.wildstang.yearly.subsystems.shooter.Feed;
 import org.wildstang.yearly.subsystems.shooter.Gate;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.StatusFrameRate;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -107,22 +109,15 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
+      configureTalon(m_CANFlywheelLeft);
+      configureTalon(m_CANFlywheelRight);
+      
       // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeed = 500;
-            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-           // + ".flywheelSpeed", 10.0);
-      m_lowLimitSpeed = 450;
-            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            //+ ".lowLimitSpeed", 5.0);
-      m_highLimitSpeed = 550;
-            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            //+ ".highLimitSpeed", 15.0);
-      m_feedSpeed = .5;
-            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            //+ ".feedSpeed", 0.4);
-      m_feedDeadBand = .05;
-      //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-        //    + ".feedDeadBand", 0.1);
+      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
+      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
+      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
@@ -173,6 +168,27 @@ public class Shooter implements Subsystem
 
    }
 
+   
+   private void configureTalon(CANTalon p_talon)
+   {
+      p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+      p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+
+//      p_talon.reverseSensor(true);
+      p_talon.setEncPosition(0);
+      
+      p_talon.configNominalOutputVoltage(+0.0f,  -0.0f);
+      p_talon.configPeakOutputVoltage(+12.0f,  0.0f);
+      p_talon.setVoltageRampRate(24.0);  // Max spinup of 24V/s - start here
+
+      // Set up closed loop PID control gains in slot 0
+      p_talon.setProfile(0);
+      p_talon.setF(1);      // 0.1998
+      p_talon.setP(0);      //(10% X 1023) / (error) 
+      p_talon.setI(0);
+      p_talon.setD(0);
+   }
+   
    @Override
    public void inputUpdate(Input p_source)
    {
