@@ -121,16 +121,21 @@ public class Shooter implements Subsystem
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
       // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".flywheelSpeed", 10.0);
-      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".lowLimitSpeed", 5.0);
-      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".highLimitSpeed", 15.0);
-      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".feedSpeed", 0.4);
-      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".feedDeadBand", 0.1);
+      m_targetSpeed = 500;
+            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+           // + ".flywheelSpeed", 10.0);
+      m_lowLimitSpeed = 450;
+            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            //+ ".lowLimitSpeed", 5.0);
+      m_highLimitSpeed = 550;
+            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            //+ ".highLimitSpeed", 15.0);
+      m_feedSpeed = .5;
+            //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            //+ ".feedSpeed", 0.4);
+      m_feedDeadBand = .05;
+      //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+        //    + ".feedDeadBand", 0.1);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
@@ -327,7 +332,7 @@ public class Shooter implements Subsystem
 
       // Opens the gate if the flywheel is up to speed and the button is pressed
       // LEFT SIDE
-      if (m_gateOpen && readyToShootLeft)
+      if (m_gateOpen) // && readyToShootLeft)
       {
          m_gate.openGate();
       }
@@ -372,26 +377,26 @@ public class Shooter implements Subsystem
       if (!checkLeftFeedJammed())
       {
          SmartDashboard.putBoolean("Left is Jammed", false);
-         runFeedBelt(m_leftFeed, m_leftFeedDirection);
       }
       else
       {
          
          SmartDashboard.putBoolean("Left is Jammed", true);
-         m_leftFeed.stop();
+         m_leftFeedDirection = FeedDirection.STOP;
       }
 
       // RIGHT SIDE
       if (!checkRightFeedJammed())
       {
          SmartDashboard.putBoolean("Right is Jammed", false);
-         runFeedBelt(m_rightFeed, m_rightFeedDirection);
       }
       else
       {
          SmartDashboard.putBoolean("Right is Jammed", true);
-         m_rightFeed.stop();
+         m_rightFeedDirection = FeedDirection.STOP;
       }
+
+      runFeedBelt(m_leftFeed, m_leftFeedDirection);
 
    }
 

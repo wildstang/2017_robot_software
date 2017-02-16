@@ -39,7 +39,8 @@ public class Feed extends Shooter
          jammed = false;
       }
 
-      return jammed;
+      // TODO
+      return false;
    }
 
    // This function makes the motors on the belts run in a positive rotation
