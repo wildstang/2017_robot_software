@@ -13,8 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake implements Subsystem
 {
    // add variables here
-   private boolean 	intakeOn = false;
-   private double  	m_motorSpeed = 0.0;
+   private boolean m_intakeOn = false;
+   private boolean m_intakeCurrent = false;
+   private boolean m_intakePrev = false;
+
+   private DigitalInput m_intakeButton;
+
+   private double m_motorSpeed;
    private WsVictor m_intakeMotor;
 
    @Override
@@ -32,42 +37,47 @@ public class Intake implements Subsystem
    public void init()
    {
       // Setup any local variables with intial values
-	   
-      Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName()).addInputListener(this);
-      m_motorSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".IntakeMotor", 0.5);
-      
+      m_motorSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + ".IntakeMotor", 0.5);
+
       m_intakeMotor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName());
-      
+
+      m_intakeButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName());
+      m_intakeButton.addInputListener(this);
+
    }
 
    @Override
-   public void inputUpdate(Input source)
+   public void inputUpdate(Input p_source)
    {
-	   if (source.getName().equals(WSInputs.INTAKE_ON.getName()))
-	   {
-		    if (((DigitalInput) source).getValue() == true)
-			{
-		    	intakeOn= !intakeOn;
-			}
-		}
+      // Toggle for intake
+      if (p_source == m_intakeButton)
+      {
+         m_intakeCurrent = m_intakeButton.getValue();
+
+         if (m_intakeCurrent && !m_intakePrev)
+         {
+            m_intakeOn = !m_intakeOn;
+         }
+         m_intakePrev = m_intakeCurrent;
+      }
    }
 
    @Override
    public void update()
-   { 
-      //*********************************************************************************************
-      // This method is called after all of the registered updates have gone through the inputUpdate()
-      // method. The software in this method should do the following:
-      //
-      // 1. Tell the framework what the updated output values should be set to.
-	   
-	   if (intakeOn)
-	   {
-		   m_intakeMotor.setValue(m_motorSpeed);
-	   }
-		   
-       SmartDashboard.putBoolean("intakeOn", intakeOn);
-       SmartDashboard.putNumber("motorSpeed", m_motorSpeed);
-	   
+   {
+
+      if (m_intakeOn)
+      {
+         m_intakeMotor.setValue(m_motorSpeed);
+      }
+      else
+      {
+         m_intakeMotor.setValue(0);
+      }
+
+      SmartDashboard.putBoolean("intakeOn", m_intakeOn);
+      SmartDashboard.putNumber("intake motorSpeed from WS", m_motorSpeed);
+      SmartDashboard.putNumber("intake motorSpeed now", m_intakeMotor.getValue());
    }
 }
