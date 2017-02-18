@@ -104,7 +104,6 @@ public class Drive implements Subsystem
       m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
 
-      m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
@@ -144,6 +143,7 @@ public class Drive implements Subsystem
 
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.reverseSensor(true);
       m_leftMaster.configEncoderCodesPerRev(256);
       m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)

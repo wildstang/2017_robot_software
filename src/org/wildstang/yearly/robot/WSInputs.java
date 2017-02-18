@@ -65,9 +65,9 @@ public enum WSInputs implements Inputs
    //---------------------------------             
    // Driver Buttons                               
    //---------------------------------             
-   QUICK_TURN("Driver Quick Turn",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),     // Driver Subsystem
+   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),     // Intake Subsystem
    SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),     // Driver Subsystem
-   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),     // Intake Subsystem
+   
 
 
    //---------------------------------             
@@ -80,7 +80,7 @@ public enum WSInputs implements Inputs
    // Manipulator DPAD Buttons                     
    //---------------------------------             
    CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), getLogging()),          // Climber Subsystem
-   CLIMBER_DOWN("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), getLogging()),        // Climber Subsystem
+   //CLIMBER_DOWN("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), getLogging()),        // Climber Subsystem
 
    //---------------------------------             
    // Manipulator Buttons                          
