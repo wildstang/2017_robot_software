@@ -1,7 +1,6 @@
 package org.wildstang.yearly.subsystems.shooter;
 
 import org.wildstang.yearly.subsystems.Shooter;
-import org.wildstang.framework.core.Core;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 
 public class Feed extends Shooter
@@ -19,17 +18,10 @@ public class Feed extends Shooter
    // Shooter subclass
    // as well as mutated accordingly with the functions below
 
-   public Feed(WsVictor p_victor, double p_speed, boolean p_invert)
+   public Feed(WsVictor p_victor, double p_speed)
    {
       m_victor = p_victor;
-      if (p_invert)
-      {
-         feedSpeed = p_speed * -1;
-      }
-      else
-      {
-         feedSpeed = p_speed;
-      }
+      feedSpeed = p_speed;
    }
 
    // This function is setup in the shooter class to determine whether or not
@@ -47,7 +39,8 @@ public class Feed extends Shooter
          jammed = false;
       }
 
-      return jammed;
+      // TODO
+      return false;
    }
 
    // This function makes the motors on the belts run in a positive rotation

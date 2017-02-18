@@ -26,6 +26,8 @@ public class LED implements Subsystem
    private static final int CLIMBING_ID = 7;
    private static final int CLIMB_COMPLETE_ID = 8;
    private static final int FEED_JAMMED_ID = 9;
+   private static final int LEFTJAM_ID = 10;
+   private static final int RIGHTJAM_ID = 11;
 
    // Sent states
    boolean autoDataSent = false;
@@ -35,16 +37,15 @@ public class LED implements Subsystem
    private String m_name;
 
    WsI2COutput m_ledOutput;
-   
+
    private LedCmd m_currentCmd;
 
    boolean m_turbo;
    boolean m_normal = true;
    boolean m_shooter;
    boolean m_intake;
-   
-   private Shooter shooter;
 
+   private Shooter shooter;
 
    // Reused commands from year to year
    public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 0, 0);
@@ -53,13 +54,12 @@ public class LED implements Subsystem
    public static LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
    public static LedCmd purpleAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 255);
    public static LedCmd turboCmd = new LedCmd(TURBO_ID, 0, 0, 0);
-   public static LedCmd shooterOnCmd = new LedCmd(SHOOTER_ON_ID, 0, 0, 0);
+   public static LedCmd shooterOnCmd = new LedCmd(SHOOTER_ON_ID, 255, 255, 0);
    public static LedCmd shootingCmd = new LedCmd(SHOOTING_ID, 0, 0, 0);
    public static LedCmd climbingCmd = new LedCmd(CLIMBING_ID, 0, 0, 0);
-   public static LedCmd climbCompleteCmd = new LedCmd(CLIMB_COMPLETE_ID, 0, 0, 0);
-   public static LedCmd feedJammedCmd = new LedCmd(FEED_JAMMED_ID, 0, 0, 0);
+   public static LedCmd leftFeedCmd = new LedCmd(LEFTJAM_ID, 0, 0, 255);
+   public static LedCmd rightFeedCmd = new LedCmd(RIGHTJAM_ID, 255, 0, 0);
 
-   
    public LED()
    {
       m_name = "LED";
@@ -71,7 +71,7 @@ public class LED implements Subsystem
       autoDataSent = false;
       disableDataSent = false;
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
-      
+
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
 
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
@@ -85,7 +85,9 @@ public class LED implements Subsystem
       boolean isRobotEnabled = DriverStation.getInstance().isEnabled();
       boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
-
+      boolean isLeftFeedJammed = shooter.checkLeftFeedJammed();
+      boolean isRightFeedJammed = shooter.checkRightFeedJammed();
+      boolean isFlywheelsReady = (shooter.isLeftReadyToShoot() && shooter.isRightReadyToShoot());
 
       m_normal = !m_turbo;
 
@@ -108,6 +110,18 @@ public class LED implements Subsystem
                autoDataSent = true;
             }
          }
+         else if (isLeftFeedJammed)
+         {
+            m_ledOutput.setValue(leftFeedCmd.getBytes());
+         }
+         else if (isRightFeedJammed)
+         {
+            m_ledOutput.setValue(rightFeedCmd.getBytes());
+         }
+         else if (isFlywheelsReady)
+         {
+            m_ledOutput.setValue(shooterOnCmd.getBytes());
+         }
       }
    }
 
@@ -119,7 +133,7 @@ public class LED implements Subsystem
       // m_shooter = ((DigitalInput) source).getValue();
       // }
 
-//      m_newDataAvailable = true;
+      // m_newDataAvailable = true;
    }
 
    public void sendCommand(LedCmd p_command)
@@ -127,7 +141,7 @@ public class LED implements Subsystem
       m_currentCmd = p_command;
       m_newDataAvailable = true;
    }
-   
+
    @Override
    public void selfTest()
    {
