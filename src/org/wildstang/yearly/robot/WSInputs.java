@@ -85,14 +85,14 @@ public enum WSInputs implements Inputs
    //---------------------------------             
    // Manipulator Buttons                          
    //---------------------------------             
-   GEAR_TILT_BUTTON("Gear Wall",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
-   GEAR_HOLD_BUTTON("Gear Hold",          WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), getLogging()),      // Gear Subsystem
-   FLYWHEEL("Flywheel On/Off",                     WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), getLogging()),
-   FLYWHEEL_LEFT("Flywheel Left On/Off",           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),        // Shooter Subsystem
-   FLYWHEEL_RIGHT("Flywheel Right On/Off",         WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),        // Shooter Subsystem
-   GATE("Gate Button",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
-   GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),
-   OVERRIDE("Override",                            WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()),
+   GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
+   GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), getLogging()),      // Gear Subsystem
+   GATE("Gate Button",                            WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),        // Shooter Subsystem
+   FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),
+   //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
+   //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),
+   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()),
+
 
    // ********************************             
    // Digital IOs                                  
