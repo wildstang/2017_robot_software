@@ -103,6 +103,9 @@ public class Drive implements Subsystem
 
       m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
+      
+      m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
+      m_quickTurnInput.addInputListener(this);
 
       m_quickTurnInput.addInputListener(this);
 
@@ -227,6 +230,7 @@ public class Drive implements Subsystem
          // Check and toggle shifter state
          toggleShifter();
       }
+      // TODO: 
       else if (p_source == m_quickTurnInput)
       {
          m_quickTurn = m_quickTurnInput.getValue();
