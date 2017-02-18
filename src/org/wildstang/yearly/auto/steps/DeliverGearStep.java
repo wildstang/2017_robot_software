@@ -18,7 +18,8 @@ public class DeliverGearStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.openGearDoor();
+      m_gearSubsystem.setHoldGear(false);
+      setFinished(true);
    }
 
    @Override

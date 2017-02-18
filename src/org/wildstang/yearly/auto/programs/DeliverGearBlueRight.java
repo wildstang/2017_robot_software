@@ -1,6 +1,7 @@
 package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.yearly.auto.steps.DeliverGearStep;
 
 public class DeliverGearBlueRight extends AutoProgram
 {
@@ -8,8 +9,8 @@ public class DeliverGearBlueRight extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      // TODO Auto-generated method stub
-
+      // TODO Add path steps
+      addStep(new DeliverGearStep());
    }
 
    @Override

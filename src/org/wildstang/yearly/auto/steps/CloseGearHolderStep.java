@@ -7,7 +7,7 @@ import org.wildstang.yearly.subsystems.Gear;
 
 public class CloseGearHolderStep extends AutoStep
 {
-   Gear m_gearSubsystem;
+   private Gear m_gearSubsystem;
    
    @Override
    public void initialize()
@@ -18,7 +18,8 @@ public class CloseGearHolderStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.closeGearDoor();
+      m_gearSubsystem.setHoldGear(true);
+      setFinished(true);
    }
 
    @Override

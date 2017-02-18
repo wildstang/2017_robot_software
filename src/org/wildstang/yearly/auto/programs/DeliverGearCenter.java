@@ -1,21 +1,22 @@
 package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.yearly.auto.steps.DeliverGearStep;
 
-public class DeliverGearRedCenter extends AutoProgram
+public class DeliverGearCenter extends AutoProgram
 {
 
    @Override
    protected void defineSteps()
    {
-      // TODO Auto-generated method stub
-
+      // TODO Add Path
+      addStep(new DeliverGearStep());
    }
 
    @Override
    public String toString()
    {
-      return "Deliver Gear - Red Center";
+      return "Deliver Gear Center";
    }
 
 }
