@@ -29,7 +29,9 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
+import org.wildstang.yearly.auto.test.autoprogram_test;
 import org.wildstang.yearly.robot.vision.VisionServer;
+
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 
@@ -166,6 +168,7 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
+      AutoManager.getInstance().addProgram(new autoprogram_test());
       
       // 3. Start Vision server
       m_visionServer = new VisionServer(5080);
