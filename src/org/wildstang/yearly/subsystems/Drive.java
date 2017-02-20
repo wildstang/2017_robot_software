@@ -140,16 +140,15 @@ public class Drive implements Subsystem
       m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
       m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
 
-      setBrakeMode(true);
+      setBrakeMode(false);
 
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders
-      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
       m_leftMaster.reverseSensor(true);
-      m_leftMaster.configEncoderCodesPerRev(256);
-      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
-      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
       }
@@ -157,12 +156,10 @@ public class Drive implements Subsystem
       {
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
-      // m_leftMaster.reverseSensor(false);
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-      m_rightMaster.configEncoderCodesPerRev(256);
-      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
-      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
       }
@@ -171,41 +168,39 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
-      //m_rightMaster.reverseSensor(false);
-
-      // TODO: When gearboxes are constructed and motor direction is determined,
-      // update to suit
-      // m_leftMaster.reverseOutput(false);
-      // m_leftFollower.reverseOutput(false);
-      // m_rightMaster.reverseOutput(true);
-      // m_rightFollower.reverseOutput(false);
 
       // Load PID profiles
       // Path following profile
-      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
-      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
-      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
-      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
+      m_leftMaster.setPID(DriveConstants.PATH_P_GAIN, DriveConstants.PATH_I_GAIN, DriveConstants.PATH_D_GAIN, DriveConstants.PATH_F_GAIN, 0, 0, DriveConstants.PATH_PROFILE_SLOT);
+      m_rightMaster.setPID(DriveConstants.PATH_P_GAIN, DriveConstants.PATH_I_GAIN, DriveConstants.PATH_D_GAIN, DriveConstants.PATH_F_GAIN, 0, 0, DriveConstants.PATH_PROFILE_SLOT);
 
-      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
-      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
-      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
-      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
-
-      // Base lock profile
-      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
-      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
-      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
-      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
-
-      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
-      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
-      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
-      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
+      m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      
+//      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+//      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
+//      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
+//      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
+//      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
+//
+//      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
+//      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
+//      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
+//      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
+//      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
+//
+//      // Base lock profile
+//      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
+//      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
+//      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
+//      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
+//
+//      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
+//      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
+//      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
+//      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
 
    }
 
@@ -432,7 +427,7 @@ public class Drive implements Subsystem
 
    public void setPathFollowingMode()
    {
-	   DriverStation.getInstance().reportWarning("Set Path Following Mode", false);
+	   DriverStation.reportWarning("Set Path Following Mode", false);
 
       m_driveMode = DriveType.PATH;
 
@@ -459,7 +454,7 @@ public class Drive implements Subsystem
 
    public void setOpenLoopDrive()
    {
-	   DriverStation.getInstance().reportWarning("Set Open Loop Drive", false);
+	   DriverStation.reportWarning("Set Open Loop Drive", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -468,6 +463,7 @@ public class Drive implements Subsystem
       }
 
       m_driveMode = DriveType.CHEESY;
+      setBrakeMode(false);
 
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
@@ -484,7 +480,7 @@ public class Drive implements Subsystem
 
    public void setFullBrakeMode()
    {
-	   DriverStation.getInstance().reportWarning("Set Full Brake Mode", false);
+	   DriverStation.reportWarning("Set Full Brake Mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {

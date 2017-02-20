@@ -164,7 +164,7 @@ public class RobotTemplate extends IterativeRobot
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 
-       startloggingState();
+      startloggingState();
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
