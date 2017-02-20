@@ -77,7 +77,5 @@ public class Intake implements Subsystem
       }
 
       SmartDashboard.putBoolean("intakeOn", m_intakeOn);
-      SmartDashboard.putNumber("intake motorSpeed from WS", m_motorSpeed);
-      SmartDashboard.putNumber("intake motorSpeed now", m_intakeMotor.getValue());
    }
 }

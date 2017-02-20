@@ -343,9 +343,6 @@ public class RobotTemplate extends IterativeRobot
    public void teleopPeriodic()
    {
 
-//      double time = System.currentTimeMillis();
-//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-//      oldTime = time;
       if (firstRun)
       {
          teleopPerodicCalled = true;
@@ -355,16 +352,8 @@ public class RobotTemplate extends IterativeRobot
       try
       {
 
-//         long cycleStartTime = System.currentTimeMillis();
-
          // Update all inputs, outputs and subsystems
          m_core.executeUpdate();
-
-//         long cycleEndTime = System.currentTimeMillis();
-//         long cycleLength = cycleEndTime - cycleStartTime;
-         // System.out.println("Cycle time: " + cycleLength);
-//         lastCycleTime = cycleEndTime;
-         // Watchdog.getInstance().feed();
       }
       catch (Throwable e)
       {

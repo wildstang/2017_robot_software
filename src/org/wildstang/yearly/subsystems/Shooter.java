@@ -109,11 +109,11 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      configureTalon(m_CANFlywheelLeft);
-      configureTalon(m_CANFlywheelRight);
+      configureFlywheelTalon(m_CANFlywheelLeft);
+      configureFlywheelTalon(m_CANFlywheelRight);
       
       // Reads values from Ws Config, defaults are nonsensical for testing
-//      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
 //      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
 //      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
 //      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
@@ -175,10 +175,11 @@ public class Shooter implements Subsystem
    }
 
    
-   private void configureTalon(CANTalon p_talon)
+   private void configureFlywheelTalon(CANTalon p_talon)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+      p_talon.enableBrakeMode(false);
 
 //      p_talon.reverseSensor(true);
       p_talon.setEncPosition(0);
@@ -377,35 +378,20 @@ public class Shooter implements Subsystem
 
    public void updateFeed()
    {
-      // Determines whether or not the feeder is jammed and, if so,
-      // displays "Is Jammed" on the dash
-
       // LEFT SIDE
-      if (!checkLeftFeedJammed())
+      if (checkLeftFeedJammed())
       {
-         SmartDashboard.putBoolean("Left is Jammed", false);
-      }
-      else
-      {
-         
-         SmartDashboard.putBoolean("Left is Jammed", true);
          m_leftFeedDirection = FeedDirection.STOP;
       }
 
       // RIGHT SIDE
-      if (!checkRightFeedJammed())
+      if (checkRightFeedJammed())
       {
-         SmartDashboard.putBoolean("Right is Jammed", false);
-      }
-      else
-      {
-         SmartDashboard.putBoolean("Right is Jammed", true);
          m_rightFeedDirection = FeedDirection.STOP;
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);
       runFeedBelt(m_rightFeed, m_rightFeedDirection);
-
    }
 
    private void runFeedBelt(Feed p_feed, FeedDirection p_direction)
@@ -435,23 +421,21 @@ public class Shooter implements Subsystem
    // Shows speeds and states for testing
    public void updateDashboardData()
    {
-      SmartDashboard.putBoolean("left flywheel is running", m_leftFlywheel.isRunning());
-      SmartDashboard.putBoolean("right flywheel is running", m_rightFlywheel.isRunning());
+      SmartDashboard.putBoolean("Left flywheel on", m_leftFlywheel.isRunning());
+      SmartDashboard.putBoolean("right flywheel on", m_rightFlywheel.isRunning());
 
       SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
       SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
 
       SmartDashboard.putBoolean("Gates is open", m_gate.isOpen());
 
-      SmartDashboard.putNumber("left feed speed", m_leftFeed.getSpeed());
-      SmartDashboard.putNumber("right feed speed", m_rightFeed.getSpeed());
+      SmartDashboard.putBoolean("left feed jammed", m_leftFeed.isJammed(m_leftFeedCurrent));
+      SmartDashboard.putBoolean("right feed jammed", m_rightFeed.isJammed(m_rightFeedCurrent));
 
       // WS config
       SmartDashboard.putNumber("flywheel target speed", m_targetSpeed);
       SmartDashboard.putNumber("flywheel low limit speed", m_lowLimitSpeed);
       SmartDashboard.putNumber("flywheel high limit speed", m_highLimitSpeed);
-      SmartDashboard.putNumber("feed speed constant", m_feedSpeed);
-      SmartDashboard.putNumber("feed dead band", m_feedDeadBand);
    }
 
 }
