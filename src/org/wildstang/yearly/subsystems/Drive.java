@@ -104,7 +104,7 @@ public class Drive implements Subsystem
       m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
       
-      m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
+      m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
       m_quickTurnInput.addInputListener(this);
