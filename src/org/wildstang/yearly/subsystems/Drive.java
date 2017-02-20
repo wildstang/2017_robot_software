@@ -9,8 +9,7 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.logger.StateTracker;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoid;
-import org.wildstang.hardware.crio.outputs.WsDoubleSolenoidState;
+import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
@@ -36,7 +35,7 @@ public class Drive implements Subsystem
    // inputUpdate()
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
-   private WsDoubleSolenoid m_shifterSolenoid;
+   private WsSolenoid m_shifterSolenoid;
    private DigitalInput m_rawModeInput;
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
@@ -104,11 +103,13 @@ public class Drive implements Subsystem
 
       m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
-
+      
       m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
-      m_shifterSolenoid = (WsDoubleSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
+      m_quickTurnInput.addInputListener(this);
+
+      m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
       
@@ -145,6 +146,7 @@ public class Drive implements Subsystem
 
       // Set up the encoders
       m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_leftMaster.reverseSensor(true);
       m_leftMaster.configEncoderCodesPerRev(256);
       m_leftMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
       if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
@@ -228,6 +230,7 @@ public class Drive implements Subsystem
          // Check and toggle shifter state
          toggleShifter();
       }
+      // TODO: 
       else if (p_source == m_quickTurnInput)
       {
          m_quickTurn = m_quickTurnInput.getValue();
@@ -258,11 +261,11 @@ public class Drive implements Subsystem
       // or by an auto program by calling setHighGear()
       if (!m_highGear)
       {
-         m_shifterSolenoid.setValue(WsDoubleSolenoidState.FORWARD.ordinal());
+         m_shifterSolenoid.setValue(true);
       }
       else
       {
-         m_shifterSolenoid.setValue(WsDoubleSolenoidState.REVERSE.ordinal());
+         m_shifterSolenoid.setValue(false);
       }
 
       switch (m_driveMode)
