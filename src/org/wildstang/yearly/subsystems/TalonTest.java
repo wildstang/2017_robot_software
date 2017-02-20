@@ -46,13 +46,11 @@ public class TalonTest implements Subsystem
    
    private double m_currentSpeed = 50;
    
-   private static final int MAX_RPM = 292;
    
    private boolean m_speedModeOn;
    private boolean m_shooterOnCurr;
    private boolean m_shooterPrev;
    
-   private boolean m_holdPos = false;
    
    
    StringBuilder m_sb = new StringBuilder();
@@ -81,10 +79,10 @@ public class TalonTest implements Subsystem
       {
          m_shooterOnCurr = m_shooterOnInput.getValue();
       }
-      else if (p_source == m_shooterPosInput)
-      {
-         m_holdPos = m_shooterPosInput.getValue();
-      }
+//      else if (p_source == m_shooterPosInput)
+//      {
+//         m_holdPos = m_shooterPosInput.getValue();
+//      }
       else if (p_source == m_throttleInput)
       {
          m_throttle = m_throttleInput.getValue();
@@ -96,25 +94,24 @@ public class TalonTest implements Subsystem
    {
       m_shooter = new CANTalon(5);
 
-      m_shooter.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+      m_shooter.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       m_shooter.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
-      m_shooter.configEncoderCodesPerRev(256);
 
-      m_shooter.reverseSensor(true);
+//      m_shooter.reverseSensor(true);
 //      m_shooter.reverseOutput(true);
       
       m_shooter.setEncPosition(0);
       
       m_shooter.configNominalOutputVoltage(+0.0f,  -0.0f);
       m_shooter.configPeakOutputVoltage(+12.0f,  0.0f);
-      m_shooter.setVoltageRampRate(12.0);  // Max spinup of 6V/s - start here
+      m_shooter.setVoltageRampRate(24.0);  // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       m_shooter.setProfile(0);
-      m_shooter.setF(2.5);      // 0.1998
-      m_shooter.setP(0.6115);      //(10% X 1023) / (error) 
+      m_shooter.setF(1);      // 0.1998
+      m_shooter.setP(0);      //(10% X 1023) / (error) 
       m_shooter.setI(0);
-      m_shooter.setD(0.3);
+      m_shooter.setD(0);
       
       m_up50Input = (DigitalInput)Core.getInputManager().getInput(WSInputs.SPEED_UP_50.getName());
       m_up50Input.addInputListener(this);
@@ -128,8 +125,8 @@ public class TalonTest implements Subsystem
       m_shooterOnInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_2.getName());
       m_shooterOnInput.addInputListener(this);
 
-      m_shooterPosInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName());
-      m_shooterPosInput.addInputListener(this);
+//      m_shooterPosInput = (DigitalInput)Core.getInputManager().getInput(WSInputs.DRV_BUTTON_4.getName());
+//      m_shooterPosInput.addInputListener(this);
       
       m_throttleInput = (AnalogInput)Core.getInputManager().getInput(WSInputs.DRV_THROTTLE.getName());
       m_throttleInput.addInputListener(this);
@@ -192,7 +189,7 @@ public class TalonTest implements Subsystem
 //         m_currentSpeed = m_throttle * MAX_RPM;
          m_shooter.set(m_currentSpeed);
 
-         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-0.85);
+         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
 
          /* append more signals to print when in speed mode. */
          m_sb.append("\terror: ");
@@ -204,7 +201,14 @@ public class TalonTest implements Subsystem
       {
          m_shooter.changeControlMode(TalonControlMode.PercentVbus);
          m_shooter.set(m_throttle);
-         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(0);
+         if (m_throttle < 0.05)
+         {
+            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
+         }
+         else
+         {
+            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(0);
+         }
       }
       SmartDashboard.putNumber("Throttle", m_throttle);
       SmartDashboard.putBoolean("Speed mode", m_speedModeOn);
@@ -217,12 +221,12 @@ public class TalonTest implements Subsystem
 //      }
       
       // Print the target and current to the dashboard
-      SmartDashboard.putNumber("Target RPM", m_currentSpeed);
-      SmartDashboard.putNumber("Encoder pos", m_shooter.getEncPosition());
-      SmartDashboard.putNumber("Current RPM", m_shooter.getSpeed());
-//      System.out.println("Retrieved RPM: " + SmartDashboard.getNumber("MAX_RPM", 300));
+      SmartDashboard.putNumber("Vout", motorOutput);
+      SmartDashboard.putNumber("Speed", m_shooter.getSpeed());
       SmartDashboard.putNumber("Error", m_shooter.getClosedLoopError());
+      SmartDashboard.putNumber("Target", m_currentSpeed);
 
+      SmartDashboard.putNumber("Shooter encoder pos", m_shooter.getEncPosition());
       
       if (m_loops++ >= 10)
       {

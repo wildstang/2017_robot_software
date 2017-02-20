@@ -4,7 +4,6 @@ import org.wildstang.framework.core.Subsystems;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.PneumaticsTest;
-import org.wildstang.yearly.subsystems.ShooterTest;
 import org.wildstang.yearly.subsystems.TalonTest;
 
 public enum WSSubsystems implements Subsystems
