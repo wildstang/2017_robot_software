@@ -104,6 +104,11 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
+      if (Core.getStateTracker().isTrackingState())
+      {
+         Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
+         Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);
+      }
       // Flywheels
       // CAN talons
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
@@ -267,6 +272,9 @@ public class Shooter implements Subsystem
       updateFeed();
 
       updateDashboardData();
+
+      Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
+      Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
    }
 
    // Flywheel stuff
