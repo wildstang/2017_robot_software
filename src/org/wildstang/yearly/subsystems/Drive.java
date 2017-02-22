@@ -161,10 +161,9 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-      m_rightMaster.configEncoderCodesPerRev(256);
-      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
-      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
       }
