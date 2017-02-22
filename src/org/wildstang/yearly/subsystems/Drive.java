@@ -63,7 +63,7 @@ public class Drive implements Subsystem
    private PathFollower m_pathFollower;
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
-   private static final double ROBOT_WIDTH_INCHES = 22;
+   private static final double ROBOT_WIDTH_INCHES = 30;
    private static final double WHEEL_DIAMETER_INCHES = 4;
    private static final double ENCODER_CPR = 4096;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
@@ -161,9 +161,10 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
-      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+      m_rightMaster.configEncoderCodesPerRev(256);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.QuadEncoder, 10);
+      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.QuadEncoder) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
       }
