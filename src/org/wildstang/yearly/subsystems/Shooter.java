@@ -118,7 +118,7 @@ public class Shooter implements Subsystem
       configureFlywheelTalon(m_CANFlywheelRight);
       
       // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+     // m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
 //      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
 //      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
 //      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);

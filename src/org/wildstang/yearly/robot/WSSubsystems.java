@@ -6,7 +6,7 @@ import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.Gear;
 import org.wildstang.yearly.subsystems.IMUTest;
 import org.wildstang.yearly.subsystems.Shooter;
-import org.wildstang.yearly.subsystems.Subsystem_Test;
+
 import org.wildstang.yearly.subsystems.Climber;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.Monitor;
@@ -23,7 +23,6 @@ public enum WSSubsystems implements Subsystems
    GEAR("Gear",                  Gear.class),
    SHOOTER("Shooter",            Shooter.class),
    CLIMBER("Climber",            Climber.class),
-   SUBSYSTEM_TEST_PP("Subsystem_Test",  Subsystem_Test.class),
    LED("LED",                    LED.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.
