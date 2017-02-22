@@ -9,6 +9,7 @@ import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Shooter;
+import org.wildstang.yearly.subsystems.Intake;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -28,6 +29,7 @@ public class LED implements Subsystem
    private static final int FEED_JAMMED_ID = 9;
    private static final int LEFTJAM_ID = 10;
    private static final int RIGHTJAM_ID = 11;
+   private static final int INTAKE_ID = 12;
 
    // Sent states
    boolean autoDataSent = false;
@@ -46,6 +48,7 @@ public class LED implements Subsystem
    boolean m_intake;
 
    private Shooter shooter;
+   private Intake intake;
 
    // Reused commands from year to year
    public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 0, 0);
@@ -54,8 +57,13 @@ public class LED implements Subsystem
    public static LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
    public static LedCmd purpleAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 255);
    public static LedCmd turboCmd = new LedCmd(TURBO_ID, 0, 0, 0);
+   
    public static LedCmd shooterOnCmd = new LedCmd(SHOOTER_ON_ID, 255, 255, 0);
+      // When flywheels are simply running
    public static LedCmd shootingCmd = new LedCmd(SHOOTING_ID, 0, 0, 0);
+      // When flywheels are running and gates are open and feed is going
+   
+   public static LedCmd intakeCmd = new LedCmd(INTAKE_ID, 255, 255, 0);
    public static LedCmd climbingCmd = new LedCmd(CLIMBING_ID, 0, 0, 0);
    public static LedCmd leftFeedCmd = new LedCmd(LEFTJAM_ID, 0, 0, 255);
    public static LedCmd rightFeedCmd = new LedCmd(RIGHTJAM_ID, 255, 0, 0);
@@ -100,7 +108,12 @@ public class LED implements Subsystem
             {
                 m_ledOutput.setValue(m_currentCmd.getBytes());
             }
+            else if ( intake.intakeState())
+            {
+               m_ledOutput.setValue(intakeCmd.getBytes());
+            }
             m_newDataAvailable = false;
+
          }
          else if (isRobotAuton)
          {
