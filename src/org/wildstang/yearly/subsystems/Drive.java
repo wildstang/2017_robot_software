@@ -215,6 +215,9 @@ public class Drive implements Subsystem
       if (p_source == m_throttleInput)
       {
          m_throttleValue = m_throttleInput.getValue();
+         
+//         m_quickTurn = m_cheesyHelper.handleDeadband(m_throttleValue, CheesyDriveHelper.kThrottleDeadband) == 0.0;
+
          SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
