@@ -47,14 +47,14 @@ public class Feed extends Shooter
 
    public void runForward()
    {
-      m_victor.setValue(feedSpeed);
+      m_victor.setValue(-feedSpeed);
    }
 
    // Basically does the same as the function above, but in reverse
 
    public void runBackwards()
    {
-      m_victor.setValue(-feedSpeed);
+      m_victor.setValue(feedSpeed);
    }
 
    // This function turns the motors off

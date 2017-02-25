@@ -19,6 +19,7 @@ import org.wildstang.yearly.subsystems.shooter.Gate;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.StatusFrameRate;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -127,7 +128,7 @@ public class Shooter implements Subsystem
       m_targetSpeed = 500.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
       m_lowLimitSpeed = 450.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
       m_highLimitSpeed = 550.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
-      m_feedSpeed = 0.5;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
+      m_feedSpeed = 1.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
       m_feedDeadBand = 0.05;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
@@ -186,12 +187,13 @@ public class Shooter implements Subsystem
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
       p_talon.enableBrakeMode(false);
 
-//      p_talon.reverseSensor(true);
+      p_talon.reverseSensor(true);
       p_talon.setEncPosition(0);
+      p_talon.changeControlMode(TalonControlMode.Speed);
       
       p_talon.configNominalOutputVoltage(+0.0f,  -0.0f);
       p_talon.configPeakOutputVoltage(+12.0f,  0.0f);
-      p_talon.setVoltageRampRate(24.0);  // Max spinup of 24V/s - start here
+//      p_talon.setVoltageRampRate(24.0);  // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);

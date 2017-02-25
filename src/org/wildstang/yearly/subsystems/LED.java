@@ -26,10 +26,9 @@ public class LED implements Subsystem
    private static final int SHOOTING_ID = 6;
    private static final int CLIMBING_ID = 7;
    private static final int CLIMB_COMPLETE_ID = 8;
-   private static final int FEED_JAMMED_ID = 9;
-   private static final int LEFTJAM_ID = 10;
-   private static final int RIGHTJAM_ID = 11;
-   private static final int INTAKE_ID = 12;
+   private static final int LEFTJAM_ID = 9;
+   private static final int RIGHTJAM_ID = 10;
+   private static final int INTAKE_ID = 11;
 
    // Sent states
    boolean autoDataSent = false;
@@ -108,10 +107,10 @@ public class LED implements Subsystem
             {
                 m_ledOutput.setValue(m_currentCmd.getBytes());
             }
-            else if ( intake.intakeState())
-            {
-               m_ledOutput.setValue(intakeCmd.getBytes());
-            }
+//            else if ( intake.intakeState())
+//            {
+//               m_ledOutput.setValue(intakeCmd.getBytes());
+//            }
             m_newDataAvailable = false;
 
          }
