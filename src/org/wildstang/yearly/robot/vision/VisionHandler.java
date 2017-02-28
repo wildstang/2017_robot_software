@@ -166,6 +166,8 @@ public class VisionHandler implements Runnable {
 		buf.append(center);
 		buf.append("|");
 		buf.append(threshold);
+		buf.append("|");
+		buf.append("blurRadius");
 		buf.append("\n");
 
 		p_out.println(buf.toString());
