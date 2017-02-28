@@ -18,7 +18,7 @@ public class CloseGearHolderStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.setHoldGear(true);
+      m_gearSubsystem.openDoor();
       setFinished(true);
    }
 
