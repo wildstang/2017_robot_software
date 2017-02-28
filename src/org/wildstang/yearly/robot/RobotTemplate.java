@@ -28,11 +28,6 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-<<<<<<< HEAD
-=======
-import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
-
->>>>>>> refs/remotes/origin/master
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
