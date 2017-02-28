@@ -1,4 +1,4 @@
-package org.wildstang.yearly.auto.test;
+package org.wildstang.yearly.auto.steps;
 
 import java.io.File;
 

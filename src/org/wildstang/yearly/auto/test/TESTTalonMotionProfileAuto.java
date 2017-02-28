@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
+import org.wildstang.yearly.auto.steps.PathFollowerStep;
 
 public class TESTTalonMotionProfileAuto extends AutoProgram
 {
