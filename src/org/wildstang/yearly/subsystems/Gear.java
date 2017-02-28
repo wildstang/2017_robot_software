@@ -17,6 +17,15 @@ public class Gear implements Subsystem
    private boolean m_holdGear;
    private boolean m_tiltGear;
 
+   private boolean m_gearPrev;
+   private boolean m_gearCurrent;
+   private boolean m_gearTiltToggle;
+   
+   private boolean m_doorPrev;
+   private boolean m_doorCurrent;
+   private boolean m_doorToggle;
+   
+   
    @Override
    public void selfTest()
    {
@@ -46,16 +55,26 @@ public class Gear implements Subsystem
       
       if (source.getName().equals(WSInputs.GEAR_TILT_BUTTON.getName()))
       {
-    	  l_tiltButton = ((DigitalInput) source).getValue();
+    	  m_gearCurrent = ((DigitalInput) source).getValue();
     	  
-    	  setTiltGear(l_tiltButton);
+        if (m_gearCurrent && !m_gearPrev)
+        {
+           m_gearTiltToggle = !m_gearTiltToggle;
+        }
+        m_gearPrev = m_gearCurrent;
+    	  setTiltGear(m_gearTiltToggle);
       }
       
       if (source.getName().equals(WSInputs.GEAR_HOLD_BUTTON.getName()))
       {
-    	  l_holdButton = ((DigitalInput) source).getValue();
-    	  
-    	  setHoldGear(l_holdButton);
+        m_doorCurrent = ((DigitalInput) source).getValue();
+        
+        if (m_doorCurrent && !m_doorPrev)
+        {
+           m_doorToggle = !m_doorToggle;
+        }
+        m_doorPrev = m_doorCurrent;
+    	  setHoldGear(m_doorToggle);
       }
    }
 

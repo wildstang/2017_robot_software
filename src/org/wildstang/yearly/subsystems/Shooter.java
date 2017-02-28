@@ -113,11 +113,17 @@ public class Shooter implements Subsystem
       configureTalon(m_CANFlywheelRight);
       
       // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
-      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
-      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
-      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
-      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+//      m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+//      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
+//      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
+//      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
+//      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+
+      m_targetSpeed = 500.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+      m_lowLimitSpeed = 450.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
+      m_highLimitSpeed = 550.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
+      m_feedSpeed = 0.5;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
+      m_feedDeadBand = 0.05;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);

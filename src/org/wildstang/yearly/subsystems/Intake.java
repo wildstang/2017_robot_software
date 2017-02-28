@@ -37,8 +37,8 @@ public class Intake implements Subsystem
    public void init()
    {
       // Setup any local variables with intial values
-      m_motorSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + ".IntakeMotor", 0.5);
+      m_motorSpeed = 1; //Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+//            + ".IntakeMotor", 1);
 
       m_intakeMotor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName());
 

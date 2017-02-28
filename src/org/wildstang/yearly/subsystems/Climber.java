@@ -14,7 +14,7 @@ public class Climber implements Subsystem
 {
    // add variables here
    private boolean DPadUp;
-   private double motorspeed = .8;
+   private double motorspeed = -.8;
    private boolean running;
    private DigitalInput upbutton;
    private WsVictor w_motor;
@@ -36,7 +36,7 @@ public class Climber implements Subsystem
    {
       DPadUp = false; 
      
-      motorspeed = .8; //Speed for motor
+      motorspeed = -.8; //Speed for motor
       running = false;
 
       //Output
