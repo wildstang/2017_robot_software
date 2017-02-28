@@ -27,14 +27,16 @@ public class VisionHandler implements Runnable {
 	private int v_max;
 	private int center;
 	private int threshold;
-	final private int H_MIN_DEFAULT = 0;
+	private double blurRadius;
+	final private int H_MIN_DEFAULT = 81;
 	final private int S_MIN_DEFAULT = 0;
-	final private int V_MIN_DEFAULT = 0;
-	final private int H_MAX_DEFAULT = 0;
-	final private int S_MAX_DEFAULT = 0;
-	final private int V_MAX_DEFAULT = 0;
+	final private int V_MIN_DEFAULT = 238;
+	final private int H_MAX_DEFAULT = 180;
+	final private int S_MAX_DEFAULT = 255;
+	final private int V_MAX_DEFAULT = 255;
 	final private int CENTER_DEFAULT = 400;
 	final private int THRESHOLD_DEFAULT = 50;
+	final private double BLUR_RADIUS_DEFAULT = 5.0;
 	final private String H_MIN_KEY = "";
 	final private String S_MIN_KEY = "";
 	final private String V_MIN_KEY = "";
@@ -43,6 +45,8 @@ public class VisionHandler implements Runnable {
 	final private String V_MAX_KEY = "";
 	final private String CENTER_KEY = "";
 	final private String THRESHOLD_KEY = "";
+	final private String BLUR_RADIUS_KEY = "";
+	
 	
 	private long m_lastMsgReceived;
 
@@ -67,6 +71,8 @@ public class VisionHandler implements Runnable {
 	            + CENTER_KEY, CENTER_DEFAULT);
 		threshold = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
 	            + THRESHOLD_KEY, THRESHOLD_DEFAULT);
+		blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+				+ BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
 	}
 
 	public boolean isRunning() {
