@@ -4,15 +4,10 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
-import org.wildstang.yearly.auto.steps.WaitStep;
-import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.auto.steps.ShootStep;
-import org.wildstang.yearly.subsystems.Shooter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.robot.WSSubsystems;
+import org.wildstang.yearly.auto.steps.WaitStep;
 
-public class HopperShootsBallsRed extends AutoProgram
+public class HopperShootsBall extends AutoProgram
 {
    private String someString = this.getClass().getName() + ".hopperWaitTime";
 
@@ -40,7 +35,7 @@ public class HopperShootsBallsRed extends AutoProgram
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Hopper-Shoot Red";
+      return "Hopper-Shoot";
    }
 
 }

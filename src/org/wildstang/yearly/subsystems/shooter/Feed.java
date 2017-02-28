@@ -40,21 +40,21 @@ public class Feed extends Shooter
       }
 
       // TODO
-      return false;
+      return jammed;
    }
 
    // This function makes the motors on the belts run in a positive rotation
 
    public void runForward()
    {
-      m_victor.setValue(feedSpeed);
+      m_victor.setValue(-feedSpeed);
    }
 
    // Basically does the same as the function above, but in reverse
 
    public void runBackwards()
    {
-      m_victor.setValue(-feedSpeed);
+      m_victor.setValue(feedSpeed);
    }
 
    // This function turns the motors off

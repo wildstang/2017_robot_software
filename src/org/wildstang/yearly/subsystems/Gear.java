@@ -25,6 +25,11 @@ public class Gear implements Subsystem
    private boolean m_doorCurrent;
    private boolean m_doorToggle;
    
+   private DigitalInput m_tiltButton;
+   private DigitalInput m_doorButton;
+   
+   private WsSolenoid m_tiltSolenoid;
+   private WsSolenoid m_doorSolenoid;
    
    @Override
    public void selfTest()
@@ -41,21 +46,23 @@ public class Gear implements Subsystem
    public void init()
    {
 	   // Register the sensors that this subsystem wants to be notified about
-      Core.getInputManager().getInput(WSInputs.GEAR_TILT_BUTTON.getName()).addInputListener(this);
-      Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName()).addInputListener(this);
+      m_tiltButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_TILT_BUTTON.getName());
+      m_tiltButton.addInputListener(this);
+      
+      m_doorButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName());
+      m_doorButton.addInputListener(this);
+      
+      m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
+      m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
    }
 
    @Override
    public void inputUpdate(Input source)
    { 
-	   boolean l_tiltButton;
-	   boolean l_holdButton;
-
       // This section reads the input sensors and places them into local variables
-      
-      if (source.getName().equals(WSInputs.GEAR_TILT_BUTTON.getName()))
+      if (source == m_tiltButton)
       {
-    	  m_gearCurrent = ((DigitalInput) source).getValue();
+    	  m_gearCurrent = m_tiltButton.getValue();
     	  
         if (m_gearCurrent && !m_gearPrev)
         {
@@ -65,9 +72,9 @@ public class Gear implements Subsystem
     	  setTiltGear(m_gearTiltToggle);
       }
       
-      if (source.getName().equals(WSInputs.GEAR_HOLD_BUTTON.getName()))
+      if (source == m_doorButton)
       {
-        m_doorCurrent = ((DigitalInput) source).getValue();
+        m_doorCurrent = m_doorButton.getValue();
         
         if (m_doorCurrent && !m_doorPrev)
         {
@@ -81,8 +88,8 @@ public class Gear implements Subsystem
    @Override
    public void update()
    {
-      ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName())).setValue(m_holdGear);
-	   ((WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName())).setValue(m_tiltGear);
+      m_tiltSolenoid.setValue(m_tiltGear);
+      m_doorSolenoid.setValue(m_holdGear);
 	   
 	   SmartDashboard.putBoolean("HoldGear", m_holdGear);
 	   SmartDashboard.putBoolean("TiltGear", m_tiltGear);
