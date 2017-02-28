@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber implements Subsystem
 {
    // add variables here
-   private boolean DPadUp;
-   private double motorspeed = -.8;
+   private boolean m_runClimber;
+   private double motorspeed = -1.0;
    private boolean running;
    private DigitalInput upbutton;
    private WsVictor w_motor;
@@ -34,9 +34,8 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
-      DPadUp = false; 
+      m_runClimber = false; 
      
-      motorspeed = -.8; //Speed for motor
       running = false;
 
       //Output
@@ -52,7 +51,7 @@ public class Climber implements Subsystem
    {
       if(source == upbutton)
       {
-         DPadUp = upbutton.getValue();
+         m_runClimber = upbutton.getValue();
       }
    }
 
@@ -60,7 +59,7 @@ public class Climber implements Subsystem
    public void update()
    {
       
-      if (DPadUp) // Checks if the dpad button is being pushed
+      if (m_runClimber) // Checks if the dpad button is being pushed
       {
          running = true; // for Smart Dashboard
          w_motor.setValue(motorspeed); //Sets the motor speed to .8

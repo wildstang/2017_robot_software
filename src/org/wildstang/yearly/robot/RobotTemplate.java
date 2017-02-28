@@ -29,7 +29,7 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
-import org.wildstang.yearly.auto.test.autoprogram_test;
+
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -81,7 +81,7 @@ public class RobotTemplate extends IterativeRobot
       m_stateLogger.setWriter(outputWriter);
 
       // Set the interval between writes to the file. Try 100ms
-      // m_stateLogger.setWriteInterval(100);
+      m_stateLogger.setWriteInterval(100);
       m_stateLogger.start();
 
       Thread t = new Thread(m_stateLogger);
@@ -164,11 +164,11 @@ public class RobotTemplate extends IterativeRobot
       // 1. Add subsystems
       m_core.createSubsystems(WSSubsystems.values());
 
-       startloggingState();
+      startloggingState();
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
-      AutoManager.getInstance().addProgram(new autoprogram_test());
+
       
       // 3. Start Vision server
       m_visionServer = new VisionServer(5080);
@@ -343,9 +343,6 @@ public class RobotTemplate extends IterativeRobot
    public void teleopPeriodic()
    {
 
-//      double time = System.currentTimeMillis();
-//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-//      oldTime = time;
       if (firstRun)
       {
          teleopPerodicCalled = true;
@@ -355,16 +352,8 @@ public class RobotTemplate extends IterativeRobot
       try
       {
 
-//         long cycleStartTime = System.currentTimeMillis();
-
          // Update all inputs, outputs and subsystems
          m_core.executeUpdate();
-
-//         long cycleEndTime = System.currentTimeMillis();
-//         long cycleLength = cycleEndTime - cycleStartTime;
-         // System.out.println("Cycle time: " + cycleLength);
-//         lastCycleTime = cycleEndTime;
-         // Watchdog.getInstance().feed();
       }
       catch (Throwable e)
       {

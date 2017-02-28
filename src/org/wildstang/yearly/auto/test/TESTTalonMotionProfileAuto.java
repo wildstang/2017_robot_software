@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
+import org.wildstang.yearly.auto.steps.PathFollowerStep;
 
 public class TESTTalonMotionProfileAuto extends AutoProgram
 {
@@ -28,7 +29,7 @@ public class TESTTalonMotionProfileAuto extends AutoProgram
 //	  addStep(new PathFollowerStep(autoRight));
 //      addStep(new PathFollowerStep(autoLeft));
 
-	   addStep(new PathFollowerStep("/home/lvuser/path.test.txt"));
+	   addStep(new PathFollowerStep("/home/lvuser/path.test.s.curve"));
    }
 
    @Override
