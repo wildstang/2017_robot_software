@@ -5,10 +5,10 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Gear;
 
-public class CloseGearHolderStep extends AutoStep
+public class OpenGearHolderStep extends AutoStep
 {
    private Gear m_gearSubsystem;
-   
+
    @Override
    public void initialize()
    {
@@ -18,14 +18,14 @@ public class CloseGearHolderStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.closeDoor();
+      m_gearSubsystem.openDoor();
       setFinished(true);
    }
 
    @Override
    public String toString()
    {
-      return "Close gear holder step";
+      return "Open gear holder step";
    }
 
 }
