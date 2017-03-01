@@ -9,7 +9,7 @@ import org.wildstang.yearly.auto.steps.ShooterOff;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 import org.wildstang.yearly.auto.steps.WaitStep;
 
-public class HopperShootsBall extends AutoProgram
+public class HopperShoot extends AutoProgram
 {
 
    private double hopperWaitTime;
