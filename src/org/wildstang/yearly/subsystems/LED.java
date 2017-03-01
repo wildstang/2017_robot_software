@@ -126,10 +126,10 @@ public class LED implements Subsystem
 //                     m_ledOutput.setValue(shooter.getBytes());
                   }
 
-                  if (m_intake)
-                  {
-//                     m_ledOutput.setValue(intake.getBytes());
-                  }
+//                  if (m_intake)
+//                  {
+////                     m_ledOutput.setValue(intake.getBytes());
+//                  }
 
                }
                m_newDataAvailable = false;

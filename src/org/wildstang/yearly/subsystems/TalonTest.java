@@ -44,7 +44,7 @@ public class TalonTest implements Subsystem
 
    private double m_throttle;
    
-   private double m_currentSpeed = 50;
+   private double m_currentSpeed = 5450;
    
    
    private boolean m_speedModeOn;
@@ -97,7 +97,7 @@ public class TalonTest implements Subsystem
       m_shooter.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       m_shooter.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
 
-//      m_shooter.reverseSensor(true);
+      m_shooter.reverseSensor(true);
 //      m_shooter.reverseOutput(true);
       
       m_shooter.setEncPosition(0);
@@ -108,8 +108,8 @@ public class TalonTest implements Subsystem
 
       // Set up closed loop PID control gains in slot 0
       m_shooter.setProfile(0);
-      m_shooter.setF(1);      // 0.1998
-      m_shooter.setP(0);      //(10% X 1023) / (error) 
+      m_shooter.setF(.02366);      // 0.1998
+      m_shooter.setP(.02);      //(10% X 1023) / (error) 
       m_shooter.setI(0);
       m_shooter.setD(0);
       
@@ -201,7 +201,7 @@ public class TalonTest implements Subsystem
       {
          m_shooter.changeControlMode(TalonControlMode.PercentVbus);
          m_shooter.set(m_throttle);
-         if (m_throttle < 0.05)
+         if (Math.abs(m_throttle) > 0.05)
          {
             ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
          }
