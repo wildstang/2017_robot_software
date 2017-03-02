@@ -10,6 +10,8 @@ public class VisionConstants
    public static final int S_MAX = 180;
    public static final int V_MAX = 180;
    
+   public static final int X_OFFSET = 400;
+   public static final int THRESHOLD = 10;
    
    
    private VisionConstants()
