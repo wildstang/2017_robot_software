@@ -7,33 +7,80 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import java.util.Properties;
+import org.wildstang.framework.core.Core;
 
 public class VisionHandler implements Runnable
 {
+
+   final int CORRECTION_LEVEL_INDEX = 0;
    private Socket m_socket;
    private boolean m_running;
    private InputStream m_inputStream;
    private OutputStream m_outputStream;
    private VisionServer m_visionServer;
-   private Preferences visionPrefs;
-   
+
+   private int h_min;
+   private int s_min;
+   private int v_min;
+   private int h_max;
+   private int s_max;
+   private int v_max;
+   private int center;
+   private int threshold;
+   private double blurRadius;
+   final private int H_MIN_DEFAULT = 81;
+   final private int S_MIN_DEFAULT = 0;
+   final private int V_MIN_DEFAULT = 238;
+   final private int H_MAX_DEFAULT = 180;
+   final private int S_MAX_DEFAULT = 255;
+   final private int V_MAX_DEFAULT = 255;
+   final private int CENTER_DEFAULT = 400;
+   final private int THRESHOLD_DEFAULT = 50;
+   final private double BLUR_RADIUS_DEFAULT = 5.0;
+   final private String H_MIN_KEY = "";
+   final private String S_MIN_KEY = "";
+   final private String V_MIN_KEY = "";
+   final private String H_MAX_KEY = "";
+   final private String S_MAX_KEY = "";
+   final private String V_MAX_KEY = "";
+   final private String CENTER_KEY = "";
+   final private String THRESHOLD_KEY = "";
+   final private String BLUR_RADIUS_KEY = "";
+
    private long m_lastMsgReceived;
-   
+
    public VisionHandler(VisionServer p_server, Socket p_socket)
    {
       m_socket = p_socket;
       m_visionServer = p_server;
+
+      h_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + H_MIN_KEY, H_MIN_DEFAULT);
+      s_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + S_MIN_KEY, S_MIN_DEFAULT);
+      v_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + V_MIN_KEY, V_MIN_DEFAULT);
+      h_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + H_MAX_KEY, H_MAX_DEFAULT);
+      s_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + S_MAX_KEY, S_MAX_DEFAULT);
+      v_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + V_MAX_KEY, V_MAX_DEFAULT);
+
+      center = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + CENTER_KEY, CENTER_DEFAULT);
+      threshold = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+            + THRESHOLD_KEY, THRESHOLD_DEFAULT);
+      blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+            + BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
    }
 
    public boolean isRunning()
    {
       return m_running;
    }
-   
+
    @Override
    public void run()
    {
@@ -41,7 +88,8 @@ public class VisionHandler implements Runnable
       PrintWriter out = null;
       String line = null;
       int readValue;
-      
+      String delims = "[,|]";
+
       try
       {
          m_inputStream = m_socket.getInputStream();
@@ -54,28 +102,49 @@ public class VisionHandler implements Runnable
       {
          e.printStackTrace();
       }
-      
+
       if (in != null && out != null)
       {
-         SmartDashboard.putBoolean("Camera connection", true);
+         System.out.println("Camera connection: " + true);
 
          // We've just connected - send the required HSV values to the client
          sendPreferences(out);
-         
+
          m_running = true;
-         
+
          while (m_running)
          {
-            // read the value sent from the client and update the current value to be used
+            // read the value sent from the client and update the current
+            // value to be used
             try
             {
                line = in.readLine();
-               
+
                if (line != null)
                {
-                  readValue = Integer.parseInt(line);
-                  m_lastMsgReceived = System.currentTimeMillis();
-                  m_visionServer.updateValue(readValue);
+                  // System.out.println("line: " + line);
+
+                  String[] tokens = line.split(delims);
+                  int[] parms = new int[tokens.length];
+
+                  for (int i = 0; i < tokens.length; i++)
+                  {
+                     parms[i] = Integer.parseInt(tokens[i].trim());
+                  }
+
+                  // System.out.println("Parms: " + parm0 + "," + parm1 +
+                  // "," + parm2+ "," + parm3);
+                  // System.out.println("tokens.length():" +
+                  // tokens.length);
+                  // System.out.println("token[0]: " + tokens[0]);
+                  // System.out.println("token[1]: " + tokens[1]);
+                  // System.out.println("token[2]: " + tokens[2]);
+                  // System.out.println("token[3]: " + tokens[3]);
+
+                  // readValue = Integer.parseInt(line.trim());
+                  // System.out.println("Read: " + readValue);
+                  // m_lastMsgReceived = System.currentTimeMillis();
+                  // m_visionServer.updateValue(readValue);
                }
             }
             catch (NumberFormatException e)
@@ -90,37 +159,39 @@ public class VisionHandler implements Runnable
       }
       else
       {
-         SmartDashboard.putBoolean("Camera connection", false);
+         System.out.println("Camera connection: " + false);
       }
-      
+
    }
-   
-   
+
    private void sendPreferences(PrintWriter p_out)
    {
       StringBuffer buf = new StringBuffer();
-      
-      buf.append(visionPrefs.getInt("H Min", VisionConstants.H_MIN));
+      Properties prefs = new Properties();
+
+      buf.append(h_min);
       buf.append("|");
-      buf.append(visionPrefs.getInt("S Min", VisionConstants.S_MIN));
+      buf.append(s_min);
       buf.append("|");
-      buf.append(visionPrefs.getInt("V Min", VisionConstants.V_MIN));
+      buf.append(v_min);
       buf.append("|");
-      buf.append(visionPrefs.getInt("H Max", VisionConstants.H_MAX));
+      buf.append(h_max);
       buf.append("|");
-      buf.append(visionPrefs.getInt("S Max", VisionConstants.S_MAX));
+      buf.append(s_max);
       buf.append("|");
-      buf.append(visionPrefs.getInt("V Max", VisionConstants.V_MAX));
+      buf.append(v_max);
       buf.append("|");
-      buf.append(visionPrefs.getInt("X Offset", VisionConstants.X_OFFSET));
+      buf.append(center);
       buf.append("|");
-      buf.append(visionPrefs.getInt("Threshold Size(per side)", VisionConstants.THRESHOLD));
+      buf.append(threshold);
+      buf.append("|");
+      buf.append("blurRadius");
       buf.append("\n");
-      
+
       p_out.println(buf.toString());
       p_out.flush();
    }
-   
+
    public void stop()
    {
       m_running = false;
@@ -131,12 +202,12 @@ public class VisionHandler implements Runnable
          {
             m_inputStream.close();
          }
-         
+
          if (m_outputStream != null)
          {
             m_outputStream.close();
          }
-         
+
          if (m_socket != null)
          {
             m_socket.close();
@@ -147,7 +218,7 @@ public class VisionHandler implements Runnable
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      
+
    }
 
 }
