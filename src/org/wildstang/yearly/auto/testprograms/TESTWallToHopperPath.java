@@ -12,12 +12,6 @@ public class TESTWallToHopperPath extends AutoProgram
    {
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
    }
-
-   @Override
-   public void update()
-   {
-      
-   }
    
    @Override
    public String toString()

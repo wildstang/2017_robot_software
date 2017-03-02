@@ -14,12 +14,6 @@ public class TESTWallToGearCenterPath extends AutoProgram
    }
 
    @Override
-   public void update()
-   {
-      
-   }
-   
-   @Override
    public String toString()
    {
       return "TEST - Wall to gear center path";
