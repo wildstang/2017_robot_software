@@ -44,7 +44,7 @@ public class TalonTest implements Subsystem
 
    private double m_throttle;
    
-   private double m_currentSpeed = 5450;
+   private double m_currentSpeed = 5650;
    
    
    private boolean m_speedModeOn;
@@ -92,7 +92,7 @@ public class TalonTest implements Subsystem
    @Override
    public void init()
    {
-      m_shooter = new CANTalon(5);
+      m_shooter = new CANTalon(6);
 
       m_shooter.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       m_shooter.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
@@ -109,9 +109,9 @@ public class TalonTest implements Subsystem
       // Set up closed loop PID control gains in slot 0
       m_shooter.setProfile(0);
       m_shooter.setF(.02366);      // 0.1998
-      m_shooter.setP(.02);      //(10% X 1023) / (error) 
+      m_shooter.setP(.015);      //(10% X 1023) / (error) 
       m_shooter.setI(0);
-      m_shooter.setD(0);
+      m_shooter.setD(0.1);
       
       m_up50Input = (DigitalInput)Core.getInputManager().getInput(WSInputs.SPEED_UP_50.getName());
       m_up50Input.addInputListener(this);
@@ -189,7 +189,7 @@ public class TalonTest implements Subsystem
 //         m_currentSpeed = m_throttle * MAX_RPM;
          m_shooter.set(m_currentSpeed);
 
-         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
+         ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_2.getName())).setValue(-1.0);
 
          /* append more signals to print when in speed mode. */
          m_sb.append("\terror: ");
@@ -201,14 +201,14 @@ public class TalonTest implements Subsystem
       {
          m_shooter.changeControlMode(TalonControlMode.PercentVbus);
          m_shooter.set(m_throttle);
-         if (Math.abs(m_throttle) > 0.05)
-         {
-            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
-         }
-         else
-         {
-            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(0);
-         }
+//         if (Math.abs(m_throttle) > 0.05)
+//         {
+//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(-1.0);
+//         }
+//         else
+//         {
+//            ((WsVictor)Core.getOutputManager().getOutput(WSOutputs.LEFT_1.getName())).setValue(0);
+//         }
       }
       SmartDashboard.putNumber("Throttle", m_throttle);
       SmartDashboard.putBoolean("Speed mode", m_speedModeOn);
