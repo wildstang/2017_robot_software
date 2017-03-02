@@ -109,6 +109,10 @@ public class Shooter implements Subsystem
       {
          Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);
+         Core.getStateTracker().addIOInfo("Left shooter voltage", "Shooter", "Input", null);
+         Core.getStateTracker().addIOInfo("Right shooter voltage", "Shooter", "Input", null);
+         Core.getStateTracker().addIOInfo("Left shooter current", "Shooter", "Input", null);
+         Core.getStateTracker().addIOInfo("Right shooter current", "Shooter", "Input", null);
       }
       // Flywheels
       // CAN talons
@@ -277,6 +281,10 @@ public class Shooter implements Subsystem
 
       Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
       Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
+      Core.getStateTracker().addState("Left shooter voltage", "Shooter", m_CANFlywheelLeft.getOutputVoltage());
+      Core.getStateTracker().addState("Right shooter voltage", "Shooter", m_CANFlywheelRight.getOutputVoltage());
+      Core.getStateTracker().addState("Left shooter current", "Shooter", m_CANFlywheelLeft.getOutputCurrent());
+      Core.getStateTracker().addState("Right shooter current", "Shooter", m_CANFlywheelRight.getOutputCurrent());
    }
 
    // Flywheel stuff
