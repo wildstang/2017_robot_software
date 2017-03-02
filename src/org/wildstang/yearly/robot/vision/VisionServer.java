@@ -27,6 +27,7 @@ public class VisionServer implements Runnable
    
    public void startVisionServer()
    {
+	   SmartDashboard.putBoolean("server file entered", isRunning());
       // Create Server Socket
       try
       {
