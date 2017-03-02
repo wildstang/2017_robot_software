@@ -4,6 +4,7 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
+import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.ShooterOff;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
@@ -28,15 +29,17 @@ public class HopperShoot extends AutoProgram
    @Override
    protected void defineSteps()
    {
+      // Drive from the wall to the hopper
+      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
-      // TODO Add path to hopper here
-
+      // Turn on feed and wait for balls
       addStep(new FeedOnStep());
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
 
       // TODO Add path to boiler here
 
+      // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       addStep(new WaitStep(delayWhileShooting));
