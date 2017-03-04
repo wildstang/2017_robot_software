@@ -639,4 +639,10 @@ public class Drive implements Subsystem
    public void setThrottle(double newThrottle){
       m_throttleValue = newThrottle;
    }
+   
+   public int getEncoderDistance(){
+      int leftTick = m_leftMaster.getEncPosition();
+      int rightTick = m_rightMaster.getEncPosition();
+      return (int)((((leftTick + rightTick) / 2) / 4096) * (4 * 3.1415));
+   }
 }

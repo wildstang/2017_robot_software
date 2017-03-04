@@ -11,7 +11,7 @@ public class TrackVisionToGearStep extends AutoStep
    double distance;
    int xCorrection;
    private Drive m_drive;
-   private final int correctionHeadingLevel = 1;
+   private final double CORRECTION_HEADING_LEVEL = .05;
 
    @Override
    public void initialize()
@@ -26,20 +26,20 @@ public class TrackVisionToGearStep extends AutoStep
       xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
       distance = RobotTemplate.getVisionServer().getDistance();
 
-      m_drive.setHeading(xCorrection * correctionHeadingLevel);
+      m_drive.setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
 
       if (distance < 36)
       {
-         m_drive.setThrottle(20);
+         m_drive.setThrottle(.1);
       }
       else
       {
-         m_drive.setThrottle(45);
+         m_drive.setThrottle(.25);
       }
 
       if (distance < 3)
       {
-         m_drive.setThrottle(2);
+         m_drive.setThrottle(.05);
          setFinished(true);
       }
    }
