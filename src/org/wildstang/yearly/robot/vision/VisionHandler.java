@@ -130,7 +130,7 @@ public class VisionHandler implements Runnable
 
                   for (int i = 0; i < tokens.length; i++)
                   {
-                     parms[i] = Integer.parseInt(tokens[i].trim());
+                     parms[i] = Double.parseDouble(tokens[i].trim());
                      System.out.println(parms[i]);
                   }
                   if(parms.length > 0){
