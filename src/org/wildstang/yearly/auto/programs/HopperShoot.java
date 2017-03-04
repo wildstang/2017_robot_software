@@ -22,26 +22,30 @@ public class HopperShoot extends AutoProgram
       super.initialize();
       
       // Read config values
-      hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".hopperWaitTime", 10000);
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 2000);
+      // 10000 = ten seconds
+      hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".hopperWaitTime", 5000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 5000);
    }
 
    @Override
    protected void defineSteps()
    {
       // Drive from the wall to the hopper
-      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
+      //addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
       // Turn on feed and wait for balls
+      // TODO add steps for gates
       addStep(new FeedOnStep());
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
 
       // TODO Add path to boiler here
+      addStep(new WaitStep(5000));
 
       // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
+      //addStep(new FeedOnStep());
       addStep(new WaitStep(delayWhileShooting));
       addStep(new ShooterOff());
    }

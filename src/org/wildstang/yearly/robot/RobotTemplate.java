@@ -28,6 +28,10 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
+import org.wildstang.yearly.auto.programs.GearDriveWithVision;
+import org.wildstang.yearly.auto.programs.HopperShoot;
+import org.wildstang.yearly.auto.programs.MiddleGear;
+import org.wildstang.yearly.auto.programs.RightGear;
 import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
 import org.wildstang.yearly.auto.testprograms.TEST20FtStraightLinePath;
 import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
@@ -174,6 +178,10 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
       AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
       
+      AutoManager.getInstance().addProgram(new HopperShoot());
+      AutoManager.getInstance().addProgram(new MiddleGear());
+      AutoManager.getInstance().addProgram(new RightGear());
+      AutoManager.getInstance().addProgram(new GearDriveWithVision());
       
       // 3. Start Vision server
       if (m_visionServer != null)

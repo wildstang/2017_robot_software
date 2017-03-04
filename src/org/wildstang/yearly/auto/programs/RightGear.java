@@ -8,6 +8,7 @@ import org.wildstang.yearly.auto.steps.DeliverGearStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
+import org.wildstang.yearly.auto.steps.WaitStep;
 
 public class RightGear extends AutoProgram
 {
@@ -17,12 +18,14 @@ public class RightGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
-      addStep(new PathFollowerStep(config.getString("RIGHT_GEAR_PATH", "")));
-      addStep(new TrackVisionToGearStep());
-      addStep(new DeliverGearStep());
+//      addStep(new PathFollowerStep(config.getString("RIGHT_GEAR_PATH", "")));
+//      addStep(new TrackVisionToGearStep());
+      //addStep(new DeliverGearStep());
+    
       addStep(new OpenGearHolderStep());
 
       // TODO: Drive away
+      addStep(new WaitStep(3000));
 
       addStep(new CloseGearHolderStep());
       

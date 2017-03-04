@@ -13,8 +13,8 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
-      addStep(new PathFollowerStep(config.getString("AUTO_PATH", "")));
-      addStep(new TrackVisionToGearStep());
+//      addStep(new PathFollowerStep(config.getString("AUTO_PATH", "")));
+//      addStep(new TrackVisionToGearStep());
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
 
