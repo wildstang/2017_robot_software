@@ -10,6 +10,7 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.CANConstants;
+import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
@@ -629,5 +630,13 @@ public class Drive implements Subsystem
       }
       driveStates.clear();
       
+   }
+   
+   public void setHeading(double newHeading){
+      m_headingValue = newHeading;
+   }
+   
+   public void setThrottle(double newThrottle){
+      m_throttleValue = newThrottle;
    }
 }
