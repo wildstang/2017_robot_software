@@ -186,31 +186,6 @@ public class Drive implements Subsystem
       m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       
-//      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-//      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
-//      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
-//      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
-//      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
-//
-//      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-//      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
-//      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
-//      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
-//      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
-//
-//      // Base lock profile
-//      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-//      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
-//      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
-//      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
-//      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
-//
-//      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-//      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
-//      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
-//      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
-//      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
-
    }
 
    @Override
