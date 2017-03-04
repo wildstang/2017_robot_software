@@ -21,7 +21,7 @@ public class GearDriveWithVision extends AutoProgram
       
       AutoParallelStepGroup goingOUT = new AutoParallelStepGroup();
       goingOUT.addStep(new CloseGearHolderStep());
-      goingOUT.addStep(new DriveDistanceStraightStep(.05, 12));
+      goingOUT.addStep(new DriveDistanceStraightStep(.05, -12));
 
       addStep(goingIN);
       addStep(new OpenGearHolderStep());
