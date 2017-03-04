@@ -58,7 +58,7 @@ public class RobotTemplate extends IterativeRobot
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
-   private VisionServer m_visionServer;
+   private static VisionServer m_visionServer = new VisionServer(5080);
    
    private boolean exceptionThrown = false;
 
@@ -174,8 +174,10 @@ public class RobotTemplate extends IterativeRobot
       
       
       // 3. Start Vision server
-      m_visionServer = new VisionServer(5080);
-      m_visionServer.startVisionServer();
+      if (m_visionServer != null)
+      {
+         m_visionServer.startVisionServer();
+      }
       
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
@@ -381,5 +383,10 @@ public class RobotTemplate extends IterativeRobot
    public void testPeriodic()
    {
       // Watchdog.getInstance().feed();
+   }
+   
+   public static VisionServer getVisionServer()
+   {
+      return m_visionServer;
    }
 }
