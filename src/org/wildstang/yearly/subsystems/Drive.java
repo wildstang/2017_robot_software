@@ -551,11 +551,12 @@ public class Drive implements Subsystem
    }
 
    public void pathCleanup()
-   { 
-	  if(m_pathFollower != null) { 
-		  m_pathFollower.stop();
-          m_pathFollower = null;
-	  }
+   {
+      if (m_pathFollower != null)
+      {
+         m_pathFollower.stop();
+         m_pathFollower = null;
+      }
    }
 
    @Override
@@ -606,12 +607,14 @@ public class Drive implements Subsystem
       driveStates.clear();
       
    }
-   
-   public void setHeading(double newHeading){
+
+   public void setHeading(double newHeading)
+   {
       m_headingValue = newHeading;
    }
-   
-   public void setThrottle(double newThrottle){
+
+   public void setThrottle(double newThrottle)
+   {
       m_throttleValue = newThrottle;
    }
 }
