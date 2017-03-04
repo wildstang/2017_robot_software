@@ -129,9 +129,9 @@ public class Shooter implements Subsystem
 //      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
 //      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
 
-      m_targetSpeed = 500.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
-      m_lowLimitSpeed = 450.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
-      m_highLimitSpeed = 550.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
+      m_targetSpeed = 5450.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
+      m_lowLimitSpeed = 5400.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
+      m_highLimitSpeed = 5550.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
       m_feedSpeed = 1.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
       m_feedDeadBand = 0.05;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
 
@@ -201,10 +201,10 @@ public class Shooter implements Subsystem
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
-      p_talon.setF(1);      // 0.1998
-      p_talon.setP(0);      //(10% X 1023) / (error) 
+      p_talon.setF(.02366);      // 0.1998
+      p_talon.setP(0.015);      //(10% X 1023) / (error) 
       p_talon.setI(0);
-      p_talon.setD(0);
+      p_talon.setD(0.15);
    }
    
    @Override

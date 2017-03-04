@@ -28,6 +28,9 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
+import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
+import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
+import org.wildstang.yearly.auto.testprograms.TESTWallToGearCenterPath;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -165,7 +168,10 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(null);
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
+      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
+      
       
       // 3. Start Vision server
       m_visionServer = new VisionServer(5080);
