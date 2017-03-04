@@ -44,7 +44,8 @@ public class Shooter implements Subsystem
    // Can override the flywheel speed checker and open gates anyway
    private boolean m_shootOverride = false;
    // Limits for range flywheels should be at before opening gates
-   private double m_targetSpeed;
+   private double m_targetSpeedLeft;
+   private double m_targetSpeedRight;
    private double m_lowLimitSpeed;
    private double m_highLimitSpeed;
 
@@ -119,24 +120,24 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      configureFlywheelTalon(m_CANFlywheelLeft);
-      configureFlywheelTalon(m_CANFlywheelRight);
-      
+      configureFlywheelTalon(m_CANFlywheelLeft, m_targetSpeedLeft);
+      configureFlywheelTalon(m_CANFlywheelRight, m_targetSpeedRight);
+
       // Reads values from Ws Config, defaults are nonsensical for testing
-     // m_targetSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
-//      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
-//      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
-//      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
-//      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+      m_targetSpeedLeft = 5450;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5350.0);
+      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
+      
+      m_lowLimitSpeed = 5400.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                               // + ".lowLimitSpeed", 450.0);
+      m_highLimitSpeed = 5550.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                                // + ".highLimitSpeed", 550.0);
+      m_feedSpeed = 1.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                        // + ".feedSpeed", 0.5);
+      m_feedDeadBand = 0.05;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+                            // + ".feedDeadBand", 0.05);
 
-      m_targetSpeed = 5450.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeed", 500.0);
-      m_lowLimitSpeed = 5400.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 450.0);
-      m_highLimitSpeed = 5550.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 550.0);
-      m_feedSpeed = 1.0;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.5);
-      m_feedDeadBand = 0.05;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
-
-      m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeed);
-      m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeed);
+      m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
+      m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
 
       // Gates
       m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE.getName());
@@ -184,8 +185,7 @@ public class Shooter implements Subsystem
 
    }
 
-   
-   private void configureFlywheelTalon(CANTalon p_talon)
+   private void configureFlywheelTalon(CANTalon p_talon, double p_speed)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
@@ -194,19 +194,19 @@ public class Shooter implements Subsystem
       p_talon.reverseSensor(true);
       p_talon.setEncPosition(0);
       p_talon.changeControlMode(TalonControlMode.Speed);
-      
-      p_talon.configNominalOutputVoltage(+0.0f,  -0.0f);
-      p_talon.configPeakOutputVoltage(+12.0f,  0.0f);
-//      p_talon.setVoltageRampRate(24.0);  // Max spinup of 24V/s - start here
+
+      p_talon.configNominalOutputVoltage(+0.0f, -0.0f);
+      p_talon.configPeakOutputVoltage(+12.0f, 0.0f);
+      // p_talon.setVoltageRampRate(24.0); // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
-      p_talon.setF(.02366);      // 0.1998
-      p_talon.setP(0.015);      //(10% X 1023) / (error) 
+      p_talon.setF(0.02366); // 0.1998
+      p_talon.setP(0.013); // (10% X 1023) / (error)
       p_talon.setI(0);
       p_talon.setD(0.15);
    }
-   
+
    @Override
    public void inputUpdate(Input p_source)
    {
@@ -445,13 +445,17 @@ public class Shooter implements Subsystem
       SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
       SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
 
+      SmartDashboard.putNumber("left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
+      SmartDashboard.putNumber("right flywheel error", m_CANFlywheelRight.getClosedLoopError());
+
       SmartDashboard.putBoolean("Gates is open", m_gate.isOpen());
 
       SmartDashboard.putBoolean("left feed jammed", m_leftFeed.isJammed(m_leftFeedCurrent));
       SmartDashboard.putBoolean("right feed jammed", m_rightFeed.isJammed(m_rightFeedCurrent));
 
       // WS config
-      SmartDashboard.putNumber("flywheel target speed", m_targetSpeed);
+      SmartDashboard.putNumber("flywheel left target speed", m_targetSpeedLeft);
+      SmartDashboard.putNumber("flywheel right target speed", m_targetSpeedRight);
       SmartDashboard.putNumber("flywheel low limit speed", m_lowLimitSpeed);
       SmartDashboard.putNumber("flywheel high limit speed", m_highLimitSpeed);
    }
