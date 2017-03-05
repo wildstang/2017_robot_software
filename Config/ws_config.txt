@@ -10,7 +10,8 @@ boiler.to.hopper.auto.red=/home/lvuser/path.test.txt
 boiler.to.hopper.auto.blue="/home/lvuser/path.test.txt"
 
 //Shooter
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeed=500.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5450.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5600.0
 org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=475.0
 org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=525.0
 org.wildstang.yearly.subsystems.Shooter.feedSpeed=0.7

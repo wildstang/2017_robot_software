@@ -1,7 +1,6 @@
 package org.wildstang.yearly.auto.steps;
 
 import org.wildstang.framework.auto.steps.AutoStep;
-import org.wildstang.framework.core.Core;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -19,10 +18,8 @@ public class WaitStep extends AutoStep
 
    public void initialize()
    {
-
       startTime = System.currentTimeMillis();
       SmartDashboard.putBoolean("Timed out", false);
-
    }
 
    @Override
@@ -42,7 +39,6 @@ public class WaitStep extends AutoStep
          SmartDashboard.putBoolean("Timed out", true);
          setFinished(true);
       }
-
    }
 
    @Override

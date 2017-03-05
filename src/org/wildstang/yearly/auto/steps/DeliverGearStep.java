@@ -3,32 +3,29 @@ package org.wildstang.yearly.auto.steps;
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.Shooter;
+import org.wildstang.yearly.subsystems.Gear;
 
-public class ShootStep extends AutoStep
+public class DeliverGearStep extends AutoStep
 {
-
-   private Shooter shooter;
-
+   Gear m_gearSubsystem;
+   
    @Override
    public void initialize()
    {
-      shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
+      m_gearSubsystem = (Gear)Core.getSubsystemManager().getSubsystem(WSSubsystems.GEAR.getName());
    }
 
    @Override
    public void update()
    {
-      shooter.openBothGate();
-      shooter.turnFeedOn();
-      
+      m_gearSubsystem.deliverGear();
       setFinished(true);
    }
 
    @Override
    public String toString()
    {
-      return "Shoot Step";
+      return "Deliver Gear Step";
    }
 
 }
