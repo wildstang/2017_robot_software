@@ -1,7 +1,6 @@
 package org.wildstang.yearly.auto.steps;
 
 import org.wildstang.framework.auto.steps.AutoStep;
-import org.wildstang.framework.core.Core;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

@@ -10,6 +10,7 @@ import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.CANConstants;
+import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
@@ -96,6 +97,10 @@ public class Drive implements Subsystem
          Core.getStateTracker().addIOInfo("Left 2 current", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 1 current", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 2 current", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Left 1 voltage", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Left 2 voltage", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Right 1 voltage", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Right 2 voltage", "Drive", "Input", null);
       }
       
       // Drive
@@ -181,31 +186,6 @@ public class Drive implements Subsystem
       m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       
-//      m_leftMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-//      m_leftMaster.setF(DriveConstants.PATH_F_GAIN);
-//      m_leftMaster.setP(DriveConstants.PATH_P_GAIN);
-//      m_leftMaster.setI(DriveConstants.PATH_I_GAIN);
-//      m_leftMaster.setD(DriveConstants.PATH_D_GAIN);
-//
-//      m_rightMaster.setProfile(DriveConstants.PATH_PROFILE_SLOT);
-//      m_rightMaster.setF(DriveConstants.PATH_F_GAIN);
-//      m_rightMaster.setP(DriveConstants.PATH_P_GAIN);
-//      m_rightMaster.setI(DriveConstants.PATH_I_GAIN);
-//      m_rightMaster.setD(DriveConstants.PATH_D_GAIN);
-//
-//      // Base lock profile
-//      m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-//      m_leftMaster.setF(DriveConstants.BASE_F_GAIN);
-//      m_leftMaster.setP(DriveConstants.BASE_P_GAIN);
-//      m_leftMaster.setI(DriveConstants.BASE_I_GAIN);
-//      m_leftMaster.setD(DriveConstants.BASE_D_GAIN);
-//
-//      m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-//      m_rightMaster.setF(DriveConstants.BASE_F_GAIN);
-//      m_rightMaster.setP(DriveConstants.BASE_P_GAIN);
-//      m_rightMaster.setI(DriveConstants.BASE_I_GAIN);
-//      m_rightMaster.setD(DriveConstants.BASE_D_GAIN);
-
    }
 
    @Override
@@ -299,10 +279,15 @@ public class Drive implements Subsystem
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
    
-         Core.getStateTracker().addState("Left 1 current", "Drive", pdp.getCurrent(0));
-         Core.getStateTracker().addState("Left 2 current", "Drive", pdp.getCurrent(1));
-         Core.getStateTracker().addState("Right 1 current", "Drive", pdp.getCurrent(14));
-         Core.getStateTracker().addState("Right 2 current", "Drive", pdp.getCurrent(15));
+         Core.getStateTracker().addState("Left 1 voltage", "Drive", m_leftMaster.getOutputVoltage());
+         Core.getStateTracker().addState("Left 2 voltage", "Drive", m_leftFollower.getOutputVoltage());
+         Core.getStateTracker().addState("Right 1 voltage", "Drive", m_rightMaster.getOutputVoltage());
+         Core.getStateTracker().addState("Right 2 voltage", "Drive", m_rightFollower.getOutputVoltage());
+
+         Core.getStateTracker().addState("Left 1 current", "Drive", m_leftMaster.getOutputCurrent());
+         Core.getStateTracker().addState("Left 2 current", "Drive", m_leftFollower.getOutputCurrent());
+         Core.getStateTracker().addState("Right 1 current", "Drive", m_rightMaster.getOutputCurrent());
+         Core.getStateTracker().addState("Right 2 current", "Drive", m_rightFollower.getOutputCurrent());
       }
    }
 
@@ -566,11 +551,12 @@ public class Drive implements Subsystem
    }
 
    public void pathCleanup()
-   { 
-	  if(m_pathFollower != null) { 
-		  m_pathFollower.stop();
-          m_pathFollower = null;
-	  }
+   {
+      if (m_pathFollower != null)
+      {
+         m_pathFollower.stop();
+         m_pathFollower = null;
+      }
    }
 
    @Override
@@ -620,5 +606,21 @@ public class Drive implements Subsystem
       }
       driveStates.clear();
       
+   }
+
+   public void setHeading(double newHeading)
+   {
+      m_headingValue = newHeading;
+   }
+
+   public void setThrottle(double newThrottle)
+   {
+      m_throttleValue = newThrottle;
+   }
+   
+   public int getEncoderDistance(){
+      int leftTick = m_leftMaster.getEncPosition();
+      int rightTick = m_rightMaster.getEncPosition();
+      return (int)((((leftTick + rightTick) / 2) / 4096) * (4 * 3.1415));
    }
 }

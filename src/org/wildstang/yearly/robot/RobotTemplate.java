@@ -28,8 +28,14 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.auto.test.TESTTalonMotionProfileAuto;
-
+import org.wildstang.yearly.auto.programs.GearDriveWithVision;
+import org.wildstang.yearly.auto.programs.HopperShoot;
+import org.wildstang.yearly.auto.programs.MiddleGear;
+import org.wildstang.yearly.auto.programs.RightGear;
+import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
+import org.wildstang.yearly.auto.testprograms.TEST20FtStraightLinePath;
+import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
+import org.wildstang.yearly.auto.testprograms.TESTWallToGearCenterPath;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -57,7 +63,7 @@ public class RobotTemplate extends IterativeRobot
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
-   private VisionServer m_visionServer;
+   private static VisionServer m_visionServer = new VisionServer(5080);
    
    private boolean exceptionThrown = false;
 
@@ -167,12 +173,21 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new TESTTalonMotionProfileAuto());
-
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
+      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
+      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
+      
+      AutoManager.getInstance().addProgram(new HopperShoot());
+      AutoManager.getInstance().addProgram(new MiddleGear());
+      AutoManager.getInstance().addProgram(new RightGear());
+      AutoManager.getInstance().addProgram(new GearDriveWithVision());
       
       // 3. Start Vision server
-      m_visionServer = new VisionServer(5080);
-      m_visionServer.startVisionServer();
+      if (m_visionServer != null)
+      {
+         m_visionServer.startVisionServer();
+      }
       
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
@@ -378,5 +393,10 @@ public class RobotTemplate extends IterativeRobot
    public void testPeriodic()
    {
       // Watchdog.getInstance().feed();
+   }
+   
+   public static VisionServer getVisionServer()
+   {
+      return m_visionServer;
    }
 }
