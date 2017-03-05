@@ -18,6 +18,7 @@ public class TrackVisionToGearStep extends AutoStep
    {
       m_drive = (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
       m_drive.setOpenLoopDrive();
+      m_drive.setHighGear(true);
    }
 
    @Override
@@ -39,7 +40,7 @@ public class TrackVisionToGearStep extends AutoStep
 
       if (distance < 3)
       {
-         m_drive.setThrottle(.05);
+         m_drive.setThrottle(0);
          setFinished(true);
       }
    }

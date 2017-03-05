@@ -10,15 +10,17 @@ public class DriveDistanceStraightStep extends AutoStep
    Drive m_drive;
    double m_speed;
    int m_distance2Go;
-   
-   public DriveDistanceStraightStep(double speed, int distance){
+
+   public DriveDistanceStraightStep(double speed, int distance)
+   {
       m_speed = speed;
       m_distance2Go = distance;
-      if(distance < 0){
+      if (distance < 0)
+      {
          m_speed *= -1;
       }
    }
-   
+
    public void initialize()
    {
       m_drive = (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
@@ -29,9 +31,12 @@ public class DriveDistanceStraightStep extends AutoStep
    @Override
    public void update()
    {
-      if(m_drive.getEncoderDistance() < m_distance2Go){
+      if (m_drive.getEncoderDistance() < m_distance2Go)
+      {
          m_drive.setThrottle(m_speed);
-      } else {
+      }
+      else
+      {
          m_drive.setThrottle(0);
          setFinished(true);
       }
@@ -40,7 +45,6 @@ public class DriveDistanceStraightStep extends AutoStep
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Drive Straight Distance";
    }
 

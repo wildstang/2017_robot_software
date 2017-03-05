@@ -57,13 +57,10 @@ public class PathFollowerStep extends AutoStep
             m_drive.setPathFollowingMode();
             m_drive.setPath(m_path);
             m_pathFollower = m_drive.getPathFollower();
+
             m_drive.startFollowingPath();
             m_drive.resetEncoders();
-            
             m_started = true;
-            
-            
-            
          }
          else
          {

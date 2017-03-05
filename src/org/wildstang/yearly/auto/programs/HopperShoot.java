@@ -6,7 +6,7 @@ import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
-import org.wildstang.yearly.auto.steps.ShooterOff;
+import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 import org.wildstang.yearly.auto.steps.WaitStep;
 
@@ -47,7 +47,7 @@ public class HopperShoot extends AutoProgram
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
       addStep(new WaitStep(delayWhileShooting));
-      addStep(new ShooterOff());
+      addStep(new StopShooting());
    }
 
 

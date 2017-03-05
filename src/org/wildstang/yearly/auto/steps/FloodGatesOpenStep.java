@@ -13,21 +13,19 @@ public class FloodGatesOpenStep extends AutoStep
    public void initialize()
    {
       m_shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
-      m_shooter.openBothGate();
    }
 
    @Override
    public void update()
    {
-      // TODO Auto-generated method stub
-
+      m_shooter.openBothGate();
+      setFinished(true);
    }
 
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "Open feed gates";
    }
 
 }

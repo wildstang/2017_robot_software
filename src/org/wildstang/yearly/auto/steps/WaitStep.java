@@ -18,10 +18,8 @@ public class WaitStep extends AutoStep
 
    public void initialize()
    {
-
       startTime = System.currentTimeMillis();
       SmartDashboard.putBoolean("Timed out", false);
-
    }
 
    @Override
@@ -41,7 +39,6 @@ public class WaitStep extends AutoStep
          SmartDashboard.putBoolean("Timed out", true);
          setFinished(true);
       }
-
    }
 
    @Override

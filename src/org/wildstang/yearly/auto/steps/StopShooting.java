@@ -5,7 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Shooter;
 
-public class ShooterOff extends AutoStep
+public class StopShooting extends AutoStep
 {
    private Shooter m_shooter;
 

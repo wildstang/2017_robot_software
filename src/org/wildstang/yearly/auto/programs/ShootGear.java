@@ -7,7 +7,7 @@ import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
-import org.wildstang.yearly.auto.steps.ShooterOff;
+import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
 import org.wildstang.yearly.auto.steps.WaitStep;
@@ -33,7 +33,7 @@ public class ShootGear extends AutoProgram
       
       addStep(new WaitStep(delayWhileShooting));
       
-      addStep(new ShooterOff());
+      addStep(new StopShooting());
       
 //       TODO Correct Paths and Tracker, if need be
 //      addStep(new PathFollowerStep(config.getString("AUTO_PATH", "")));

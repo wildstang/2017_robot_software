@@ -14,7 +14,6 @@ public class ShootStep extends AutoStep
    public void initialize()
    {
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
-
    }
 
    @Override

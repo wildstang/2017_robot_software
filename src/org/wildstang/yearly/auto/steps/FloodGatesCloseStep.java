@@ -13,21 +13,19 @@ public class FloodGatesCloseStep extends AutoStep
    public void initialize()
    {
       m_shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
-      m_shooter.closeBothGate();
    }
 
    @Override
    public void update()
    {
-      // TODO Auto-generated method stub
-
+      m_shooter.closeBothGate();
+      setFinished(true);
    }
 
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "Close feed gates";
    }
 
 }
