@@ -1,4 +1,4 @@
-package org.wildstang.yearly.subsystems;
+org.wildstang.yearly.subsystems;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -621,6 +621,6 @@ public class Drive implements Subsystem
    public int getEncoderDistance(){
       int leftTick = m_leftMaster.getEncPosition();
       int rightTick = m_rightMaster.getEncPosition();
-      return (int)((((leftTick + rightTick) / 2) / 4096) * (4 * 3.1415));
+      return (int)(((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
 }

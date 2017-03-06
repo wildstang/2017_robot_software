@@ -115,26 +115,17 @@ public class Shooter implements Subsystem
          Core.getStateTracker().addIOInfo("Left shooter current", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter current", "Shooter", "Input", null);
       }
+      
+      // Read config values
+      readConfigValues();
+      
       // Flywheels
       // CAN talons
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      configureFlywheelTalon(m_CANFlywheelLeft, m_targetSpeedLeft);
-      configureFlywheelTalon(m_CANFlywheelRight, m_targetSpeedRight);
-
-      // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeedLeft = 5450;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5350.0);
-      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
-      
-      m_lowLimitSpeed = 5400.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                               // + ".lowLimitSpeed", 450.0);
-      m_highLimitSpeed = 5550.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                                // + ".highLimitSpeed", 550.0);
-      m_feedSpeed = 1.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                        // + ".feedSpeed", 0.5);
-      m_feedDeadBand = 0.05;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                            // + ".feedDeadBand", 0.05);
+      configureFlywheelTalon(m_CANFlywheelLeft);
+      configureFlywheelTalon(m_CANFlywheelRight);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
@@ -174,18 +165,20 @@ public class Shooter implements Subsystem
 
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
-
-      // If we get a swtich for balls waiting
-      // leftBallReadySwitch = (DigitalInput)
-      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
-      // leftBallReadySwitch.addInputListener(this);
-      // rightBallReadySwitch = (DigitalInput)
-      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
-      // rightBallReadySwitch.addInputListener(this);
-
    }
 
-   private void configureFlywheelTalon(CANTalon p_talon, double p_speed)
+   private void readConfigValues()
+   {
+      // Reads values from Ws Config
+      m_targetSpeedLeft = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5450.0);
+      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
+      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 5400.0);
+      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5550.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 1.0);
+      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+   }
+
+   private void configureFlywheelTalon(CANTalon p_talon)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);

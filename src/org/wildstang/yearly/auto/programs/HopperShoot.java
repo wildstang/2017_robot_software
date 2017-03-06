@@ -31,16 +31,14 @@ public class HopperShoot extends AutoProgram
    protected void defineSteps()
    {
       // Drive from the wall to the hopper
-      //addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
+      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
       // Turn on feed and wait for balls
-      // TODO add steps for gates
       addStep(new FeedOnStep());
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
 
-      // TODO Add path to boiler here
-      addStep(new WaitStep(5000));
+      addStep(new PathFollowerStep(PathNameConstants.HOPPER_TO_BOILER));
 
       // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
@@ -48,6 +46,8 @@ public class HopperShoot extends AutoProgram
       //addStep(new FeedOnStep());
       addStep(new WaitStep(delayWhileShooting));
       addStep(new StopShooting());
+      
+      // TODO: Back up over auto line?
    }
 
 

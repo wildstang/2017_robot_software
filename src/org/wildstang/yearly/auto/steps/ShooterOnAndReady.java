@@ -20,10 +20,10 @@ public class ShooterOnAndReady extends AutoStep
    {
       m_shooter.turnFlywheelOn();
 
-      //if (m_shooter.isLeftReadyToShoot() && m_shooter.isRightReadyToShoot())
-     // {
+      if (m_shooter.isLeftReadyToShoot() || m_shooter.isRightReadyToShoot())
+      {
          setFinished(true);
-     // }
+      }
 
    }
 
