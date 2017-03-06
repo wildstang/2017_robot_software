@@ -1,6 +1,5 @@
 package org.wildstang.yearly.subsystems;
 
-import org.wildstang.framework.config.Config;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
@@ -13,6 +12,7 @@ import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
+import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
 import org.wildstang.yearly.subsystems.shooter.Gate;
 
@@ -65,6 +65,9 @@ public class Shooter implements Subsystem
 
    private Feed m_leftFeed;
    private Feed m_rightFeed;
+   
+   private WsVictor m_blenderVictor;
+   private Blender m_blender;
 
    private double m_leftJoyAxis;
    private double m_rightJoyAxis;
@@ -142,6 +145,9 @@ public class Shooter implements Subsystem
       // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
       m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
+      
+      m_blenderVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.BLENDER.getName());
+      m_blender = new Blender(m_blenderVictor);
 
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
@@ -411,15 +417,19 @@ public class Shooter implements Subsystem
       {
          case SHOOT:
             p_feed.runForward();
+            m_blender.turnOn();
             break;
          case REVERSE:
             p_feed.runBackwards();
+            m_blender.turnOff();
             break;
          case STOP:
             p_feed.stop();
+            m_blender.turnOff();
             break;
          default:
             p_feed.stop();
+            m_blender.turnOff();
             break;
       }
    }

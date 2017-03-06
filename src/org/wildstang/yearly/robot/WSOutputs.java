@@ -25,6 +25,7 @@ public enum WSOutputs implements Outputs
    FEEDER_RIGHT("Right Feeder Motor",        WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),   // Shooter Subsystem
    INTAKE("Intake Motor",                    WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),   // Intake Subsystem
    WINCH("Winch motor",                      WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),   // Winch Subsystem
+   BLENDER("Blender motor",                  WSOutputType.VICTOR,    new WsVictorConfig(4, 0.0), getLogging()),   // Blender Subsystem
                                              
    //---------------------------------             
    // Servos
