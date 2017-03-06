@@ -1,4 +1,4 @@
-org.wildstang.yearly.subsystems;
+package org.wildstang.yearly.subsystems;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -9,17 +9,8 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
-import org.wildstang.yearly.robot.CANConstants;
-import org.wildstang.yearly.robot.RobotTemplate;
-import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
-import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
-import org.wildstang.yearly.subsystems.drive.DriveConstants;
-import org.wildstang.yearly.subsystems.drive.DriveSignal;
-import org.wildstang.yearly.subsystems.drive.DriveState;
-import org.wildstang.yearly.subsystems.drive.DriveType;
-import org.wildstang.yearly.subsystems.drive.Path;
-import org.wildstang.yearly.subsystems.drive.PathFollower;
+import org.wildstang.yearly.robot.*;
+import org.wildstang.yearly.subsystems.drive.*;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.StatusFrameRate;
