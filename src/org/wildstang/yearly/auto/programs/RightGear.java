@@ -20,19 +20,18 @@ public class RightGear extends AutoProgram
       Config config = Core.getConfigManager().getConfig();
 
       // TODO:  WRONG PATH!!!
-      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
-      addStep(new TrackVisionToGearStep());
-      addStep(new DeliverGearStep());
-    
-      addStep(new OpenGearHolderStep());
-      
-      // Wait a little for it to settle
-      addStep(new WaitStep(200));
-
-      // Drive away
-      addStep(new DriveDistanceStraightStep(0.5, -24));
-
       addStep(new CloseGearHolderStep());
+
+      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_RIGHT));
+//      addStep(new TrackVisionToGearStep());
+      addStep(new DeliverGearStep());
+      addStep(new OpenGearHolderStep());
+
+      // TODO: Drive away
+      // Go backwards 2ft
+      addStep(new WaitStep(500));
+      //addStep(new DriveDistanceStraightStep(0.5, -24));
+      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
 
       // TODO: Drive over auto line?
    }

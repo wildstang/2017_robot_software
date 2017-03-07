@@ -13,6 +13,8 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
+      addStep(new CloseGearHolderStep());
+
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
 //      addStep(new TrackVisionToGearStep());
       addStep(new DeliverGearStep());
@@ -20,9 +22,10 @@ public class MiddleGear extends AutoProgram
 
       // TODO: Drive away
       // Go backwards 2ft
-      addStep(new DriveDistanceStraightStep(0.5, -24));
-
-      addStep(new CloseGearHolderStep());
+      addStep(new WaitStep(500));
+      //addStep(new DriveDistanceStraightStep(0.5, -24));
+      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
+      //addStep(new CloseGearHolderStep());
       
       // TODO: Drive away?  Shoot?  Need to reuse the above steps
    }

@@ -250,6 +250,14 @@ public class Drive implements Subsystem
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
+            
+            if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
+               maxSpeed = Math.abs(m_leftMaster.getSpeed());
+             } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
+               maxSpeed = Math.abs(m_rightMaster.getSpeed());
+             }
+             
+             SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             //collectDriveState();
             break;
          case FULL_BRAKE:
