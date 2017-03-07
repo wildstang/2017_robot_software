@@ -244,18 +244,21 @@ public class Drive implements Subsystem
       switch (m_driveMode)
       {
          case PATH:
-            //collectDriveState();
+            collectDriveState();
             break;
 
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
             
-            if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
+            if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
+            {
                maxSpeed = Math.abs(m_leftMaster.getSpeed());
-             } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
+            }
+            else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
+            {
                maxSpeed = Math.abs(m_rightMaster.getSpeed());
-             }
+            }
              
              SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             //collectDriveState();
@@ -305,21 +308,22 @@ public class Drive implements Subsystem
    private void collectDriveState()
    {
       // Calculate all changes in DriveState
-      double deltaLeftTicks = m_leftMaster.getEncPosition()
-            - absoluteDriveState.getDeltaLeftEncoderTicks();
-      double deltaRightTicks = m_rightMaster.getEncPosition()
-            - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
-      double deltaTime = System.currentTimeMillis()
-            - absoluteDriveState.getDeltaTime();
+      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
-      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
-      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
-      }
-      
-      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+      // This is only for tracking max speed on dashboard - moved to update()
+//      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
+//      {
+//         maxSpeed = Math.abs(m_leftMaster.getSpeed());
+//      }
+//      else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
+//      {
+//         maxSpeed = Math.abs(m_rightMaster.getSpeed());
+//      }
+//
+//      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
       
       
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
@@ -336,36 +340,27 @@ public class Drive implements Subsystem
       }
       else
       {
-    	 straightLineInches = deltaLeftInches; 
+         straightLineInches = deltaLeftInches;
          deltaTheta = 0;
       }
 
       double c;
       double rLong;
-      // double deltaXRight; // delta X and Y relative to the robots position
-      // double deltaXLeft;
-      // double deltaYRight;
-      // double deltaYLeft;
+
       if (deltaTheta < 0)
       {
-         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES)
-               / (deltaLeftTicks - deltaRightTicks));
-
+         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
       }
       else if (deltaTheta > 0)
       {
-         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES)
-               / (deltaRightTicks - deltaLeftTicks));
-
+         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
       }
       else
       {
          c = (double) Integer.MAX_VALUE;
-
       }
 
-      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
-                                      // larger turn radius.
+      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the larger turn radius.
 
       // System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
@@ -374,16 +369,13 @@ public class Drive implements Subsystem
       driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
-      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime()
-            + deltaTime);
-      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks()
-            + deltaRightTicks);
-      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks()
-            + deltaLeftTicks);
-      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle()
-            + deltaHeading);
-
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
    }
+
+
    private void calculateRawMode()
    {
       if (m_rawModeCurrent && !m_rawModePrev)
