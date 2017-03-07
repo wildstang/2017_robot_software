@@ -14,16 +14,14 @@ public class Gear implements Subsystem
 {
    // add variables here
    
-   private boolean m_holdGear;
-   private boolean m_tiltGear;
 
    private boolean m_gearPrev;
    private boolean m_gearCurrent;
-   private boolean m_gearTiltToggle;
+   private boolean m_receiveGear;
    
    private boolean m_doorPrev;
    private boolean m_doorCurrent;
-   private boolean m_doorToggle;
+   private boolean m_doorOpen;
    
    private DigitalInput m_tiltButton;
    private DigitalInput m_doorButton;
@@ -66,10 +64,9 @@ public class Gear implements Subsystem
     	  
         if (m_gearCurrent && !m_gearPrev)
         {
-           m_gearTiltToggle = !m_gearTiltToggle;
+           m_receiveGear = !m_receiveGear;
         }
         m_gearPrev = m_gearCurrent;
-    	  setTiltGear(m_gearTiltToggle);
       }
       
       if (source == m_doorButton)
@@ -78,34 +75,39 @@ public class Gear implements Subsystem
         
         if (m_doorCurrent && !m_doorPrev)
         {
-           m_doorToggle = !m_doorToggle;
+           m_doorOpen = !m_doorOpen;
         }
         m_doorPrev = m_doorCurrent;
-    	  setHoldGear(m_doorToggle);
       }
    }
 
    @Override
    public void update()
    {
-      m_tiltSolenoid.setValue(m_tiltGear);
-      m_doorSolenoid.setValue(m_holdGear);
+      m_tiltSolenoid.setValue(m_receiveGear);
+      m_doorSolenoid.setValue(m_doorOpen);
 	   
-	   SmartDashboard.putBoolean("HoldGear", m_holdGear);
-	   SmartDashboard.putBoolean("TiltGear", m_tiltGear);
+	   SmartDashboard.putBoolean("Gear door open", m_doorOpen);
+	   SmartDashboard.putBoolean("Receive gear", m_receiveGear);
    }
    
-   public void setHoldGear(boolean p_holdGear)
+   public void openDoor()
    {
-      
-	  m_holdGear = p_holdGear;
-      
+      m_doorOpen = true;
    }
    
-   public void setTiltGear(boolean p_tiltGear)
+   public void closeDoor()
    {
-     
-	   m_tiltGear = p_tiltGear;
-
+      m_doorOpen = false;
+   }
+   
+   public void receiveGear()
+   {
+      m_receiveGear = true;
+   }
+   
+   public void deliverGear()
+   {
+      m_receiveGear = false;
    }
 }

@@ -14,6 +14,7 @@ public class VisionHandler implements Runnable
 {
 
    final int CORRECTION_LEVEL_INDEX = 0;
+   final int DISTANCE_INDEX = 1;
    private Socket m_socket;
    private boolean m_running;
    private InputStream m_inputStream;
@@ -125,12 +126,20 @@ public class VisionHandler implements Runnable
                   // System.out.println("line: " + line);
 
                   String[] tokens = line.split(delims);
-                  int[] parms = new int[tokens.length];
+                  double[] parms = new double[tokens.length];
 
                   for (int i = 0; i < tokens.length; i++)
                   {
-                     parms[i] = Integer.parseInt(tokens[i].trim());
+                     parms[i] = Double.parseDouble(tokens[i].trim());
+                     System.out.println(parms[i]);
                   }
+                  if(parms.length > 0){
+                     m_visionServer.setXCorrectionLevel((int)parms[CORRECTION_LEVEL_INDEX]);
+                     if(parms.length > 1){
+                        m_visionServer.setDistance(parms[DISTANCE_INDEX]);
+                     }
+                  }
+                  
 
                   // System.out.println("Parms: " + parm0 + "," + parm1 +
                   // "," + parm2+ "," + parm3);
@@ -185,7 +194,7 @@ public class VisionHandler implements Runnable
       buf.append("|");
       buf.append(threshold);
       buf.append("|");
-      buf.append("blurRadius");
+      buf.append(blurRadius);
       buf.append("\n");
 
       p_out.println(buf.toString());
