@@ -13,6 +13,7 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
+      addStep(new SetDriveGearStep(true));
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));

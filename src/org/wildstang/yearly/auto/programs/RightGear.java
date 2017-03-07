@@ -8,6 +8,7 @@ import org.wildstang.yearly.auto.steps.DeliverGearStep;
 import org.wildstang.yearly.auto.steps.DriveDistanceStraightStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
+import org.wildstang.yearly.auto.steps.SetDriveGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
 import org.wildstang.yearly.auto.steps.WaitStep;
 
@@ -19,6 +20,7 @@ public class RightGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
+      addStep(new SetDriveGearStep(true));
       // TODO:  WRONG PATH!!!
       addStep(new CloseGearHolderStep());
 

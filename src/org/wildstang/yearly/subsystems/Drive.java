@@ -80,7 +80,7 @@ public class Drive implements Subsystem
       pdp = new PowerDistributionPanel();
       
       // Add any additional items to track in the logger
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
@@ -276,7 +276,7 @@ public class Drive implements Subsystem
       SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
       
       
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
@@ -509,7 +509,6 @@ public class Drive implements Subsystem
          }
       }
 
-      System.out.println("Drive.setPath(): Creating new PathFollower");
       m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 

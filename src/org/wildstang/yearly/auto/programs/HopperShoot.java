@@ -5,6 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
+import org.wildstang.yearly.auto.steps.SetDriveGearStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
@@ -30,6 +31,8 @@ public class HopperShoot extends AutoProgram
    @Override
    protected void defineSteps()
    {
+      // Set high gear state
+      addStep(new SetDriveGearStep(true));
       // Drive from the wall to the hopper
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 

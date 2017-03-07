@@ -9,6 +9,7 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
+import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
@@ -109,7 +110,7 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);
@@ -278,12 +279,15 @@ public class Shooter implements Subsystem
 
       updateDashboardData();
 
-      Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
-      Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
-      Core.getStateTracker().addState("Left shooter voltage", "Shooter", m_CANFlywheelLeft.getOutputVoltage());
-      Core.getStateTracker().addState("Right shooter voltage", "Shooter", m_CANFlywheelRight.getOutputVoltage());
-      Core.getStateTracker().addState("Left shooter current", "Shooter", m_CANFlywheelLeft.getOutputCurrent());
-      Core.getStateTracker().addState("Right shooter current", "Shooter", m_CANFlywheelRight.getOutputCurrent());
+      if (RobotTemplate.LOG_STATE)
+      {
+         Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
+         Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
+         Core.getStateTracker().addState("Left shooter voltage", "Shooter", m_CANFlywheelLeft.getOutputVoltage());
+         Core.getStateTracker().addState("Right shooter voltage", "Shooter", m_CANFlywheelRight.getOutputVoltage());
+         Core.getStateTracker().addState("Left shooter current", "Shooter", m_CANFlywheelLeft.getOutputCurrent());
+         Core.getStateTracker().addState("Right shooter current", "Shooter", m_CANFlywheelRight.getOutputCurrent());
+      }
    }
 
    // Flywheel stuff
