@@ -17,6 +17,7 @@ public class Climber implements Subsystem
    private double motorspeed = -1.0;
    private boolean running;
    private DigitalInput upbutton;
+   private DigitalInput halfButton;
    private WsVictor w_motor;
    
 
@@ -44,6 +45,8 @@ public class Climber implements Subsystem
       //Inputs
       upbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_UP.getName());
       upbutton.addInputListener(this);
+      halfButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_HALF_SPEED.getName());
+      halfButton.addInputListener(this);
    }
 
    @Override
@@ -52,6 +55,11 @@ public class Climber implements Subsystem
       if(source == upbutton)
       {
          m_runClimber = upbutton.getValue();
+         motorspeed = -1.0;
+      } 
+      if (source == halfButton) {
+         m_runClimber = halfButton.getValue();
+         motorspeed = -0.5;
       }
    }
 

@@ -79,7 +79,7 @@ public enum WSInputs implements Inputs
    // Manipulator DPAD Buttons                     
    //---------------------------------             
    CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), true),          // Climber Subsystem
-   //CLIMBER_DOWN("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), true),        // Climber Subsystem
+   CLIMBER_HALF_SPEED("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), true),        // Climber Subsystem
 
    //---------------------------------             
    // Manipulator Buttons                          
