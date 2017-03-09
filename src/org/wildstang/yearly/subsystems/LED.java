@@ -75,14 +75,22 @@ public class LED implements Subsystem
    @Override
    public void init()
    {
-      autoDataSent = false;
-      disableDataSent = false;
+      resetState();
+      
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
 
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
 
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
       // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+   }
+
+   @Override
+   public void resetState()
+   {
+      autoDataSent = false;
+      disableDataSent = false;
+      m_newDataAvailable = false;
    }
 
    @Override

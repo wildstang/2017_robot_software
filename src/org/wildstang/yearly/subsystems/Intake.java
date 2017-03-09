@@ -37,14 +37,21 @@ public class Intake implements Subsystem
    public void init()
    {
       // Setup any local variables with intial values
-      m_motorSpeed = 1; // Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-      // + ".IntakeMotor", 1);
+      resetState();
 
       m_intakeMotor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.INTAKE.getName());
 
       m_intakeButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName());
       m_intakeButton.addInputListener(this);
 
+   }
+   
+   
+   @Override
+   public void resetState()
+   {
+      m_motorSpeed = 1; // Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+      // + ".IntakeMotor", 1);
    }
 
    @Override

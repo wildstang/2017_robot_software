@@ -174,6 +174,16 @@ public class Shooter implements Subsystem
       m_overrideButton.addInputListener(this);
    }
 
+   @Override
+   public void resetState()
+   {
+      m_leftFeedDirection = FeedDirection.STOP;
+      m_rightFeedDirection = FeedDirection.STOP;
+      
+      m_gateOpen = false;
+      m_flywheelOn = false;
+   }
+
    private void readConfigValues()
    {
       // Reads values from Ws Config

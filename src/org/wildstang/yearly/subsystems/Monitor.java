@@ -91,6 +91,11 @@ public class Monitor implements Subsystem
    }
 
    @Override
+   public void resetState()
+   {
+   }
+
+   @Override
    public void update()
    {
 

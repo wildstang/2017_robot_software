@@ -256,7 +256,6 @@ public class RobotTemplate extends IterativeRobot
 
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
-
    }
 
    public void disabledPeriodic()
@@ -323,6 +322,9 @@ public class RobotTemplate extends IterativeRobot
 
    public void autonomousInit()
    {
+      // Reset any subsystem state
+      Core.getSubsystemManager().resetState();
+
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
@@ -330,7 +332,6 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
-
       m_core.executeUpdate();
 //      double time = System.currentTimeMillis();
 //      SmartDashboard.putNumber("Cycle Time", time - oldTime);
@@ -351,6 +352,9 @@ public class RobotTemplate extends IterativeRobot
       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
+      // Reset any subsystem state
+      Core.getSubsystemManager().resetState();
+      
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
       driveBase.setBrakeMode(false);

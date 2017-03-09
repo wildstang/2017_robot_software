@@ -35,10 +35,6 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
-      m_runClimber = false; 
-     
-      running = false;
-
       //Output
       w_motor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH.getName());
       
@@ -47,6 +43,15 @@ public class Climber implements Subsystem
       upbutton.addInputListener(this);
       halfButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_HALF_SPEED.getName());
       halfButton.addInputListener(this);
+      
+      resetState();
+   }
+
+   @Override
+   public void resetState()
+   {
+      m_runClimber = false; 
+      running = false;
    }
 
    @Override

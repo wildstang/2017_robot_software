@@ -113,8 +113,20 @@ public class Drive implements Subsystem
 
       initDriveTalons();
       
-      resetEncoders();
+      resetState();
    }
+
+   
+   
+   @Override
+   public void resetState()
+   {
+      resetEncoders();
+      setBrakeMode(false);
+      setHighGear(true);
+   }
+
+
 
    public void initDriveTalons()
    {

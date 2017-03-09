@@ -54,6 +54,14 @@ public class Gear implements Subsystem
       m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
    }
 
+   
+   @Override
+   public void resetState()
+   {
+      m_doorOpen = false;
+      m_receiveGear = false;
+   }
+
    @Override
    public void inputUpdate(Input source)
    { 
