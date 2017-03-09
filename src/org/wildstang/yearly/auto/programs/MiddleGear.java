@@ -14,6 +14,10 @@ public class MiddleGear extends AutoProgram
       Config config = Core.getConfigManager().getConfig();
 
       addStep(new SetDriveGearStep(true));
+      
+      // For this step, turn off brake mode so we can transition smoothly to vision
+      addStep(new SetBrakeModeStep(false));
+      
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
@@ -21,14 +25,12 @@ public class MiddleGear extends AutoProgram
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
 
-      // TODO: Drive away
       // Go backwards 2ft
       addStep(new WaitStep(500));
       //addStep(new DriveDistanceStraightStep(0.5, -24));
       addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
       //addStep(new CloseGearHolderStep());
       
-      // TODO: Drive away?  Shoot?  Need to reuse the above steps
    }
 
    @Override

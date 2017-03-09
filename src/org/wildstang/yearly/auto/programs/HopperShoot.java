@@ -5,6 +5,7 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
+import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetDriveGearStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.StopShooting;
@@ -33,8 +34,13 @@ public class HopperShoot extends AutoProgram
    {
       // Set high gear state
       addStep(new SetDriveGearStep(true));
+      addStep(new SetBrakeModeStep(true));
+      
       // Drive from the wall to the hopper
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
+
+      // Backup from the hopper
+      addStep(new PathFollowerStep(PathNameConstants.BACKUP_FROM_HOPPER));
 
       // Turn on feed and wait for balls
       addStep(new FeedOnStep());

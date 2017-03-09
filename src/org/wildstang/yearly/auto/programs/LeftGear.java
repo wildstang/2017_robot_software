@@ -13,7 +13,7 @@ import org.wildstang.yearly.auto.steps.SetDriveGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
 import org.wildstang.yearly.auto.steps.WaitStep;
 
-public class RightGear extends AutoProgram
+public class LeftGear extends AutoProgram
 {
 
    @Override
@@ -29,7 +29,8 @@ public class RightGear extends AutoProgram
 
       addStep(new CloseGearHolderStep());
 
-      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_RIGHT_GEAR));
+      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_LEFT_GEAR));
+
 //      addStep(new TrackVisionToGearStep());
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
@@ -46,7 +47,7 @@ public class RightGear extends AutoProgram
    @Override
    public String toString()
    {
-      return "Right Gear";
+      return "Left Gear";
    }
 
 }

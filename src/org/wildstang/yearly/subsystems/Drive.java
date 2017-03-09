@@ -428,7 +428,7 @@ public class Drive implements Subsystem
       m_rightMaster.setProfile(0);
 
       // Go as fast as possible
-      setHighGear(true);
+//      setHighGear(true);
 
       // Use brake mode to stop quickly at end of path, since Talons will put
       // output to neutral
