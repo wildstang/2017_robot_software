@@ -452,7 +452,6 @@ public class Drive implements Subsystem
       }
 
       m_driveMode = DriveType.CHEESY;
-      setBrakeMode(false);
 
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);

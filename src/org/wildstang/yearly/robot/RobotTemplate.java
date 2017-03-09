@@ -353,6 +353,7 @@ public class RobotTemplate extends IterativeRobot
 
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
+      driveBase.setBrakeMode(false);
 
       periodTimer.startTimingSection();
    }
