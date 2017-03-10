@@ -25,8 +25,8 @@ public class HopperShoot extends AutoProgram
       
       // Read config values
       // 10000 = ten seconds
-      hopperWaitTime = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".hopperWaitTime", 5000);
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 5000);
+      hopperWaitTime = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + ".hopperWaitTime", 3000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + ".delayWhileShooting", 5000);
    }
 
    @Override
@@ -42,6 +42,7 @@ public class HopperShoot extends AutoProgram
       addStep(new FeedOnStep());
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
+      
       // Backup from the hopper
       addStep(new PathFollowerStep(PathNameConstants.BACKUP_FROM_HOPPER));
 
