@@ -36,6 +36,7 @@ import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
 import org.wildstang.yearly.auto.testprograms.TEST20FtStraightLinePath;
 import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
 import org.wildstang.yearly.auto.testprograms.TESTWallToGearCenterPath;
+import org.wildstang.yearly.auto.testprograms.VisionTest;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -184,6 +185,7 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new GearDriveWithVision());
+      AutoManager.getInstance().addProgram(new VisionTest());
       
       // 3. Start Vision server
       if (m_visionServer != null)

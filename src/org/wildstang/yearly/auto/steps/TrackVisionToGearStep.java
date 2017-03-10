@@ -11,7 +11,7 @@ public class TrackVisionToGearStep extends AutoStep
    double distance;
    int xCorrection;
    private Drive m_drive;
-   private final double CORRECTION_HEADING_LEVEL = .05;
+   private final double CORRECTION_HEADING_LEVEL = 1.0;
 
    @Override
    public void initialize()
