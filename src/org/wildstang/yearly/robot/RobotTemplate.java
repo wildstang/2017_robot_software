@@ -372,7 +372,11 @@ public class RobotTemplate extends IterativeRobot
       {
 
          // Update all inputs, outputs and subsystems
+         long start = System.currentTimeMillis();
          m_core.executeUpdate();
+         long end = System.currentTimeMillis();
+         
+         SmartDashboard.putNumber("Cycke time", (end - start));
       }
       catch (Throwable e)
       {

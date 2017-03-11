@@ -719,6 +719,6 @@ public class Drive implements Subsystem
    public int getEncoderDistance(){
       int leftTick = m_leftMaster.getEncPosition();
       int rightTick = m_rightMaster.getEncPosition();
-      return (int)(((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
+      return (int)(((rightTick)) * TICKS_TO_INCHES);
    }
 }

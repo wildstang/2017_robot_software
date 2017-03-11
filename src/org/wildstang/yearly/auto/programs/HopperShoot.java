@@ -43,12 +43,15 @@ public class HopperShoot extends AutoProgram
       addStep(new WaitStep(hopperWaitTime));
       addStep(new FeedOffStep());
       
+      
+      addStep(new SetBrakeModeStep(false));
       // Backup from the hopper
       addStep(new PathFollowerStep(PathNameConstants.BACKUP_FROM_HOPPER));
 
       // Turn on feed and wait for balls
       
 
+      addStep(new SetBrakeModeStep(true));
       addStep(new PathFollowerStep(PathNameConstants.HOPPER_TO_BOILER));
 
       // Turn on shooter and shoot

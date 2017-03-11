@@ -25,7 +25,7 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void inputUpdate(Input p_source) {
 		// TODO Auto-generated method stub
-		if (p_source.getName().equals(WSInputs.IMU.getName()))
+//		if (p_source.getName().equals(WSInputs.IMU.getName()))
 	      {
 //			HeadingBytes = ((WsI2CInput) p_source).getValue();
 			HeadingBytes = m_IMUInput.getValue();
@@ -35,9 +35,9 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
+//		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
 		 
-		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
+//		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
 	}
 	
 	

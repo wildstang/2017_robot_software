@@ -91,7 +91,7 @@ public enum WSInputs implements Inputs
    FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), RobotTemplate.LOG_STATE),
    //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), RobotTemplate.LOG_STATE),        // Shooter Subsystem
    //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), RobotTemplate.LOG_STATE),
-   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), RobotTemplate.LOG_STATE),
+   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), RobotTemplate.LOG_STATE);
 
 
    // ********************************             
@@ -104,7 +104,7 @@ public enum WSInputs implements Inputs
    // ********************************             
    // Others ...                                   
    // ********************************             
-   IMU("IMU", WSInputType.I2C,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), RobotTemplate.LOG_STATE);
+//   IMU("IMU", WSInputType.I2C,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), RobotTemplate.LOG_STATE);
 
 
    private final String m_name;

@@ -130,6 +130,11 @@ public class Shooter implements Subsystem
 
       configureFlywheelTalon(m_CANFlywheelLeft);
       configureFlywheelTalon(m_CANFlywheelRight);
+      m_CANFlywheelRight.setProfile(0);
+      m_CANFlywheelRight.setF(0.02366); // 0.1998
+      m_CANFlywheelRight.setP(0.015); // (10% X 1023) / (error)
+      m_CANFlywheelRight.setI(0);
+      m_CANFlywheelRight.setD(0.12);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
