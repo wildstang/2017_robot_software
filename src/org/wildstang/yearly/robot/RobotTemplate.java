@@ -66,7 +66,7 @@ public class RobotTemplate extends IterativeRobot
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
-   private static VisionServer m_visionServer = new VisionServer(5080);
+   private static VisionServer m_visionServer = new VisionServer(5800);
    
    private boolean exceptionThrown = false;
 

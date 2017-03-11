@@ -15,7 +15,7 @@ public class VisionServer implements Runnable
    private ServerSocket m_serverSocket;
    
    private int m_currentValue;
-   int xCorrectionLevel;
+   double xCorrectionLevel;
    double distance;
       
    private ArrayList<VisionHandler> m_handlers = new ArrayList<VisionHandler>();
@@ -112,11 +112,11 @@ public class VisionServer implements Runnable
       }
    }
    
-   public void setXCorrectionLevel(int newVal){
+   public void setXCorrectionLevel(double newVal){
       xCorrectionLevel = newVal;
    }
    
-   public int getXCorrectionLevel(){
+   public double getXCorrectionLevel(){
       return xCorrectionLevel;
    }
    

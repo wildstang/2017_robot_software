@@ -6,41 +6,50 @@ import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class TrackVisionToGearStep extends AutoStep
 {
    double distance;
-   int xCorrection;
+   double xCorrection;
    private Drive m_drive;
-   private final double CORRECTION_HEADING_LEVEL = 1.0;
+   private final double CORRECTION_HEADING_LEVEL = 1.5;
 
    @Override
    public void initialize()
    {
       m_drive = (Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
-      m_drive.setOpenLoopDrive();
+      m_drive.setAutoGearMode();
       m_drive.setHighGear(true);
    }
 
    @Override
    public void update()
    {
-      xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
-      distance = RobotTemplate.getVisionServer().getDistance();
-
-      m_drive.setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
-
-      if (distance < 36)
+//      xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
+//      distance = RobotTemplate.getVisionServer().getDistance();
+//
+//      SmartDashboard.putNumber("Distance", distance);
+//      SmartDashboard.putNumber("xCorrection", xCorrection);
+//
+//      m_drive.setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
+//
+//      if (distance < 36)
+//      {
+//         m_drive.setThrottle(.15);
+//      }
+//      else
+//      {
+//         m_drive.setThrottle(.3);
+//      }
+//
+//      if (distance < 10)
+//      {
+//         m_drive.setThrottle(0);
+//         setFinished(true);
+//      }
+      if (m_drive.isGearDropFinished())
       {
-         m_drive.setThrottle(.1);
-      }
-      else
-      {
-         m_drive.setThrottle(.25);
-      }
-
-      if (distance < 3)
-      {
-         m_drive.setThrottle(0);
          setFinished(true);
       }
    }

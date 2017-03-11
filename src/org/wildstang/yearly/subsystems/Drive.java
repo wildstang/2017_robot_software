@@ -30,7 +30,10 @@ public class Drive implements Subsystem
    private DigitalInput m_rawModeInput;
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
+   private DigitalInput m_autoDropInput;
 
+   private boolean m_gearDropFinished = false;
+   
    // Values from inputs
    private double m_throttleValue;
    private double m_headingValue;
@@ -43,6 +46,10 @@ public class Drive implements Subsystem
    private boolean m_rawModeCurrent = false;
    private boolean m_rawModePrev = false;
    private boolean m_rawMode = false;
+
+   private boolean m_autoDropCurrent = false;
+   private boolean m_autoDropPrev = false;
+   private boolean m_autoDropMode = false;
 
    // Talons for output
    private CANTalon m_leftMaster;
@@ -60,6 +67,8 @@ public class Drive implements Subsystem
    private static final double ENCODER_CPR = 4096;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
    private static final double RADIANS = Math.PI / 180;
+   private final double CORRECTION_HEADING_LEVEL = 1.5;
+
    private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    double maxSpeed = 0;
 
@@ -107,7 +116,8 @@ public class Drive implements Subsystem
       m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
-      m_quickTurnInput.addInputListener(this);
+      m_autoDropInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.AUTO_GEAR_DROP.getName());
+      m_autoDropInput.addInputListener(this);
 
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
@@ -215,6 +225,20 @@ public class Drive implements Subsystem
          // Check and toggle shifter state
          toggleShifter();
       }
+      else if (p_source == m_autoDropInput)
+      {
+         m_autoDropCurrent = m_autoDropInput.getValue();
+         // Check and toggle auto gear drop state
+         toggleAutoDrop();
+         if (m_autoDropMode)
+         {
+            setAutoGearMode();
+         }
+         else
+         {
+            setOpenLoopDrive();
+         }
+      }
       // TODO: Do we want to make quickturn automatic?
       else if (p_source == m_quickTurnInput)
       {
@@ -273,9 +297,11 @@ public class Drive implements Subsystem
             }
              
              SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
-            //collectDriveState();
             break;
          case FULL_BRAKE:
+            break;
+         case AUTO_GEAR_DROP:
+            autoGear();
             break;
          case RAW:
          default:
@@ -315,6 +341,15 @@ public class Drive implements Subsystem
       
       // TODO: Remove this
       maxSpeed = 0; // Easy way to reset max speed.
+   }
+
+   private void toggleAutoDrop()
+   {
+      if (m_autoDropCurrent && !m_autoDropPrev)
+      {
+         m_autoDropMode = !m_autoDropMode;
+      }
+      m_autoDropPrev = m_autoDropCurrent;
    }
 
    private void collectDriveState()
@@ -387,6 +422,39 @@ public class Drive implements Subsystem
       absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
    }
 
+   private void autoGear()
+   {
+      double xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
+      double distance = RobotTemplate.getVisionServer().getDistance();
+
+      SmartDashboard.putNumber("Distance", distance);
+      SmartDashboard.putNumber("xCorrection", xCorrection);
+
+      setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
+
+      if (distance < 36)
+      {
+         setThrottle(.15);
+      }
+      else
+      {
+         setThrottle(.3);
+      }
+
+      if (distance < 10)
+      {
+         setThrottle(0);
+         m_gearDropFinished = true;
+      }
+      
+      m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
+      setMotorSpeeds(m_driveSignal);
+   }
+   
+   public boolean isGearDropFinished()
+   {
+      return m_gearDropFinished;
+   }
 
    private void calculateRawMode()
    {
@@ -426,6 +494,25 @@ public class Drive implements Subsystem
       m_rightMaster.set(p_signal.rightMotor);
    }
 
+   public void setAutoGearMode()
+   {
+      DriverStation.reportWarning("Set Auto Gear mode", false);
+      // Stop following any current path
+      if (m_driveMode == DriveType.PATH)
+      {
+         abortFollowingPath();
+         pathCleanup();
+      }
+
+      m_driveMode = DriveType.AUTO_GEAR_DROP;
+
+      m_gearDropFinished = false;
+      
+      // Reconfigure motor controllers
+      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
+      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
+   }
+   
    public void setPathFollowingMode()
    {
 	   DriverStation.reportWarning("Set Path Following Mode", false);
@@ -465,6 +552,8 @@ public class Drive implements Subsystem
 
       m_driveMode = DriveType.CHEESY;
 
+      m_gearDropFinished = true;
+      
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);

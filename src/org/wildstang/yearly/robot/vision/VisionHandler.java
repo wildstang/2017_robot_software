@@ -33,7 +33,7 @@ public class VisionHandler implements Runnable
    final private int H_MIN_DEFAULT = 81;
    final private int S_MIN_DEFAULT = 0;
    final private int V_MIN_DEFAULT = 238;
-   final private int H_MAX_DEFAULT = 180;
+   final private int H_MAX_DEFAULT = 125;
    final private int S_MAX_DEFAULT = 255;
    final private int V_MAX_DEFAULT = 255;
    final private int CENTER_DEFAULT = 400;
@@ -69,10 +69,10 @@ public class VisionHandler implements Runnable
       v_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
             + V_MAX_KEY, V_MAX_DEFAULT);
 
-      center = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + CENTER_KEY, CENTER_DEFAULT);
-      threshold = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + THRESHOLD_KEY, THRESHOLD_DEFAULT);
+      center = 0;//Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+//            + CENTER_KEY, CENTER_DEFAULT);
+      threshold = 10;//Core.getConfigManager().getConfig().getInt(this.getClass().getName()
+//            + THRESHOLD_KEY, THRESHOLD_DEFAULT);
       blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
             + BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
    }
@@ -133,13 +133,14 @@ public class VisionHandler implements Runnable
                      parms[i] = Double.parseDouble(tokens[i].trim());
                      System.out.println(parms[i]);
                   }
-                  if(parms.length > 0){
-                     m_visionServer.setXCorrectionLevel((int)parms[CORRECTION_LEVEL_INDEX]);
-                     if(parms.length > 1){
+                  if (parms.length > 0)
+                  {
+                     m_visionServer.setXCorrectionLevel(parms[CORRECTION_LEVEL_INDEX]);
+                     if (parms.length > 1)
+                     {
                         m_visionServer.setDistance(parms[DISTANCE_INDEX]);
                      }
-                  }
-                  
+                  }                  
 
                   // System.out.println("Parms: " + parm0 + "," + parm1 +
                   // "," + parm2+ "," + parm3);
