@@ -13,7 +13,7 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
-      addStep(new SetDriveGearStep(true));
+      addStep(new SetHighGearStep(true));
       
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));

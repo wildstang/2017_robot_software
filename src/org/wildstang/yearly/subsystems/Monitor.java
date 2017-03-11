@@ -24,12 +24,12 @@ public class Monitor implements Subsystem
    private static final String NAME_2 = "Current 2 (Shooter right)";
    private static final String NAME_3 = "Current 3 (Climber)";
    private static final String NAME_4 = "Current 4 (Feed right)";
-   private static final String NAME_5 = "Current 5";
-   private static final String NAME_6 = "Current 6";
+   private static final String NAME_5 = "Current 5 (PCM)";
+   private static final String NAME_6 = "Current 6 (MXP)";
    private static final String NAME_7 = "Current 7";
-   private static final String NAME_8 = "Current 8 (Intake)";
+   private static final String NAME_8 = "Current 8";
    private static final String NAME_9 = "Current 9";
-   private static final String NAME_10 = "Current 10";
+   private static final String NAME_10 = "Current 10 (Intake)";
    private static final String NAME_11 = "Current 11 (Feed left)";
    private static final String NAME_12 = "Current 12";
    private static final String NAME_13 = "Current 13 (Shooter left)";

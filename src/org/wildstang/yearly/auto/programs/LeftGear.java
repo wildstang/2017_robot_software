@@ -9,7 +9,7 @@ import org.wildstang.yearly.auto.steps.DriveDistanceStraightStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
-import org.wildstang.yearly.auto.steps.SetDriveGearStep;
+import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
 import org.wildstang.yearly.auto.steps.WaitStep;
 
@@ -22,7 +22,7 @@ public class LeftGear extends AutoProgram
       Config config = Core.getConfigManager().getConfig();
 
       // Use high gear
-      addStep(new SetDriveGearStep(true));
+      addStep(new SetHighGearStep(true));
 
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));

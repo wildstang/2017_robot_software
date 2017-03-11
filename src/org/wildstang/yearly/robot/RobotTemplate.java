@@ -30,6 +30,7 @@ import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.programs.GearDriveWithVision;
 import org.wildstang.yearly.auto.programs.HopperShoot;
+import org.wildstang.yearly.auto.programs.LeftGear;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
 import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
@@ -60,14 +61,14 @@ public class RobotTemplate extends IterativeRobot
 {
 
    public static boolean LOG_STATE = true;
-   
+
    private static long lastCycleTime = 0;
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
    private static VisionServer m_visionServer = new VisionServer(5800);
-   
+
    private boolean exceptionThrown = false;
 
    private boolean m_firstDisabled = true;
@@ -180,19 +181,20 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
       AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
       AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
-      
+      AutoManager.getInstance().addProgram(new VisionTest());
+
       AutoManager.getInstance().addProgram(new HopperShoot());
+      AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new GearDriveWithVision());
-      AutoManager.getInstance().addProgram(new VisionTest());
-      
+
       // 3. Start Vision server
       if (m_visionServer != null)
       {
          m_visionServer.startVisionServer();
       }
-      
+
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
       startupTimer.endTimingSection();
@@ -263,6 +265,7 @@ public class RobotTemplate extends IterativeRobot
    public void disabledPeriodic()
    {
 
+      // Stop and remove any current path
       if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
       {
          if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
@@ -295,14 +298,6 @@ public class RobotTemplate extends IterativeRobot
       }
 
       // If we are finished with teleop, finish and close the log file
-      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
-      {
-         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
-         {
-            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
-         }
-      }
-
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
@@ -335,9 +330,9 @@ public class RobotTemplate extends IterativeRobot
    {
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-//      double time = System.currentTimeMillis();
-//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-//      oldTime = time;
+      // double time = System.currentTimeMillis();
+      // SmartDashboard.putNumber("Cycle Time", time - oldTime);
+      // oldTime = time;
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -356,7 +351,7 @@ public class RobotTemplate extends IterativeRobot
 
       // Reset any subsystem state
       Core.getSubsystemManager().resetState();
-      
+
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
       driveBase.setBrakeMode(false);
@@ -403,7 +398,7 @@ public class RobotTemplate extends IterativeRobot
    {
       // Watchdog.getInstance().feed();
    }
-   
+
    public static VisionServer getVisionServer()
    {
       return m_visionServer;

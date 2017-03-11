@@ -5,12 +5,12 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
 
-public class SetDriveGearStep extends AutoStep
+public class SetHighGearStep extends AutoStep
 {
    private Drive m_drive;
    private boolean m_high;
    
-   public SetDriveGearStep(boolean p_high)
+   public SetHighGearStep(boolean p_high)
    {
       m_high = p_high;
    }

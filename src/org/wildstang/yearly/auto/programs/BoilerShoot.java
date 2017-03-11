@@ -6,7 +6,7 @@ import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
-import org.wildstang.yearly.auto.steps.SetDriveGearStep;
+import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
@@ -31,7 +31,7 @@ public class BoilerShoot extends AutoProgram
    protected void defineSteps()
    {
       // Set high gear state
-      addStep(new SetDriveGearStep(true));
+      addStep(new SetHighGearStep(true));
       addStep(new SetBrakeModeStep(true));
       
       // Drive from the wall to the hopper
