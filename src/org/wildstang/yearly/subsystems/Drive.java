@@ -134,6 +134,10 @@ public class Drive implements Subsystem
       resetEncoders();
       setBrakeMode(false);
       setHighGear(true);
+      setOpenLoopDrive();
+      m_gearDropFinished = false;
+      setThrottle(0);
+      setHeading(0);
    }
 
 
@@ -233,10 +237,13 @@ public class Drive implements Subsystem
          if (m_autoDropMode)
          {
             setAutoGearMode();
+            SmartDashboard.putBoolean("Auto gear mode", true);
          }
          else
          {
             setOpenLoopDrive();
+            setHeading(0);
+            SmartDashboard.putBoolean("Auto gear mode", false);
          }
       }
       // TODO: Do we want to make quickturn automatic?
@@ -506,6 +513,7 @@ public class Drive implements Subsystem
 
       m_driveMode = DriveType.AUTO_GEAR_DROP;
 
+      setHighGear(true);
       m_gearDropFinished = false;
       
       // Reconfigure motor controllers

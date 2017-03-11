@@ -88,6 +88,10 @@ public class VisionServer implements Runnable
             Thread t = new Thread(handler);
             t.start();
             
+            for (VisionHandler h : m_handlers)
+            {
+               h.stop();
+            }
             m_handlers.add(handler);
          }
          catch (IOException e)

@@ -153,7 +153,7 @@ public class VisionHandler implements Runnable
 
                   // readValue = Integer.parseInt(line.trim());
                   // System.out.println("Read: " + readValue);
-                  // m_lastMsgReceived = System.currentTimeMillis();
+                   m_lastMsgReceived = System.currentTimeMillis();
                   // m_visionServer.updateValue(readValue);
                }
             }
