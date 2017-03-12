@@ -28,21 +28,21 @@ public class RightGear extends AutoProgram
 
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));
-
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_RIGHT_GEAR));
-//      addStep(new TrackVisionToGearStep());
+
+      addStep(new TrackVisionToGearStep());
+      
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
-
-      // TODO: Drive away
-      // Go backwards 2ft
+      // Wait to let it settle
       addStep(new WaitStep(waitTime));
-      //addStep(new DriveDistanceStraightStep(0.5, -24));
-      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
 
-      // TODO: Drive over auto line?
+      // Go backwards 2ft
+      addStep(new DriveDistanceStraightStep(0.5, -24));
+//      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
+
    }
 
    @Override

@@ -185,6 +185,11 @@ public class Shooter implements Subsystem
       m_leftFeedDirection = FeedDirection.STOP;
       m_rightFeedDirection = FeedDirection.STOP;
       
+      readyToShootLeft = false;
+      readyToShootRight = false;
+      m_leftJoyAxis = 0;
+      m_rightJoyAxis = 0;
+      
       m_gateOpen = false;
       m_flywheelOn = false;
    }

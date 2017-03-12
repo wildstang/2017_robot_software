@@ -34,17 +34,15 @@ public class LeftGear extends AutoProgram
 
       addStep(new TrackVisionToGearStep());
       
-      
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
-
-      // TODO: Drive away
-      // Go backwards 2ft
+      // Wait to let it settle
       addStep(new WaitStep(waitTime));
-      //addStep(new DriveDistanceStraightStep(0.5, -24));
-      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
 
-      // TODO: Drive over auto line?
+      // Go backwards 2ft
+      addStep(new DriveDistanceStraightStep(0.5, -24));
+//      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
+
    }
 
    @Override

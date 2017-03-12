@@ -694,7 +694,9 @@ public class Drive implements Subsystem
          {
             fw.close();
          }
-      }//373x45=>31 ft, 1 inch x 3 ft 9 inches
+      }
+      
+      //373x45=>31 ft, 1 inch x 3 ft 9 inches
       // We got 23 ft 9 inches x 11 ft 4 inches
       // Our calculations were 7 ft 4 inches too short in the x direction, but
       // we were 7 ft 7 inches too long in the y direction
@@ -716,9 +718,15 @@ public class Drive implements Subsystem
       m_throttleValue = newThrottle;
    }
    
-   public int getEncoderDistance(){
-      int leftTick = m_leftMaster.getEncPosition();
-      int rightTick = m_rightMaster.getEncPosition();
-      return (int)(((rightTick)) * TICKS_TO_INCHES);
+   /**
+    * Returns distance traveled since encoders were set to zero, in inches.
+    * @return
+    */
+   public int getEncoderDistanceInches()
+   {
+      int leftTick = Math.abs(m_leftMaster.getEncPosition());
+      int rightTick = Math.abs(m_rightMaster.getEncPosition());
+
+      return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
 }

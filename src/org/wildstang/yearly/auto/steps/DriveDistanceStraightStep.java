@@ -11,11 +11,19 @@ public class DriveDistanceStraightStep extends AutoStep
    double m_speed;
    int m_distance2Go;
 
-   public DriveDistanceStraightStep(double speed, int distance)
+   /**
+    * 
+    * @param speed speed to travel
+    * @param inchesToTravel distance to travel in inches - if negative, goes backwards
+    */
+   public DriveDistanceStraightStep(double speed, int inchesToTravel)
    {
       m_speed = speed;
-      m_distance2Go = distance;
-      if (distance < 0)
+      // Convert distance to positive
+      m_distance2Go = Math.abs(inchesToTravel);
+
+      // If distance is negative, invert speed to go backwards
+      if (inchesToTravel < 0)
       {
          m_speed *= -1;
       }
@@ -31,7 +39,7 @@ public class DriveDistanceStraightStep extends AutoStep
    @Override
    public void update()
    {
-      if (m_drive.getEncoderDistance() < m_distance2Go)
+      if (m_drive.getEncoderDistanceInches() < m_distance2Go)
       {
          m_drive.setThrottle(m_speed);
       }

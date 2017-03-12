@@ -183,11 +183,10 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
       AutoManager.getInstance().addProgram(new VisionTest());
 
-      AutoManager.getInstance().addProgram(new HopperShoot());
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
-      AutoManager.getInstance().addProgram(new GearDriveWithVision());
+      AutoManager.getInstance().addProgram(new HopperShoot());
 
       // 3. Start Vision server
       if (m_visionServer != null)
@@ -255,8 +254,6 @@ public class RobotTemplate extends IterativeRobot
    {
       initTimer.startTimingSection();
       AutoManager.getInstance().clear();
-
-      loadConfig();
 
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
