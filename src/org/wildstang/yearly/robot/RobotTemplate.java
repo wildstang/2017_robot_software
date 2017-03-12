@@ -28,16 +28,11 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.auto.programs.GearDriveWithVision;
 import org.wildstang.yearly.auto.programs.HopperShoot;
 import org.wildstang.yearly.auto.programs.LeftGear;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
-import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
-import org.wildstang.yearly.auto.testprograms.TEST20FtStraightLinePath;
-import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
-import org.wildstang.yearly.auto.testprograms.TESTWallToGearCenterPath;
-import org.wildstang.yearly.auto.testprograms.VisionTest;
+import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -80,7 +75,8 @@ public class RobotTemplate extends IterativeRobot
    static boolean teleopPerodicCalled = false;
 
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
-
+   private static final String ERROR_MSG_KEY = "Last error";
+   
    private void startloggingState()
    {
       Writer outputWriter = null;
@@ -109,12 +105,10 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (UnknownHostException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
@@ -150,7 +144,7 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
+         SmartDashboard.putString(ERROR_MSG_KEY, "Failed to open log file for writing");
          e.printStackTrace();
       }
 
@@ -177,11 +171,11 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
-      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
-      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
-      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
-      AutoManager.getInstance().addProgram(new VisionTest());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
+//      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
+//      AutoManager.getInstance().addProgram(new VisionTest());
 
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
@@ -227,7 +221,7 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (FileNotFoundException e)
       {
-         // TODO Auto-generated catch block
+         SmartDashboard.putString(ERROR_MSG_KEY, "Couldn't find config file to load");
          e.printStackTrace();
       }
 
@@ -239,7 +233,7 @@ public class RobotTemplate extends IterativeRobot
          }
          catch (IOException e)
          {
-            // TODO Auto-generated catch block
+            SmartDashboard.putString(ERROR_MSG_KEY, "Failed to close config file");
             e.printStackTrace();
          }
       }
@@ -327,9 +321,11 @@ public class RobotTemplate extends IterativeRobot
    {
       // Update all inputs, outputs and subsystems
       m_core.executeUpdate();
-      // double time = System.currentTimeMillis();
-      // SmartDashboard.putNumber("Cycle Time", time - oldTime);
-      // oldTime = time;
+
+      double time = System.currentTimeMillis();
+      SmartDashboard.putNumber("Cycle time", time - oldTime);
+      oldTime = time;
+
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -377,6 +373,7 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (Throwable e)
       {
+         SmartDashboard.putString(ERROR_MSG_KEY, "Exception thrown during teleopPeriodic");
          SmartDashboard.putString("Exception thrown", e.toString());
          exceptionThrown = true;
          throw e;
