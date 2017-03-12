@@ -34,7 +34,7 @@ public class Monitor implements Subsystem
    private static final String NAME_12 = "Current 12";
    private static final String NAME_13 = "Current 13 (Shooter left)";
    private static final String NAME_14 = "Current 14 (Drive left master)";
-   private static final String NAME_15 = "Current 15 (Drive left master)";
+   private static final String NAME_15 = "Current 15 (Drive left follower)";
    
    public Monitor()
    {
@@ -110,15 +110,12 @@ public class Monitor implements Subsystem
 
       double totalCurrent = pdp.getTotalCurrent();
       tracker.addState("Total Current", "PDP", totalCurrent);
-      SmartDashboard.putNumber("Current", totalCurrent);
 
       double voltage = pdp.getVoltage();
       tracker.addState("Voltage", "PDP", voltage);
-      SmartDashboard.putNumber("Voltage", voltage);
 
       double pdpTemp = pdp.getTemperature();
       tracker.addState("Temperature", "PDP", pdpTemp);
-      SmartDashboard.putNumber("Temperature", pdpTemp);
 
       boolean isRobotEnabled = DriverStation.getInstance().isEnabled();
       boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();

@@ -19,7 +19,6 @@ public class WaitStep extends AutoStep
    public void initialize()
    {
       startTime = System.currentTimeMillis();
-      SmartDashboard.putBoolean("Timed out", false);
    }
 
    @Override
@@ -32,11 +31,9 @@ public class WaitStep extends AutoStep
       }
 
       timePassed = ((double) System.currentTimeMillis() - startTime);
-      SmartDashboard.putNumber("time passed", timePassed);
 
       if (timePassed >= targetTime)
       {
-         SmartDashboard.putBoolean("Timed out", true);
          setFinished(true);
       }
    }

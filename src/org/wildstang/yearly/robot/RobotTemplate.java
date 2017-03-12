@@ -373,7 +373,7 @@ public class RobotTemplate extends IterativeRobot
          m_core.executeUpdate();
          long end = System.currentTimeMillis();
          
-         SmartDashboard.putNumber("Cycke time", (end - start));
+         SmartDashboard.putNumber("Cycle Time", (end - start));
       }
       catch (Throwable e)
       {

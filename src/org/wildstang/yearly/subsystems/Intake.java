@@ -13,14 +13,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake implements Subsystem
 {
    // add variables here
+   private DigitalInput m_intakeButton;
+   private WsVictor m_intakeMotor;
+
+   // State that needs to be reset
+   private double m_motorSpeed;
    private boolean m_intakeOn = false;
    private boolean m_intakeCurrent = false;
    private boolean m_intakePrev = false;
 
-   private DigitalInput m_intakeButton;
-
-   private double m_motorSpeed;
-   private WsVictor m_intakeMotor;
+   
+   @Override
+   public void resetState()
+   {
+      m_motorSpeed = 1; // Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
+      // + ".IntakeMotor", 1);
+      m_intakeOn = false;
+      m_intakeCurrent = false;
+      m_intakePrev = false;
+   }
 
    @Override
    public void selfTest()
@@ -47,13 +58,6 @@ public class Intake implements Subsystem
    }
    
    
-   @Override
-   public void resetState()
-   {
-      m_motorSpeed = 1; // Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-      // + ".IntakeMotor", 1);
-   }
-
    @Override
    public void inputUpdate(Input p_source)
    {
@@ -83,7 +87,7 @@ public class Intake implements Subsystem
          m_intakeMotor.setValue(0);
       }
 
-      SmartDashboard.putBoolean("intakeOn", m_intakeOn);
+      SmartDashboard.putBoolean("Intake on", m_intakeOn);
    }
 
    public boolean intakeState()

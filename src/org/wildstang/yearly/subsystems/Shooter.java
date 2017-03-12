@@ -34,17 +34,7 @@ public class Shooter implements Subsystem
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
 
-   // For the toggle
-   private boolean m_flywheelOn = false;
-   private boolean m_shooterCurrent;
-   private boolean m_shooterPrev;
-
-   // For checking if the gates should open when flywheels are up to speed
-   private boolean readyToShootLeft = false;
-   private boolean readyToShootRight = false;
-   // Can override the flywheel speed checker and open gates anyway
-   private boolean m_shootOverride = false;
-   // Limits for range flywheels should be at before opening gates
+   
    private double m_targetSpeedLeft;
    private double m_targetSpeedRight;
    private double m_lowLimitSpeed;
@@ -54,11 +44,6 @@ public class Shooter implements Subsystem
    private WsSolenoid m_gateSolenoid;
 
    private Gate m_gate;
-
-   // For toggling
-   private boolean m_gateOpen = false;
-   private boolean m_gateCurrent;
-   private boolean m_gatePrev;
 
    // Feeds
    private WsVictor m_leftFeedVictor;
@@ -70,30 +55,69 @@ public class Shooter implements Subsystem
    private WsVictor m_blenderVictor;
    private Blender m_blender;
 
-   private double m_leftJoyAxis;
-   private double m_rightJoyAxis;
    // Deadband so nothing happens if joystick is bumped on accident
    private double m_feedDeadBand;
    private double m_feedSpeed;
+
+   // PDP for checking if Feeds are jammed
+   private PowerDistributionPanel pdp;
+
+   // Inputs
+   private DigitalInput m_flywheelButton;
+   private DigitalInput m_gateButton;
+   private DigitalInput m_overrideButton;
+   private AnalogInput m_leftBeltJoystick;
+   private AnalogInput m_rightBeltJoystick;
+
+   // ALL variables below here are state that need to be reset in resetState to revert to an initial state
+   // For the toggle
+   private boolean m_flywheelOn = false;
+   private boolean m_shooterCurrent;
+   private boolean m_shooterPrev;
+
+   // For toggling
+   private boolean m_gateOpen = false;
+   private boolean m_gateCurrent;
+   private boolean m_gatePrev;
+
+   private double m_leftJoyAxis;
+   private double m_rightJoyAxis;
+
+   // For checking if the gates should open when flywheels are up to speed
+   private boolean readyToShootLeft = false;
+   private boolean readyToShootRight = false;
+
+   // Can override the flywheel speed checker and open gates anyway
+   private boolean m_shootOverride = false;
+   // Limits for range flywheels should be at before opening gates
 
    // Enumeration variable for SHOOT, REVERSE, and STOP
    private FeedDirection m_leftFeedDirection;
    private FeedDirection m_rightFeedDirection;
 
-   // PDP for checking if Feeds are jammed
-   private PowerDistributionPanel pdp;
-   double m_rightFeedCurrent;
-   double m_leftFeedCurrent;
 
-   // Inputs
-   private DigitalInput m_flywheelButton;
+   @Override
+   public void resetState()
+   {
+      m_shootOverride = false;
 
-   private DigitalInput m_gateButton;
+      m_leftFeedDirection = FeedDirection.STOP;
+      m_rightFeedDirection = FeedDirection.STOP;
+      
+      readyToShootLeft = false;
+      readyToShootRight = false;
+      m_leftJoyAxis = 0;
+      m_rightJoyAxis = 0;
+      
+      m_gateOpen = false;
+      m_flywheelOn = false;
 
-   private DigitalInput m_overrideButton;
-
-   private AnalogInput m_leftBeltJoystick;
-   private AnalogInput m_rightBeltJoystick;
+      // Toggle state variables
+      m_shooterCurrent = false;
+      m_shooterPrev = false;
+      m_gateCurrent = false;
+      m_gatePrev = false;
+   }
 
    @Override
    public void selfTest()
@@ -130,11 +154,11 @@ public class Shooter implements Subsystem
 
       configureFlywheelTalon(m_CANFlywheelLeft);
       configureFlywheelTalon(m_CANFlywheelRight);
-      m_CANFlywheelRight.setProfile(0);
-      m_CANFlywheelRight.setF(0.02366); // 0.1998
-      m_CANFlywheelRight.setP(0.015); // (10% X 1023) / (error)
-      m_CANFlywheelRight.setI(0);
-      m_CANFlywheelRight.setD(0.12);
+//      m_CANFlywheelRight.setProfile(0);
+//      m_CANFlywheelRight.setF(0.02366); // 0.1998
+//      m_CANFlywheelRight.setP(0.015); // (10% X 1023) / (error)
+//      m_CANFlywheelRight.setI(0);
+//      m_CANFlywheelRight.setD(0.12);
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
@@ -155,13 +179,8 @@ public class Shooter implements Subsystem
       m_blenderVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.BLENDER.getName());
       m_blender = new Blender(m_blenderVictor);
 
-      m_leftFeedDirection = FeedDirection.STOP;
-      m_rightFeedDirection = FeedDirection.STOP;
-
       // PDP
       pdp = new PowerDistributionPanel();
-      m_leftFeedCurrent = pdp.getCurrent(11);
-      m_rightFeedCurrent = pdp.getCurrent(4);
 
       // Input Listeners
       m_flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
@@ -177,21 +196,8 @@ public class Shooter implements Subsystem
 
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
-   }
-
-   @Override
-   public void resetState()
-   {
-      m_leftFeedDirection = FeedDirection.STOP;
-      m_rightFeedDirection = FeedDirection.STOP;
       
-      readyToShootLeft = false;
-      readyToShootRight = false;
-      m_leftJoyAxis = 0;
-      m_rightJoyAxis = 0;
-      
-      m_gateOpen = false;
-      m_flywheelOn = false;
+      resetState();
    }
 
    private void readConfigValues()
@@ -369,8 +375,7 @@ public class Shooter implements Subsystem
 
    public void updateGates()
    {
-      // Tests to see if the left and right flywheel is up to speed and ready to
-      // shoot a ball.
+      // Tests to see if the left and right flywheel is up to speed and ready to shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
       // Can be overriden so gates can open even if flywheel isn't up to speed
 
@@ -409,12 +414,12 @@ public class Shooter implements Subsystem
 
    public boolean checkLeftFeedJammed()
    {
-      return m_leftFeed.isJammed(m_leftFeedCurrent);
+      return m_leftFeed.isJammed(pdp.getCurrent(11));
    }
 
    public boolean checkRightFeedJammed()
    {
-      return m_rightFeed.isJammed(m_rightFeedCurrent);
+      return m_rightFeed.isJammed(pdp.getCurrent(4));
    }
 
    public void updateFeed()
@@ -467,24 +472,24 @@ public class Shooter implements Subsystem
    public void updateDashboardData()
    {
       SmartDashboard.putBoolean("Left flywheel on", m_leftFlywheel.isRunning());
-      SmartDashboard.putBoolean("right flywheel on", m_rightFlywheel.isRunning());
+      SmartDashboard.putBoolean("Right flywheel on", m_rightFlywheel.isRunning());
 
-      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
-      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
+      SmartDashboard.putNumber("Left flywheel speed", m_leftFlywheel.getSpeed());
+      SmartDashboard.putNumber("Right flywheel speed", m_rightFlywheel.getSpeed());
 
-      SmartDashboard.putNumber("left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
-      SmartDashboard.putNumber("right flywheel error", m_CANFlywheelRight.getClosedLoopError());
+      SmartDashboard.putNumber("Left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
+      SmartDashboard.putNumber("Right flywheel error", m_CANFlywheelRight.getClosedLoopError());
 
-      SmartDashboard.putBoolean("Gates is open", m_gate.isOpen());
+      SmartDashboard.putBoolean("Gates open", m_gate.isOpen());
 
-      SmartDashboard.putBoolean("left feed jammed", m_leftFeed.isJammed(m_leftFeedCurrent));
-      SmartDashboard.putBoolean("right feed jammed", m_rightFeed.isJammed(m_rightFeedCurrent));
+      SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
+      SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));
 
       // WS config
-      SmartDashboard.putNumber("flywheel left target speed", m_targetSpeedLeft);
-      SmartDashboard.putNumber("flywheel right target speed", m_targetSpeedRight);
-      SmartDashboard.putNumber("flywheel low limit speed", m_lowLimitSpeed);
-      SmartDashboard.putNumber("flywheel high limit speed", m_highLimitSpeed);
+      SmartDashboard.putNumber("Left flywheel target", m_targetSpeedLeft);
+      SmartDashboard.putNumber("Right flywheel target", m_targetSpeedRight);
+      SmartDashboard.putNumber("Flywheel low limit", m_lowLimitSpeed);
+      SmartDashboard.putNumber("Flywheel high limit", m_highLimitSpeed);
    }
 
 }

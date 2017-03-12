@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.Properties;
 import org.wildstang.framework.core.Core;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class VisionHandler implements Runnable
 {
 
@@ -20,6 +22,7 @@ public class VisionHandler implements Runnable
    private InputStream m_inputStream;
    private OutputStream m_outputStream;
    private VisionServer m_visionServer;
+   private String m_ip;
 
    private int h_min;
    private int s_min;
@@ -30,6 +33,7 @@ public class VisionHandler implements Runnable
    private int center;
    private int threshold;
    private double blurRadius;
+   
    final private int H_MIN_DEFAULT = 81;
    final private int S_MIN_DEFAULT = 0;
    final private int V_MIN_DEFAULT = 238;
@@ -55,7 +59,8 @@ public class VisionHandler implements Runnable
    {
       m_socket = p_socket;
       m_visionServer = p_server;
-
+      m_ip = p_socket.getInetAddress().getHostAddress();
+      
       h_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + H_MIN_KEY, H_MIN_DEFAULT);
       s_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + S_MIN_KEY, S_MIN_DEFAULT);
       v_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + V_MIN_KEY, V_MIN_DEFAULT);
@@ -79,7 +84,6 @@ public class VisionHandler implements Runnable
       BufferedReader in = null;
       PrintWriter out = null;
       String line = null;
-      int readValue;
       String delims = "[,|]";
 
       try
@@ -103,6 +107,10 @@ public class VisionHandler implements Runnable
          sendPreferences(out);
 
          m_running = true;
+         m_lastMsgReceived = System.currentTimeMillis();
+         
+         // Start health check thread to see if we're still alive
+         startHeartbeatThread();
 
          while (m_running)
          {
@@ -124,6 +132,7 @@ public class VisionHandler implements Runnable
                      parms[i] = Double.parseDouble(tokens[i].trim());
                      System.out.println(parms[i]);
                   }
+                  
                   if (parms.length > 0)
                   {
                      m_visionServer.setXCorrectionLevel(parms[CORRECTION_LEVEL_INDEX]);
@@ -133,19 +142,7 @@ public class VisionHandler implements Runnable
                      }
                   }                  
 
-                  // System.out.println("Parms: " + parm0 + "," + parm1 +
-                  // "," + parm2+ "," + parm3);
-                  // System.out.println("tokens.length():" +
-                  // tokens.length);
-                  // System.out.println("token[0]: " + tokens[0]);
-                  // System.out.println("token[1]: " + tokens[1]);
-                  // System.out.println("token[2]: " + tokens[2]);
-                  // System.out.println("token[3]: " + tokens[3]);
-
-                  // readValue = Integer.parseInt(line.trim());
-                  // System.out.println("Read: " + readValue);
-                   m_lastMsgReceived = System.currentTimeMillis();
-                  // m_visionServer.updateValue(readValue);
+                  m_lastMsgReceived = System.currentTimeMillis();
                }
             }
             catch (NumberFormatException e)
@@ -165,10 +162,59 @@ public class VisionHandler implements Runnable
 
    }
 
+   private void startHeartbeatThread()
+   {
+      Thread t = new Thread(new Heartbeat(this));
+      t.start();
+   }
+   
+   class Heartbeat implements Runnable
+   {
+      VisionHandler m_handler;
+      boolean m_running = false;
+      
+      Heartbeat(VisionHandler handler)
+      {
+         m_handler = handler;
+      }
+      
+      public void run()
+      {
+         m_running = true;
+         
+         while (m_running)
+         {
+            long timeSinceLastMsg = (System.currentTimeMillis() - m_lastMsgReceived);
+            if (timeSinceLastMsg > 2000)
+            {
+               // TODO: Flag handler as inactive
+               SmartDashboard.putBoolean("Camera maybe offline", true);
+               SmartDashboard.putNumber("Time since last camera update", timeSinceLastMsg);
+            }
+            else
+            {
+               SmartDashboard.putBoolean("Camera maybe offline", false);
+            }
+            try
+            {
+               Thread.sleep(1000);
+            }
+            catch (InterruptedException e)
+            {
+               e.printStackTrace();
+            }
+         }
+      }
+      
+      public void stop()
+      {
+         m_running = false;
+      }
+   }
+   
    private void sendPreferences(PrintWriter p_out)
    {
       StringBuffer buf = new StringBuffer();
-      Properties prefs = new Properties();
 
       buf.append(h_min);
       buf.append("|");
@@ -216,10 +262,14 @@ public class VisionHandler implements Runnable
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
+   }
+
+   public String getIP()
+   {
+      return m_ip;
    }
 
 }

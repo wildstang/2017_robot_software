@@ -22,16 +22,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive implements Subsystem
 {
+   // Constants
+   private static final double ROBOT_WIDTH_INCHES = 30;
+   private static final double WHEEL_DIAMETER_INCHES = 4;
+   private static final double ENCODER_CPR = 4096;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
+   private static final double RADIANS = Math.PI / 180;
+   private final double CORRECTION_HEADING_LEVEL = 1.5;
+
    // Hold a reference to the input test for fast equality test during
    // inputUpdate()
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
    private WsSolenoid m_shifterSolenoid;
-   private DigitalInput m_rawModeInput;
+//   private DigitalInput m_rawModeInput;
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
    private DigitalInput m_autoDropInput;
 
+   // Talons for output
+   private CANTalon m_leftMaster;
+   private CANTalon m_rightMaster;
+   private CANTalon m_leftFollower;
+   private CANTalon m_rightFollower;
+
+   private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
+
+   // Drive state information
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
+   private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
+
+   // ALL variables below here are state that needs to be reset in resetState()
    private boolean m_gearDropFinished = false;
    
    // Values from inputs
@@ -51,33 +72,11 @@ public class Drive implements Subsystem
    private boolean m_autoDropPrev = false;
    private boolean m_autoDropMode = false;
 
-   // Talons for output
-   private CANTalon m_leftMaster;
-   private CANTalon m_rightMaster;
-   private CANTalon m_leftFollower;
-   private CANTalon m_rightFollower;
-
-   // State information
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
-   private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
-   private static final double ROBOT_WIDTH_INCHES = 30;
-   private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double ENCODER_CPR = 4096;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
-   private static final double RADIANS = Math.PI / 180;
-   private final double CORRECTION_HEADING_LEVEL = 1.5;
-
-   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    double maxSpeed = 0;
-
-   private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
-
    private boolean m_brakeMode = true;
-
-   // TODO Remove this
-   private PowerDistributionPanel pdp;
 
    // While this is really a temporary variable, declared here to prevent
    // constant stack allocation
@@ -86,8 +85,6 @@ public class Drive implements Subsystem
    @Override
    public void init()
    {
-      pdp = new PowerDistributionPanel();
-      
       // Add any additional items to track in the logger
       if (RobotTemplate.LOG_STATE)
       {
@@ -138,6 +135,20 @@ public class Drive implements Subsystem
       m_gearDropFinished = false;
       setThrottle(0);
       setHeading(0);
+      m_quickTurn = false;
+
+      m_shifterCurrent = false;
+      m_shifterPrev = false;
+
+      m_rawModeCurrent = false;
+      m_rawModePrev = false;
+      m_rawMode = false;
+
+      m_autoDropCurrent = false;
+      m_autoDropPrev = false;
+      m_autoDropMode = false;
+
+      maxSpeed = 0;
    }
 
 
@@ -214,14 +225,10 @@ public class Drive implements Subsystem
          m_throttleValue = m_throttleInput.getValue();
          
 //         m_quickTurn = m_cheesyHelper.handleDeadband(m_throttleValue, CheesyDriveHelper.kThrottleDeadband) == 0.0;
-
-         SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
       {
          m_headingValue = m_headingInput.getValue();
-         // headingValue *= -1;
-         SmartDashboard.putNumber("heading value", m_headingValue);
       }
       else if (p_source == m_shifterInput)
       {
@@ -251,14 +258,14 @@ public class Drive implements Subsystem
       {
          m_quickTurn = m_quickTurnInput.getValue();
       }
-      // If SELECT is pressed, use Raw mode
-      else if (p_source == m_rawModeInput)
-      {
-         m_rawModeCurrent = m_rawModeInput.getValue();
-
-         // Determine drive state override
-         calculateRawMode();
-      }
+//      // If SELECT is pressed, use Raw mode
+//      else if (p_source == m_rawModeInput)
+//      {
+//         m_rawModeCurrent = m_rawModeInput.getValue();
+//
+//         // Determine drive state override
+//         calculateRawMode();
+//      }
    }
 
    @Override
@@ -284,6 +291,10 @@ public class Drive implements Subsystem
          m_shifterSolenoid.setValue(false);
       }
 
+      SmartDashboard.putNumber("throttleValue", m_throttleValue);
+      SmartDashboard.putNumber("heading value", m_headingValue);
+      SmartDashboard.putString("Drive mode", m_driveMode.name());
+      
       switch (m_driveMode)
       {
          case PATH:
@@ -294,16 +305,19 @@ public class Drive implements Subsystem
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
             
-            if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
+            if (RobotTemplate.LOG_STATE)
             {
-               maxSpeed = Math.abs(m_leftMaster.getSpeed());
+               if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
+               {
+                  maxSpeed = Math.abs(m_leftMaster.getSpeed());
+               }
+               else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
+               {
+                  maxSpeed = Math.abs(m_rightMaster.getSpeed());
+               }
+                
+                SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             }
-            else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
-            {
-               maxSpeed = Math.abs(m_rightMaster.getSpeed());
-            }
-             
-             SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             break;
          case FULL_BRAKE:
             break;
