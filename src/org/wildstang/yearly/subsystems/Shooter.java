@@ -23,6 +23,7 @@ import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
@@ -152,13 +153,7 @@ public class Shooter implements Subsystem
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      configureFlywheelTalon(m_CANFlywheelLeft);
-      configureFlywheelTalon(m_CANFlywheelRight);
-//      m_CANFlywheelRight.setProfile(0);
-//      m_CANFlywheelRight.setF(0.02366); // 0.1998
-//      m_CANFlywheelRight.setP(0.015); // (10% X 1023) / (error)
-//      m_CANFlywheelRight.setI(0);
-//      m_CANFlywheelRight.setD(0.12);
+      configureFlywheelTalons();
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
@@ -172,7 +167,6 @@ public class Shooter implements Subsystem
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
 
-      // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
       m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
       
@@ -200,6 +194,23 @@ public class Shooter implements Subsystem
       resetState();
    }
 
+   private void configureFlywheelTalons()
+   {
+      // Configure left talon
+      configureFlywheelTalon(m_CANFlywheelLeft, 
+            Preferences.getInstance().getDouble("L_F", 0.02366), 
+            Preferences.getInstance().getDouble("L_P", 0.013), 
+            Preferences.getInstance().getDouble("L_I", 0), 
+            Preferences.getInstance().getDouble("L_D", 0.15));
+
+      // Configure right talon
+      configureFlywheelTalon(m_CANFlywheelRight, 
+            Preferences.getInstance().getDouble("R_F", 0.02366), 
+            Preferences.getInstance().getDouble("R_P", 0.013), 
+            Preferences.getInstance().getDouble("R_I", 0), 
+            Preferences.getInstance().getDouble("R_D", 0.15));
+   }
+
    private void readConfigValues()
    {
       // Reads values from Ws Config
@@ -211,7 +222,7 @@ public class Shooter implements Subsystem
       m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
    }
 
-   private void configureFlywheelTalon(CANTalon p_talon)
+   private void configureFlywheelTalon(CANTalon p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
@@ -227,10 +238,10 @@ public class Shooter implements Subsystem
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
-      p_talon.setF(0.02366); // 0.1998
-      p_talon.setP(0.013); // (10% X 1023) / (error)
-      p_talon.setI(0);
-      p_talon.setD(0.15);
+      p_talon.setF(p_fGain);
+      p_talon.setP(p_pGain);
+      p_talon.setI(p_iGain);
+      p_talon.setD(p_pGain);
    }
 
    @Override
