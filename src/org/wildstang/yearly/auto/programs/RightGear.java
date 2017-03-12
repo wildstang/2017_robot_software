@@ -21,6 +21,8 @@ public class RightGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
+      int waitTime = config.getInt(this.getClass().getName() + ".deliverWaitTime", 500);
+
       // Use high gear
       addStep(new SetHighGearStep(true));
 
@@ -36,7 +38,7 @@ public class RightGear extends AutoProgram
 
       // TODO: Drive away
       // Go backwards 2ft
-      addStep(new WaitStep(500));
+      addStep(new WaitStep(waitTime));
       //addStep(new DriveDistanceStraightStep(0.5, -24));
       addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
 

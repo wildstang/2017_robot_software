@@ -23,7 +23,6 @@ public class BoilerShoot extends AutoProgram
       super.initialize();
       
       // Read config values
-      // 10000 = ten seconds
       delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 5000);
    }
 

@@ -1,6 +1,5 @@
 package org.wildstang.yearly.subsystems.shooter;
 
-import org.wildstang.framework.core.Core;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 
 public class Blender
@@ -11,7 +10,7 @@ public class Blender
    public Blender(WsVictor p_victor)
    {
       m_victor = p_victor;
-      m_speed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".blenderSpeed", 1.0);
+      m_speed = 1.0;
    }
    
    

@@ -13,6 +13,8 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
+      int waitTime = config.getInt(this.getClass().getName() + ".deliverWaitTime", 500);
+
       addStep(new SetHighGearStep(true));
       
       // For this step, turn off brake mode so we can transition smoothly to vision
@@ -27,7 +29,7 @@ public class MiddleGear extends AutoProgram
       addStep(new OpenGearHolderStep());
 
       // Go backwards 2ft
-      addStep(new WaitStep(500));
+      addStep(new WaitStep(waitTime));
       addStep(new DriveDistanceStraightStep(0.5, -24));
 //      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
       //addStep(new CloseGearHolderStep());

@@ -19,13 +19,32 @@ org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
 org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
 
-//Auto
-//ShootStep
-org.wildstang.yearly.auto.steps.ShootStep.delayWhileShooting=4000.0
 
-//WaitStep
+// Vision
+org.wildstang.yearly.robot.vision.VisionHandler.h_min=80
+org.wildstang.yearly.robot.vision.VisionHandler.s_min=0
+org.wildstang.yearly.robot.vision.VisionHandler.v_min=238
+org.wildstang.yearly.robot.vision.VisionHandler.h_max=125
+org.wildstang.yearly.robot.vision.VisionHandler.s_max=255
+org.wildstang.yearly.robot.vision.VisionHandler.v_max=255
+org.wildstang.yearly.robot.vision.VisionHandler.center=0
+org.wildstang.yearly.robot.vision.VisionHandler.threshold=10
+org.wildstang.yearly.robot.vision.VisionHandler.blur=5.0
+org.wildstang.yearly.robot.vision.VisionServer.port=5800
+
+
+//Auto
+
 org.wildstang.yearly.auto.programs.HopperShoot.hopperWaitTime=3000
 org.wildstang.yearly.auto.programs.HopperShoot.delayWhileShooting=5000
+
+org.wildstang.yearly.auto.programs.BoilerShoot.delayWhileShooting=5000
+
+org.wildstang.yearly.auto.programs.MiddleGear.deliverWaitTime=500
+
+org.wildstang.yearly.auto.programs.LeftGear.deliverWaitTime=500
+
+org.wildstang.yearly.auto.programs.RightGear.deliverWaitTime=500
 
 org.wildstang.logger.sender.LogManager.Logger_Enabled=false
 

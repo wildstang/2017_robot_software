@@ -39,15 +39,15 @@ public class VisionHandler implements Runnable
    final private int CENTER_DEFAULT = 400;
    final private int THRESHOLD_DEFAULT = 50;
    final private double BLUR_RADIUS_DEFAULT = 5.0;
-   final private String H_MIN_KEY = "";
-   final private String S_MIN_KEY = "";
-   final private String V_MIN_KEY = "";
-   final private String H_MAX_KEY = "";
-   final private String S_MAX_KEY = "";
-   final private String V_MAX_KEY = "";
-   final private String CENTER_KEY = "";
-   final private String THRESHOLD_KEY = "";
-   final private String BLUR_RADIUS_KEY = "";
+   final private String H_MIN_KEY = ".h_min";
+   final private String S_MIN_KEY = ".s_min";
+   final private String V_MIN_KEY = ".v_min";
+   final private String H_MAX_KEY = ".h_max";
+   final private String S_MAX_KEY = ".s_max";
+   final private String V_MAX_KEY = ".v_max";
+   final private String CENTER_KEY = ".center";
+   final private String THRESHOLD_KEY = ".threshold";
+   final private String BLUR_RADIUS_KEY = ".blur";
 
    private long m_lastMsgReceived;
 
@@ -56,25 +56,16 @@ public class VisionHandler implements Runnable
       m_socket = p_socket;
       m_visionServer = p_server;
 
-      h_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + H_MIN_KEY, H_MIN_DEFAULT);
-      s_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + S_MIN_KEY, S_MIN_DEFAULT);
-      v_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + V_MIN_KEY, V_MIN_DEFAULT);
-      h_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + H_MAX_KEY, H_MAX_DEFAULT);
-      s_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + S_MAX_KEY, S_MAX_DEFAULT);
-      v_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-            + V_MAX_KEY, V_MAX_DEFAULT);
+      h_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + H_MIN_KEY, H_MIN_DEFAULT);
+      s_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + S_MIN_KEY, S_MIN_DEFAULT);
+      v_min = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + V_MIN_KEY, V_MIN_DEFAULT);
+      h_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + H_MAX_KEY, H_MAX_DEFAULT);
+      s_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + S_MAX_KEY, S_MAX_DEFAULT);
+      v_max = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + V_MAX_KEY, V_MAX_DEFAULT);
 
-      center = 0;//Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-//            + CENTER_KEY, CENTER_DEFAULT);
-      threshold = 10;//Core.getConfigManager().getConfig().getInt(this.getClass().getName()
-//            + THRESHOLD_KEY, THRESHOLD_DEFAULT);
-      blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-            + BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
+      center = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + CENTER_KEY, CENTER_DEFAULT);
+      threshold = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + THRESHOLD_KEY, THRESHOLD_DEFAULT);
+      blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
    }
 
    public boolean isRunning()

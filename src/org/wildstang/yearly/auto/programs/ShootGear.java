@@ -23,7 +23,7 @@ public class ShootGear extends AutoProgram
       super.initialize();
       
       // Read config values
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 2000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + ".delayWhileShooting", 2000);
    }
    protected void defineSteps()
    {
