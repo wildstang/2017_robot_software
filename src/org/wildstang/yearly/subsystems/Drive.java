@@ -309,16 +309,13 @@ public class Drive implements Subsystem
             
             if (RobotTemplate.LOG_STATE)
             {
-               if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
+               double tempMax = Math.max(Math.abs(m_leftMaster.getSpeed()), Math.abs(m_rightMaster.getSpeed()));
+               if (tempMax > maxSpeed)
                {
-                  maxSpeed = Math.abs(m_leftMaster.getSpeed());
-               }
-               else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
-               {
-                  maxSpeed = Math.abs(m_rightMaster.getSpeed());
+                  maxSpeed = tempMax;
                }
                 
-                SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+               SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             }
             break;
          case FULL_BRAKE:

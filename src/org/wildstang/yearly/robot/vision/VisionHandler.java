@@ -142,7 +142,9 @@ public class VisionHandler implements Runnable
                      }
                   }                  
 
-                  m_lastMsgReceived = System.currentTimeMillis();
+                  long now = System.currentTimeMillis();
+                  SmartDashboard.putNumber("Vision update delta", (now - m_lastMsgReceived));
+                  m_lastMsgReceived = now;
                }
             }
             catch (NumberFormatException e)
