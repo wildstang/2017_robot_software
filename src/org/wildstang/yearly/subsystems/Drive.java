@@ -381,18 +381,6 @@ public class Drive implements Subsystem
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
       double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
-      // This is only for tracking max speed on dashboard - moved to update()
-//      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed)
-//      {
-//         maxSpeed = Math.abs(m_leftMaster.getSpeed());
-//      }
-//      else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed)
-//      {
-//         maxSpeed = Math.abs(m_rightMaster.getSpeed());
-//      }
-//
-//      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
-      
       
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();

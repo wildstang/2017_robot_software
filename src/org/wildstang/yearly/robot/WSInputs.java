@@ -59,52 +59,52 @@ public enum WSInputs implements Inputs
    //---------------------------------
    // Driver Joysticks
    //---------------------------------
-   DRV_THROTTLE("Driver throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), RobotTemplate.LOG_STATE),     // Driver Subsystem
-   DRV_HEADING("Driver heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), RobotTemplate.LOG_STATE),    // Driver Subsystem
+   DRV_THROTTLE("Driver throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), getLogging()),     // Driver Subsystem
+   DRV_HEADING("Driver heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), getLogging()),    // Driver Subsystem
                                                 
    //---------------------------------             
    // Driver Buttons                               
    //---------------------------------             
-   AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), RobotTemplate.LOG_STATE),     // Intake Subsystem
-   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), RobotTemplate.LOG_STATE),     // Intake Subsystem
-   SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), RobotTemplate.LOG_STATE),     // Driver Subsystem
-   QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), RobotTemplate.LOG_STATE),     // Driver Subsystem
+   AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),     // Intake Subsystem
+   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),     // Intake Subsystem
+   SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),     // Driver Subsystem
+   QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),     // Driver Subsystem
 
    //---------------------------------             
    // Manipulator Joysticks                        
    //---------------------------------             
-   FEEDER_LEFT("Feeder Left Up/Down",              WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y), RobotTemplate.LOG_STATE),     // Shooter Subsystem
-   FEEDER_RIGHT("Feeder Right Up/Down",            WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), RobotTemplate.LOG_STATE),    // Shooter Subsystem
+   FEEDER_LEFT("Feeder Left Up/Down",              WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y), getLogging()),     // Shooter Subsystem
+   FEEDER_RIGHT("Feeder Right Up/Down",            WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), getLogging()),    // Shooter Subsystem
 
    //---------------------------------             
    // Manipulator DPAD Buttons                     
    //---------------------------------             
-   CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), RobotTemplate.LOG_STATE),          // Climber Subsystem
-   CLIMBER_HALF_SPEED("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), RobotTemplate.LOG_STATE),        // Climber Subsystem
+   CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), getLogging()),          // Climber Subsystem
+   CLIMBER_HALF_SPEED("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), getLogging()),        // Climber Subsystem
 
    //---------------------------------             
    // Manipulator Buttons                          
    //---------------------------------             
-   GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), RobotTemplate.LOG_STATE),      // Gear Subsystem
-   GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), RobotTemplate.LOG_STATE),      // Gear Subsystem
-   GATE("Gate Button",                            WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), RobotTemplate.LOG_STATE),        // Shooter Subsystem
-   FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), RobotTemplate.LOG_STATE),
-   //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), RobotTemplate.LOG_STATE),        // Shooter Subsystem
-   //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), RobotTemplate.LOG_STATE),
-   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), RobotTemplate.LOG_STATE);
+   GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
+   GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), getLogging()),      // Gear Subsystem
+   GATE("Gate Button",                            WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),        // Shooter Subsystem
+   FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),
+   //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
+   //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),
+   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging());
 
 
    // ********************************             
    // Digital IOs                                  
    // ********************************             
-//   GEAR_IN_POSITION("Gear In Position Sensor",     WSInputType.SWITCH, new WsDigitalInputConfig(0, true), RobotTemplate.LOG_STATE),	// Gear Subsystem
-//   BALLS_WAITING_LEFT("Balls Waiting Left",        WSInputType.SWITCH, new WsDigitalInputConfig(1, true), RobotTemplate.LOG_STATE),	// Shooter Subsystem
-//   BALLS_WAITING_RIGHT("Digital Waiting Right",    WSInputType.SWITCH, new WsDigitalInputConfig(2, true), RobotTemplate.LOG_STATE),	// Shooter Subsystem
+//   GEAR_IN_POSITION("Gear In Position Sensor",     WSInputType.SWITCH, new WsDigitalInputConfig(0, true), getLogging()),	// Gear Subsystem
+//   BALLS_WAITING_LEFT("Balls Waiting Left",        WSInputType.SWITCH, new WsDigitalInputConfig(1, true), getLogging()),	// Shooter Subsystem
+//   BALLS_WAITING_RIGHT("Digital Waiting Right",    WSInputType.SWITCH, new WsDigitalInputConfig(2, true), getLogging()),	// Shooter Subsystem
 
    // ********************************             
    // Others ...                                   
    // ********************************             
-//   IMU("IMU", WSInputType.I2C,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), RobotTemplate.LOG_STATE);
+//   IMU("IMU", WSInputType.I2C,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), getLogging());
 
 
    private final String m_name;
