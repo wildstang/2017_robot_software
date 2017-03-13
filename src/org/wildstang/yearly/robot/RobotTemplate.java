@@ -188,6 +188,20 @@ public class RobotTemplate extends IterativeRobot
          m_visionServer.startVisionServer();
       }
 
+    // Send alliance colour to LEDs
+    if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+    }
+    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+    }
+    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+    }
+
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
       startupTimer.endTimingSection();
@@ -265,33 +279,33 @@ public class RobotTemplate extends IterativeRobot
          }
       }
 
-      if (m_firstDisabled)
-      {
-         // Send alliance colour to LEDs
-         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-         }
-         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-         }
-         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-         }
-         m_firstDisabled = false;
-      }
-      else
-      {
-         // Send rainbow colour to LEDs
-         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
-      }
+//      if (m_firstDisabled)
+//      {
+//         // Send alliance colour to LEDs
+//         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+//         }
+//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+//         }
+//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+//         }
+//         m_firstDisabled = false;
+//      }
+//      else
+//      {
+//      }
 
       // If we are finished with teleop, finish and close the log file
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
+         // Send rainbow colour to LEDs
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
       }
 
       resetRobotState();
