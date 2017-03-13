@@ -160,13 +160,11 @@ public class Shooter implements Subsystem
 
       // Gates
       m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE.getName());
-
       m_gate = new Gate(m_gateSolenoid);
 
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
-
       m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
       m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
       
