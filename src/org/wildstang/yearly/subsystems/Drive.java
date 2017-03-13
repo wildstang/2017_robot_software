@@ -29,6 +29,8 @@ public class Drive implements Subsystem
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
    private static final double RADIANS = Math.PI / 180;
    private final double CORRECTION_HEADING_LEVEL = 1.5;
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
+   private int pathNum = 1;
 
    // Hold a reference to the input test for fast equality test during
    // inputUpdate()
@@ -656,6 +658,7 @@ public class Drive implements Subsystem
       {
          m_pathFollower.stop();
          m_pathFollower = null;
+         writeDriveStatesToFile(DRIVER_STATES_FILENAME + pathNum++ + ".txt");
       }
    }
 
@@ -691,10 +694,6 @@ public class Drive implements Subsystem
          if (bw != null)
          {
             bw.close();
-         }
-         if (fw != null)
-         {
-            fw.close();
          }
       }
       

@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +83,8 @@ public class RobotTemplate extends IterativeRobot
    {
       Writer outputWriter = null;
 
-      outputWriter = getFileWriter();
+      String dateStr = (new SimpleDateFormat("YYYY-MM-dd-HH-mm")).format(new Date());
+      outputWriter = getFileWriter(dateStr);
       // outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
@@ -115,7 +118,7 @@ public class RobotTemplate extends IterativeRobot
       return output;
    }
 
-   private FileWriter getFileWriter()
+   private FileWriter getFileWriter(String p_date)
    {
       FileWriter output = null;
 
@@ -133,7 +136,7 @@ public class RobotTemplate extends IterativeRobot
          }
          else
          {
-            outputFile = new File("/home/lvuser/log.txt");
+            outputFile = new File("/home/lvuser/log-" + p_date + ".txt");
          }
          if (outputFile.exists())
          {
