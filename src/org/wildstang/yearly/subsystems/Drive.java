@@ -445,11 +445,11 @@ public class Drive implements Subsystem
 
       if (distance < 36)
       {
-         setThrottle(.15);
+         setThrottle(.3);
       }
       else
       {
-         setThrottle(.3);
+         setThrottle(.5);
       }
 
       if (distance < 10)
