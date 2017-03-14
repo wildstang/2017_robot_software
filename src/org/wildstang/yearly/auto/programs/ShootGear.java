@@ -15,7 +15,7 @@ import org.wildstang.yearly.auto.steps.WaitStep;
 public class ShootGear extends AutoProgram
 {
 
-   private double delayWhileShooting;
+   private long delayWhileShooting;
 
    @Override
    public void initialize()

@@ -2,23 +2,20 @@ package org.wildstang.yearly.auto.steps;
 
 import org.wildstang.framework.auto.steps.AutoStep;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WaitStep extends AutoStep
 {
-   private double startTime;
-   private double timePassed;
-   private double targetTime;
+   private long endTime;
+   private long duration;
    private boolean firstRun = true;
 
-   public WaitStep(double waitTime)
+   public WaitStep(long waitTime)
    {
-      targetTime = waitTime;
+      duration = waitTime;
    }
 
    public void initialize()
    {
-      startTime = System.currentTimeMillis();
    }
 
    @Override
@@ -26,13 +23,11 @@ public class WaitStep extends AutoStep
    {
       if (firstRun)
       {
-         startTime = (double) System.currentTimeMillis();
+         endTime = System.currentTimeMillis() + duration;
          firstRun = false;
       }
 
-      timePassed = ((double) System.currentTimeMillis() - startTime);
-
-      if (timePassed >= targetTime)
+      if (System.currentTimeMillis() >= endTime)
       {
          setFinished(true);
       }

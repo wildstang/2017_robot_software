@@ -40,8 +40,8 @@ public class VisionHandler implements Runnable
    final private int H_MAX_DEFAULT = 125;
    final private int S_MAX_DEFAULT = 255;
    final private int V_MAX_DEFAULT = 255;
-   final private int CENTER_DEFAULT = 400;
-   final private int THRESHOLD_DEFAULT = 50;
+   final private int CENTER_DEFAULT = 0;
+   final private int THRESHOLD_DEFAULT = 10;
    final private double BLUR_RADIUS_DEFAULT = 5.0;
    final private String H_MIN_KEY = ".h_min";
    final private String S_MIN_KEY = ".s_min";
@@ -122,6 +122,7 @@ public class VisionHandler implements Runnable
 
                if (line != null)
                {
+                  SmartDashboard.putString("vision string", line);
                   // System.out.println("line: " + line);
 
                   String[] tokens = line.split(delims);
@@ -144,6 +145,9 @@ public class VisionHandler implements Runnable
 
                   long now = System.currentTimeMillis();
                   SmartDashboard.putNumber("Vision update delta", (now - m_lastMsgReceived));
+                  SmartDashboard.putNumber("Distance", m_visionServer.getDistance());
+                  SmartDashboard.putNumber("xCorrection", m_visionServer.getXCorrectionLevel());
+
                   m_lastMsgReceived = now;
                }
             }

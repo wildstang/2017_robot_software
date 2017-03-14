@@ -40,8 +40,8 @@ public class RightGear extends AutoProgram
       addStep(new WaitStep(waitTime));
 
       // Go backwards 2ft
-      addStep(new DriveDistanceStraightStep(0.5, -24));
-//      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
+//      addStep(new DriveDistanceStraightStep(0.5, -24));
+      addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
 
    }
 

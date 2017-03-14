@@ -10,7 +10,7 @@ public class Blender
    public Blender(WsVictor p_victor)
    {
       m_victor = p_victor;
-      m_speed = 1.0;
+      m_speed = -1.0;
    }
    
    

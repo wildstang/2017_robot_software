@@ -207,6 +207,8 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
+      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
 
       // Load PID profiles
       // Path following profile
@@ -435,18 +437,19 @@ public class Drive implements Subsystem
       double xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
       double distance = RobotTemplate.getVisionServer().getDistance();
 
-      SmartDashboard.putNumber("Distance", distance);
-      SmartDashboard.putNumber("xCorrection", xCorrection);
-
       setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
 
-      if (distance < 36)
+      if (distance < 20)
       {
-         setThrottle(.3);
+         setThrottle(.15);
+      }
+      else if (distance < 36)
+      {
+         setThrottle(.25);
       }
       else
       {
-         setThrottle(.5);
+         setThrottle(.4);
       }
 
       if (distance < 10)
@@ -725,6 +728,6 @@ public class Drive implements Subsystem
       int leftTick = Math.abs(m_leftMaster.getEncPosition());
       int rightTick = Math.abs(m_rightMaster.getEncPosition());
 
-      return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
+      return (int) (((leftTick + rightTick) / 2) / TICKS_TO_INCHES);
    }
 }

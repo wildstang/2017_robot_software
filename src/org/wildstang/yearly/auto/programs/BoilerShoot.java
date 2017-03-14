@@ -15,7 +15,7 @@ import org.wildstang.yearly.auto.steps.WaitStep;
 public class BoilerShoot extends AutoProgram
 {
 
-   private double delayWhileShooting;
+   private long delayWhileShooting;
 
    @Override
    public void initialize()
@@ -23,7 +23,7 @@ public class BoilerShoot extends AutoProgram
       super.initialize();
       
       // Read config values
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 5000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + ".delayWhileShooting", 5000);
    }
 
    @Override

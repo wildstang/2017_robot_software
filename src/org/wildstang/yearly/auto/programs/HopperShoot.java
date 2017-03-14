@@ -15,8 +15,8 @@ import org.wildstang.yearly.auto.steps.WaitStep;
 public class HopperShoot extends AutoProgram
 {
 
-   private double hopperWaitTime;
-   private double delayWhileShooting;
+   private long hopperWaitTime;
+   private long delayWhileShooting;
 
    @Override
    public void initialize()
