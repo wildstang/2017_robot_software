@@ -13,16 +13,28 @@ public class MiddleGear extends AutoProgram
    {
       Config config = Core.getConfigManager().getConfig();
 
-//      addStep(new PathFollowerStep(config.getString("AUTO_PATH", "")));
-//      addStep(new TrackVisionToGearStep());
+      int waitTime = config.getInt(this.getClass().getName() + ".deliverWaitTime", 500);
+
+      // Use high gear
+      addStep(new SetHighGearStep(true));
+      
+      // For this step, turn off brake mode so we can transition smoothly to vision
+      addStep(new SetBrakeModeStep(false));
+      addStep(new CloseGearHolderStep());
+
+//      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
+      addStep(new DriveDistanceStraightStep(0.5, 48));
+      addStep(new TrackVisionToGearStep());
+
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
+      // Wait to let it settle
+      addStep(new WaitStep(waitTime));
 
-      // TODO: Drive away
-
-      addStep(new CloseGearHolderStep());
+      // Go backwards 2ft
+      addStep(new DriveDistanceStraightStep(0.5, -24));
+//      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
       
-      // TODO: Drive away?  Shoot?  Need to reuse the above steps
    }
 
    @Override

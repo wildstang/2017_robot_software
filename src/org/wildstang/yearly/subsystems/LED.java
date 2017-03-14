@@ -39,15 +39,16 @@ public class LED implements Subsystem
 
    WsI2COutput m_ledOutput;
 
-   private LedCmd m_currentCmd;
-
    boolean m_turbo;
    boolean m_normal = true;
    boolean m_shooter;
    boolean m_intake;
 
+   boolean m_leftJammedLast = false;
+   boolean m_rightJammedLast = false;
+   boolean m_isFlywheelReady = false;
+   
    private Shooter shooter;
-   private Intake intake;
 
    // Reused commands from year to year
    public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 0, 0);
@@ -75,8 +76,8 @@ public class LED implements Subsystem
    @Override
    public void init()
    {
-      autoDataSent = false;
-      disableDataSent = false;
+      resetState();
+      
       m_ledOutput = (WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName());
 
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
@@ -86,15 +87,32 @@ public class LED implements Subsystem
    }
 
    @Override
+   public void resetState()
+   {
+      autoDataSent = false;
+      disableDataSent = false;
+      m_newDataAvailable = false;
+   }
+
+   @Override
    public void update()
    {
       // Get all inputs relevant to the LEDs
       boolean isRobotEnabled = DriverStation.getInstance().isEnabled();
       boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
+
       boolean isLeftFeedJammed = shooter.checkLeftFeedJammed();
+      m_newDataAvailable = isLeftFeedJammed && !m_leftJammedLast;
+      m_leftJammedLast = isLeftFeedJammed;
+      
       boolean isRightFeedJammed = shooter.checkRightFeedJammed();
+      m_newDataAvailable = isRightFeedJammed && !m_rightJammedLast;
+      m_rightJammedLast = isRightFeedJammed;
+      
       boolean isFlywheelsReady = (shooter.isLeftReadyToShoot() && shooter.isRightReadyToShoot());
+      m_newDataAvailable = isFlywheelsReady && !m_isFlywheelReady;
+      m_isFlywheelReady = isFlywheelsReady;
 
       m_normal = !m_turbo;
 
@@ -105,12 +123,19 @@ public class LED implements Subsystem
          {
             if (m_newDataAvailable)
             {
-                m_ledOutput.setValue(m_currentCmd.getBytes());
+               if (isLeftFeedJammed)
+               {
+                  m_ledOutput.setValue(leftFeedCmd.getBytes());
+               }
+               else if (isRightFeedJammed)
+               {
+                  m_ledOutput.setValue(rightFeedCmd.getBytes());
+               }
+               else if (isFlywheelsReady)
+               {
+                  m_ledOutput.setValue(shooterOnCmd.getBytes());
+               }
             }
-//            else if ( intake.intakeState())
-//            {
-//               m_ledOutput.setValue(intakeCmd.getBytes());
-//            }
             m_newDataAvailable = false;
 
          }
@@ -121,18 +146,6 @@ public class LED implements Subsystem
                m_ledOutput.setValue(autoCmd.getBytes());
                autoDataSent = true;
             }
-         }
-         else if (isLeftFeedJammed)
-         {
-            m_ledOutput.setValue(leftFeedCmd.getBytes());
-         }
-         else if (isRightFeedJammed)
-         {
-            m_ledOutput.setValue(rightFeedCmd.getBytes());
-         }
-         else if (isFlywheelsReady)
-         {
-            m_ledOutput.setValue(shooterOnCmd.getBytes());
          }
       }
    }
@@ -148,11 +161,11 @@ public class LED implements Subsystem
       // m_newDataAvailable = true;
    }
 
-   public void sendCommand(LedCmd p_command)
-   {
-      m_currentCmd = p_command;
-      m_newDataAvailable = true;
-   }
+//   public void sendCommand(LedCmd p_command)
+//   {
+//      m_currentCmd = p_command;
+//      m_newDataAvailable = true;
+//   }
 
    @Override
    public void selfTest()

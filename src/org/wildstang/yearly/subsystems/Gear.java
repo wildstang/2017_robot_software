@@ -29,6 +29,24 @@ public class Gear implements Subsystem
    private WsSolenoid m_tiltSolenoid;
    private WsSolenoid m_doorSolenoid;
    
+   private static final boolean DOOR_OPEN = true;
+   private static final boolean GEAR_BACK = true;
+
+   private static final boolean DOOR_CLOSED = !DOOR_OPEN;
+   private static final boolean GEAR_FORWARD = !GEAR_BACK;
+
+   @Override
+   public void resetState()
+   {
+      m_doorOpen = DOOR_CLOSED;
+      m_receiveGear = GEAR_FORWARD;
+      
+      m_gearPrev = false;
+      m_gearCurrent = false;
+      m_doorPrev = false;
+      m_doorCurrent = false;
+   }
+
    @Override
    public void selfTest()
    {
@@ -52,8 +70,11 @@ public class Gear implements Subsystem
       
       m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
       m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
+      
+      resetState();
    }
 
+   
    @Override
    public void inputUpdate(Input source)
    { 
@@ -88,26 +109,26 @@ public class Gear implements Subsystem
       m_doorSolenoid.setValue(m_doorOpen);
 	   
 	   SmartDashboard.putBoolean("Gear door open", m_doorOpen);
-	   SmartDashboard.putBoolean("Receive gear", m_receiveGear);
+	   SmartDashboard.putBoolean("Gear back", m_receiveGear);
    }
    
    public void openDoor()
    {
-      m_doorOpen = true;
+      m_doorOpen = DOOR_OPEN;
    }
    
    public void closeDoor()
    {
-      m_doorOpen = false;
+      m_doorOpen = DOOR_CLOSED;
    }
    
-   public void receiveGear()
+   public void tiltGearBack()
    {
-      m_receiveGear = true;
+      m_receiveGear = GEAR_BACK;
    }
    
-   public void deliverGear()
+   public void tiltGearForward()
    {
-      m_receiveGear = false;
+      m_receiveGear = GEAR_FORWARD;
    }
 }

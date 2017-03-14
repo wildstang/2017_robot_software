@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber implements Subsystem
 {
    // add variables here
-   private boolean m_runClimber;
-   private double motorspeed = -1.0;
-   private boolean running;
    private DigitalInput upbutton;
+   private DigitalInput halfButton;
    private WsVictor w_motor;
+   private double motorspeed = -1.0;
    
+   // ALL these are state that should be reset in resetState()
+   private boolean m_runClimber;
+   private boolean running;
 
    @Override
    public void selfTest()
@@ -34,16 +36,23 @@ public class Climber implements Subsystem
    @Override
    public void init()
    {
-      m_runClimber = false; 
-     
-      running = false;
-
       //Output
       w_motor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.WINCH.getName());
       
       //Inputs
       upbutton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_UP.getName());
       upbutton.addInputListener(this);
+      halfButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.CLIMBER_HALF_SPEED.getName());
+      halfButton.addInputListener(this);
+      
+      resetState();
+   }
+
+   @Override
+   public void resetState()
+   {
+      m_runClimber = false; 
+      running = false;
    }
 
    @Override
@@ -52,6 +61,12 @@ public class Climber implements Subsystem
       if(source == upbutton)
       {
          m_runClimber = upbutton.getValue();
+         motorspeed = -1.0;
+      } 
+      else if (source == halfButton)
+      {
+         m_runClimber = halfButton.getValue();
+         motorspeed = -0.5;
       }
    }
 
@@ -62,7 +77,7 @@ public class Climber implements Subsystem
       if (m_runClimber) // Checks if the dpad button is being pushed
       {
          running = true; // for Smart Dashboard
-         w_motor.setValue(motorspeed); //Sets the motor speed to .8
+         w_motor.setValue(motorspeed);
       }
       else // Checks to see if the button is not being pushed
       {
@@ -71,6 +86,5 @@ public class Climber implements Subsystem
       }
       
       SmartDashboard.putBoolean("Winch Running", running);
-      
    }
 }

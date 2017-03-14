@@ -3,9 +3,6 @@ package org.wildstang.yearly.robot.vision;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionServer implements Runnable
@@ -15,10 +12,10 @@ public class VisionServer implements Runnable
    private ServerSocket m_serverSocket;
    
    private int m_currentValue;
-   int xCorrectionLevel;
-   double distance;
+   double m_xCorrectionLevel;
+   double m_distance;
       
-   private ArrayList<VisionHandler> m_handlers = new ArrayList<VisionHandler>();
+   private VisionHandler m_handler = null;
    
    
    public VisionServer(int p_port)
@@ -29,7 +26,9 @@ public class VisionServer implements Runnable
    
    public void startVisionServer()
    {
-	   SmartDashboard.putBoolean("server file entered", isRunning());
+	   SmartDashboard.putBoolean("VisionServer", isRunning());
+      SmartDashboard.putBoolean("Camera", false);
+
       // Create Server Socket
       try
       {
@@ -72,23 +71,13 @@ public class VisionServer implements Runnable
          {
             s = m_serverSocket.accept();
 
+            // Remove any current handler
+            removeCurrentHandler();
+
             // Create new VisionHandler for requests
             VisionHandler handler = new VisionHandler(this, s);
-            SmartDashboard.putString("Vision server connected to", s.getInetAddress().getHostAddress());
 
-            if (s.getInetAddress().getHostAddress().equals("10.1.11.10"))
-            {
-               SmartDashboard.putBoolean("Camera connected", true);
-            }
-            else
-            {
-               SmartDashboard.putBoolean("Camera connected", false);
-            }
-            
-            Thread t = new Thread(handler);
-            t.start();
-            
-            m_handlers.add(handler);
+            startHandler(handler);
          }
          catch (IOException e)
          {
@@ -97,7 +86,42 @@ public class VisionServer implements Runnable
          
       }
    }
+
+
+   private void startHandler(VisionHandler handler)
+   {
+      if (handler.getIP().equals("10.1.11.10"))
+      {
+         SmartDashboard.putBoolean("Camera", true);
+      }
+      SmartDashboard.putString("Vision server connected to", handler.getIP());
+      
+      Thread t = new Thread(handler);
+      t.start();
+      m_handler = handler;
+   }
+
+
+   private void removeCurrentHandler()
+   {
+      if (m_handler != null)
+      {
+         m_handler.stop();
+      }
+      m_handler = null;
+      SmartDashboard.putBoolean("Camera", false);
+      SmartDashboard.putString("Vision server connected to", "");
+      
+      // Reset any values read from camera to 0 to remove any residual values
+      resetReadState();
+      
+   }
    
+   private void resetReadState()
+   {
+      m_xCorrectionLevel = 0;
+      m_distance = 0;
+   }
    
    public void updateValue(int p_value)
    {
@@ -106,26 +130,31 @@ public class VisionServer implements Runnable
 
    public void shutdown()
    {
-      for (VisionHandler handler : m_handlers)
-      {
-         handler.stop();
-      }
+      m_running = false;
+      
+      removeCurrentHandler();
+
+      SmartDashboard.putBoolean("VisionServer", isRunning());
    }
    
-   public void setXCorrectionLevel(int newVal){
-      xCorrectionLevel = newVal;
+   public void setXCorrectionLevel(double newVal)
+   {
+      m_xCorrectionLevel = newVal;
    }
-   
-   public int getXCorrectionLevel(){
-      return xCorrectionLevel;
+
+   public double getXCorrectionLevel()
+   {
+      return m_xCorrectionLevel;
    }
-   
-   public void setDistance(double newVal){
-      distance = newVal;
+
+   public void setDistance(double newVal)
+   {
+      m_distance = newVal;
    }
-   
-   public double getDistance(){
-      return distance;
+
+   public double getDistance()
+   {
+      return m_distance;
    }
    
 }

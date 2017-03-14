@@ -15,7 +15,7 @@ import org.wildstang.yearly.auto.steps.WaitStep;
 public class ShootGear extends AutoProgram
 {
 
-   private double delayWhileShooting;
+   private long delayWhileShooting;
 
    @Override
    public void initialize()
@@ -23,7 +23,7 @@ public class ShootGear extends AutoProgram
       super.initialize();
       
       // Read config values
-      delayWhileShooting = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".delayWhileShooting", 2000);
+      delayWhileShooting = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + ".delayWhileShooting", 2000);
    }
    protected void defineSteps()
    {
@@ -46,7 +46,6 @@ public class ShootGear extends AutoProgram
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Shoot Gear";
    }
 
