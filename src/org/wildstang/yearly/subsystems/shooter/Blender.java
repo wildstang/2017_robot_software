@@ -14,9 +14,14 @@ public class Blender
    }
    
    
-   public void turnOn()
+   public void runIn()
    {
       m_victor.setValue(m_speed);
+   }
+   
+   public void runOut()
+   {
+      m_victor.setValue(-m_speed);
    }
    
    public void turnOff()

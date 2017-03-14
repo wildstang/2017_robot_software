@@ -447,7 +447,17 @@ public class Shooter implements Subsystem
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);
       runFeedBelt(m_rightFeed, m_rightFeedDirection);
+      
+      if (m_leftFeedDirection == FeedDirection.SHOOT || m_rightFeedDirection == FeedDirection.SHOOT)
+      {
+         m_blender.runIn();
+      }
+      else
+      {
+         m_blender.turnOff();
+      }
    }
+
 
    private void runFeedBelt(Feed p_feed, FeedDirection p_direction)
    {
@@ -455,19 +465,15 @@ public class Shooter implements Subsystem
       {
          case SHOOT:
             p_feed.runForward();
-            m_blender.turnOn();
             break;
          case REVERSE:
             p_feed.runBackwards();
-            m_blender.turnOff();
             break;
          case STOP:
             p_feed.stop();
-            m_blender.turnOff();
             break;
          default:
             p_feed.stop();
-            m_blender.turnOff();
             break;
       }
    }
