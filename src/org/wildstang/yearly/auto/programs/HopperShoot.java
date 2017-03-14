@@ -1,6 +1,7 @@
 package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
@@ -39,26 +40,26 @@ public class HopperShoot extends AutoProgram
       // Drive from the wall to the hopper
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
-      addStep(new FeedOnStep());
-      addStep(new WaitStep(hopperWaitTime));
-      addStep(new FeedOffStep());
+//      addStep(new FeedOnStep());
+      addStep(new AutoStepDelay(3000));
+//      addStep(new FeedOffStep());
       
       
-      addStep(new SetBrakeModeStep(false));
+//      addStep(new SetBrakeModeStep(false));
       // Backup from the hopper
       addStep(new PathFollowerStep(PathNameConstants.BACKUP_FROM_HOPPER));
 
       // Turn on feed and wait for balls
       
 
-      addStep(new SetBrakeModeStep(true));
+//      addStep(new SetBrakeModeStep(true));
       addStep(new PathFollowerStep(PathNameConstants.HOPPER_TO_BOILER));
 
       // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
-      addStep(new WaitStep(delayWhileShooting));
+      addStep(new AutoStepDelay(10000));
       addStep(new StopShooting());
       
       // TODO: Back up over auto line?

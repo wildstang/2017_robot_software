@@ -1,6 +1,7 @@
 package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.config.Config;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.*;
@@ -22,18 +23,18 @@ public class MiddleGear extends AutoProgram
       addStep(new SetBrakeModeStep(false));
       addStep(new CloseGearHolderStep());
 
-//      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
-      addStep(new DriveDistanceStraightStep(0.5, 48));
+      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
+//      addStep(new DriveDistanceStraightStep(0.5, 48));
       addStep(new TrackVisionToGearStep());
 
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
       // Wait to let it settle
-      addStep(new WaitStep(waitTime));
+      addStep(new AutoStepDelay(500));
 
       // Go backwards 2ft
-      addStep(new DriveDistanceStraightStep(0.5, -24));
-//      addStep(new PathFollowerStep(PathNameConstants.GEAR_CENTER_TO_WALL));
+//      addStep(new DriveDistanceStraightStep(0.5, -24));
+      addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
       
    }
 
