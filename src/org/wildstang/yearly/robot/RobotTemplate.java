@@ -30,6 +30,7 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
+import org.wildstang.yearly.auto.programs.BoilerShoot;
 import org.wildstang.yearly.auto.programs.HopperShoot;
 import org.wildstang.yearly.auto.programs.LeftGear;
 import org.wildstang.yearly.auto.programs.MiddleGear;
@@ -180,6 +181,7 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
 
+      AutoManager.getInstance().addProgram(new BoilerShoot());
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());

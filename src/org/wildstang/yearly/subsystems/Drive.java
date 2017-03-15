@@ -28,7 +28,7 @@ public class Drive implements Subsystem
    private static final double ENCODER_CPR = 4096;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
    private static final double RADIANS = Math.PI / 180;
-   private final double CORRECTION_HEADING_LEVEL = 1.5;
+   private final double CORRECTION_HEADING_LEVEL = 1.2;
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
    private int pathNum = 1;
 
@@ -439,17 +439,13 @@ public class Drive implements Subsystem
 
       setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
 
-      if (distance < 20)
+      if (distance < 36)
       {
          setThrottle(.15);
       }
-      else if (distance < 36)
-      {
-         setThrottle(.25);
-      }
       else
       {
-         setThrottle(.4);
+         setThrottle(.3);
       }
 
       if (distance < 10)
@@ -725,9 +721,9 @@ public class Drive implements Subsystem
     */
    public int getEncoderDistanceInches()
    {
-      int leftTick = Math.abs(m_leftMaster.getEncPosition());
-      int rightTick = Math.abs(m_rightMaster.getEncPosition());
+      long leftTick = Math.abs(m_leftMaster.getEncPosition());
+      long rightTick = Math.abs(m_rightMaster.getEncPosition());
 
-      return (int) (((leftTick + rightTick) / 2) / TICKS_TO_INCHES);
+      return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
 }

@@ -5,6 +5,8 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DriveDistanceStraightStep extends AutoStep
 {
    Drive m_drive;
@@ -39,6 +41,7 @@ public class DriveDistanceStraightStep extends AutoStep
    @Override
    public void update()
    {
+      SmartDashboard.putString("Drive distance", m_drive.getEncoderDistanceInches() + " : " + m_distance2Go);
       if (m_drive.getEncoderDistanceInches() < m_distance2Go)
       {
          m_drive.setThrottle(m_speed);

@@ -5,6 +5,7 @@ import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.FeedOffStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
+import org.wildstang.yearly.auto.steps.FloodGatesOpenStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
@@ -38,6 +39,7 @@ public class BoilerShoot extends AutoProgram
 //      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_BOILER));
 //
       // Turn on shooter and shoot
+      addStep(new FloodGatesOpenStep());
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       //addStep(new FeedOnStep());

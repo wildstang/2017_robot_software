@@ -34,10 +34,10 @@ public class VisionHandler implements Runnable
    private int threshold;
    private double blurRadius;
    
-   final private int H_MIN_DEFAULT = 72;
+   final private int H_MIN_DEFAULT = 64;
    final private int S_MIN_DEFAULT = 0;
-   final private int V_MIN_DEFAULT = 238;
-   final private int H_MAX_DEFAULT = 125;
+   final private int V_MIN_DEFAULT = 0;
+   final private int H_MAX_DEFAULT = 154;
    final private int S_MAX_DEFAULT = 255;
    final private int V_MAX_DEFAULT = 255;
    final private int CENTER_DEFAULT = 0;
