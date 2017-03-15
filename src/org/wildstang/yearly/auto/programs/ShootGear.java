@@ -1,6 +1,7 @@
 package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
+import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.DeliverGearStep;
 import org.wildstang.yearly.auto.steps.FeedOnStep;
@@ -31,7 +32,7 @@ public class ShootGear extends AutoProgram
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       
-      addStep(new WaitStep(delayWhileShooting));
+      addStep(new AutoStepDelay(2000));
       
       addStep(new StopShooting());
       

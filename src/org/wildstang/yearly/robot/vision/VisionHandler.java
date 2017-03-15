@@ -34,10 +34,10 @@ public class VisionHandler implements Runnable
    private int threshold;
    private double blurRadius;
    
-   final private int H_MIN_DEFAULT = 81;
+   final private int H_MIN_DEFAULT = 64;
    final private int S_MIN_DEFAULT = 0;
-   final private int V_MIN_DEFAULT = 238;
-   final private int H_MAX_DEFAULT = 125;
+   final private int V_MIN_DEFAULT = 0;
+   final private int H_MAX_DEFAULT = 154;
    final private int S_MAX_DEFAULT = 255;
    final private int V_MAX_DEFAULT = 255;
    final private int CENTER_DEFAULT = 0;
@@ -193,7 +193,7 @@ public class VisionHandler implements Runnable
             long timeSinceLastMsg = (System.currentTimeMillis() - m_lastMsgReceived);
             if (timeSinceLastMsg > 2000)
             {
-               // TODO: Flag handler as inactive
+               // TODO: Flag handler as inactivef
                SmartDashboard.putBoolean("Camera maybe offline", true);
                SmartDashboard.putNumber("Time since last camera update", timeSinceLastMsg);
             }

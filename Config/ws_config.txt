@@ -21,10 +21,10 @@ org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
 
 
 // Vision
-org.wildstang.yearly.robot.vision.VisionHandler.h_min=80
-org.wildstang.yearly.robot.vision.VisionHandler.s_min=0
-org.wildstang.yearly.robot.vision.VisionHandler.v_min=238
-org.wildstang.yearly.robot.vision.VisionHandler.h_max=125
+org.wildstang.yearly.robot.vision.VisionHandler.h_min=77
+org.wildstang.yearly.robot.vision.VisionHandler.s_min=129
+org.wildstang.yearly.robot.vision.VisionHandler.v_min=210
+org.wildstang.yearly.robot.vision.VisionHandler.h_max=94
 org.wildstang.yearly.robot.vision.VisionHandler.s_max=255
 org.wildstang.yearly.robot.vision.VisionHandler.v_max=255
 org.wildstang.yearly.robot.vision.VisionHandler.center=0
