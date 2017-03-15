@@ -11,7 +11,7 @@ boiler.to.hopper.auto.blue="/home/lvuser/path.test.txt"
 
 //Shooter
 org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5550.0
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5900.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5550.0
 org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=5500.0
 org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=5650.0
 org.wildstang.yearly.subsystems.Shooter.feedSpeed=1.0
@@ -36,9 +36,9 @@ org.wildstang.yearly.robot.vision.VisionServer.port=5800
 //Auto
 
 org.wildstang.yearly.auto.programs.HopperShoot.hopperWaitTime=3000
-org.wildstang.yearly.auto.programs.HopperShoot.delayWhileShooting=5000
+org.wildstang.yearly.auto.programs.HopperShoot.delayWhileShooting=10000
 
-org.wildstang.yearly.auto.programs.BoilerShoot.delayWhileShooting=5000
+org.wildstang.yearly.auto.programs.BoilerShoot.delayWhileShooting=15000
 
 org.wildstang.yearly.auto.programs.MiddleGear.deliverWaitTime=500
 

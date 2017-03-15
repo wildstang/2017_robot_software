@@ -13,7 +13,7 @@ import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 public class BoilerShoot extends AutoProgram
 {
 
-   private long delayWhileShooting;
+   private int delayWhileShooting;
 
    @Override
    public void initialize()
@@ -39,7 +39,7 @@ public class BoilerShoot extends AutoProgram
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(15000));
+      addStep(new AutoStepDelay(delayWhileShooting));
       addStep(new StopShooting());
       
    }

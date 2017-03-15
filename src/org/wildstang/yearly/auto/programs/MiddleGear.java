@@ -30,7 +30,7 @@ public class MiddleGear extends AutoProgram
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
       // Wait to let it settle
-      addStep(new AutoStepDelay(500));
+      addStep(new AutoStepDelay(waitTime));
 
       // Go backwards 2ft
 //      addStep(new DriveDistanceStraightStep(0.5, -24));

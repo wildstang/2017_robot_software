@@ -13,8 +13,8 @@ import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 public class HopperShoot extends AutoProgram
 {
 
-   private long hopperWaitTime;
-   private long delayWhileShooting;
+   private int hopperWaitTime;
+   private int delayWhileShooting;
 
    @Override
    public void initialize()
@@ -38,7 +38,7 @@ public class HopperShoot extends AutoProgram
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
 //      addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(3000));
+      addStep(new AutoStepDelay(hopperWaitTime));
 //      addStep(new FeedOffStep());
       
       
@@ -56,7 +56,7 @@ public class HopperShoot extends AutoProgram
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(10000));
+      addStep(new AutoStepDelay(delayWhileShooting));
       addStep(new StopShooting());
       
       // TODO: Back up over auto line?
