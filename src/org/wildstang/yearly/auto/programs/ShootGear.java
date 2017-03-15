@@ -3,15 +3,9 @@ package org.wildstang.yearly.auto.programs;
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.auto.steps.DeliverGearStep;
-import org.wildstang.yearly.auto.steps.FeedOnStep;
-import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
-import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
-import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
-import org.wildstang.yearly.auto.steps.WaitStep;
 
 public class ShootGear extends AutoProgram
 {
