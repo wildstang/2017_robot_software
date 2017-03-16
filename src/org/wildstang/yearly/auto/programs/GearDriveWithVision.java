@@ -7,6 +7,7 @@ import org.wildstang.yearly.auto.steps.DeliverGearStep;
 import org.wildstang.yearly.auto.steps.DriveDistanceStraightStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
+import org.wildstang.yearly.auto.steps.WaitStep;
 import org.wildstang.yearly.robot.RobotTemplate;
 
 public class GearDriveWithVision extends AutoProgram
@@ -21,10 +22,11 @@ public class GearDriveWithVision extends AutoProgram
       
       AutoParallelStepGroup goingOUT = new AutoParallelStepGroup();
       goingOUT.addStep(new CloseGearHolderStep());
-      goingOUT.addStep(new DriveDistanceStraightStep(.05, -12));
+      goingOUT.addStep(new DriveDistanceStraightStep(.25, -12));
 
       addStep(goingIN);
       addStep(new OpenGearHolderStep());
+      addStep(new WaitStep(1000));
       addStep(goingOUT);
    }
 

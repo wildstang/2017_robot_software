@@ -1,6 +1,5 @@
 package org.wildstang.yearly.subsystems;
 
-import org.wildstang.framework.config.Config;
 
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
@@ -10,9 +9,11 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
+import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
+import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
 import org.wildstang.yearly.subsystems.shooter.Gate;
 
@@ -22,6 +23,7 @@ import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
@@ -33,17 +35,7 @@ public class Shooter implements Subsystem
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
 
-   // For the toggle
-   private boolean m_flywheelOn = false;
-   private boolean m_shooterCurrent;
-   private boolean m_shooterPrev;
-
-   // For checking if the gates should open when flywheels are up to speed
-   private boolean readyToShootLeft = false;
-   private boolean readyToShootRight = false;
-   // Can override the flywheel speed checker and open gates anyway
-   private boolean m_shootOverride = false;
-   // Limits for range flywheels should be at before opening gates
+   
    private double m_targetSpeedLeft;
    private double m_targetSpeedRight;
    private double m_lowLimitSpeed;
@@ -54,42 +46,79 @@ public class Shooter implements Subsystem
 
    private Gate m_gate;
 
-   // For toggling
-   private boolean m_gateOpen = false;
-   private boolean m_gateCurrent;
-   private boolean m_gatePrev;
-
    // Feeds
    private WsVictor m_leftFeedVictor;
    private WsVictor m_rightFeedVictor;
 
    private Feed m_leftFeed;
    private Feed m_rightFeed;
+   
+   private WsVictor m_blenderVictor;
+   private Blender m_blender;
 
-   private double m_leftJoyAxis;
-   private double m_rightJoyAxis;
    // Deadband so nothing happens if joystick is bumped on accident
    private double m_feedDeadBand;
    private double m_feedSpeed;
+
+   // PDP for checking if Feeds are jammed
+   private PowerDistributionPanel pdp;
+
+   // Inputs
+   private DigitalInput m_flywheelButton;
+   private DigitalInput m_gateButton;
+   private DigitalInput m_overrideButton;
+   private AnalogInput m_leftBeltJoystick;
+   private AnalogInput m_rightBeltJoystick;
+
+   // ALL variables below here are state that need to be reset in resetState to revert to an initial state
+   // For the toggle
+   private boolean m_flywheelOn = false;
+   private boolean m_shooterCurrent;
+   private boolean m_shooterPrev;
+
+   // For toggling
+   private boolean m_gateOpen = false;
+   private boolean m_gateCurrent;
+   private boolean m_gatePrev;
+
+   private double m_leftJoyAxis;
+   private double m_rightJoyAxis;
+
+   // For checking if the gates should open when flywheels are up to speed
+   private boolean readyToShootLeft = false;
+   private boolean readyToShootRight = false;
+
+   // Can override the flywheel speed checker and open gates anyway
+   private boolean m_shootOverride = false;
+   // Limits for range flywheels should be at before opening gates
 
    // Enumeration variable for SHOOT, REVERSE, and STOP
    private FeedDirection m_leftFeedDirection;
    private FeedDirection m_rightFeedDirection;
 
-   // PDP for checking if Feeds are jammed
-   private PowerDistributionPanel pdp;
-   double m_rightFeedCurrent;
-   double m_leftFeedCurrent;
 
-   // Inputs
-   private DigitalInput m_flywheelButton;
+   @Override
+   public void resetState()
+   {
+      m_shootOverride = false;
 
-   private DigitalInput m_gateButton;
+      m_leftFeedDirection = FeedDirection.STOP;
+      m_rightFeedDirection = FeedDirection.STOP;
+      
+      readyToShootLeft = false;
+      readyToShootRight = false;
+      m_leftJoyAxis = 0;
+      m_rightJoyAxis = 0;
+      
+      m_gateOpen = false;
+      m_flywheelOn = false;
 
-   private DigitalInput m_overrideButton;
-
-   private AnalogInput m_leftBeltJoystick;
-   private AnalogInput m_rightBeltJoystick;
+      // Toggle state variables
+      m_shooterCurrent = false;
+      m_shooterPrev = false;
+      m_gateCurrent = false;
+      m_gatePrev = false;
+   }
 
    @Override
    public void selfTest()
@@ -106,7 +135,7 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);
@@ -115,50 +144,35 @@ public class Shooter implements Subsystem
          Core.getStateTracker().addIOInfo("Left shooter current", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter current", "Shooter", "Input", null);
       }
+      
+      // Read config values
+      readConfigValues();
+      
       // Flywheels
       // CAN talons
       m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
       m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
-      configureFlywheelTalon(m_CANFlywheelLeft, m_targetSpeedLeft);
-      configureFlywheelTalon(m_CANFlywheelRight, m_targetSpeedRight);
-
-      // Reads values from Ws Config, defaults are nonsensical for testing
-      m_targetSpeedLeft = 5450;//Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5350.0);
-      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
-      
-      m_lowLimitSpeed = 5400.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                               // + ".lowLimitSpeed", 450.0);
-      m_highLimitSpeed = 5550.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                                // + ".highLimitSpeed", 550.0);
-      m_feedSpeed = 1.0;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                        // + ".feedSpeed", 0.5);
-      m_feedDeadBand = 0.05;// Core.getConfigManager().getConfig().getDouble(this.getClass().getName()
-                            // + ".feedDeadBand", 0.05);
+      configureFlywheelTalons();
 
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
 
       // Gates
       m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE.getName());
-
       m_gate = new Gate(m_gateSolenoid);
 
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
-
-      // inverts the left, may change
       m_leftFeed = new Feed(m_leftFeedVictor, m_feedSpeed);
       m_rightFeed = new Feed(m_rightFeedVictor, m_feedSpeed);
-
-      m_leftFeedDirection = FeedDirection.STOP;
-      m_rightFeedDirection = FeedDirection.STOP;
+      
+      m_blenderVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.BLENDER.getName());
+      m_blender = new Blender(m_blenderVictor);
 
       // PDP
       pdp = new PowerDistributionPanel();
-      m_leftFeedCurrent = pdp.getCurrent(11);
-      m_rightFeedCurrent = pdp.getCurrent(4);
 
       // Input Listeners
       m_flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
@@ -174,18 +188,39 @@ public class Shooter implements Subsystem
 
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
-
-      // If we get a swtich for balls waiting
-      // leftBallReadySwitch = (DigitalInput)
-      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_LEFT.getName());
-      // leftBallReadySwitch.addInputListener(this);
-      // rightBallReadySwitch = (DigitalInput)
-      // Core.getInputManager().getInput(WSInputs.BALLS_WAITING_RIGHT.getName());
-      // rightBallReadySwitch.addInputListener(this);
-
+      
+      resetState();
    }
 
-   private void configureFlywheelTalon(CANTalon p_talon, double p_speed)
+   private void configureFlywheelTalons()
+   {
+      // Configure left talon
+      configureFlywheelTalon(m_CANFlywheelLeft, 
+            Preferences.getInstance().getDouble("L_F", 0.02366), 
+            Preferences.getInstance().getDouble("L_P", 0.013), 
+            Preferences.getInstance().getDouble("L_I", 0), 
+            Preferences.getInstance().getDouble("L_D", 0.15));
+
+      // Configure right talon
+      configureFlywheelTalon(m_CANFlywheelRight, 
+            Preferences.getInstance().getDouble("R_F", 0.02366), 
+            Preferences.getInstance().getDouble("R_P", 0.013), 
+            Preferences.getInstance().getDouble("R_I", 0), 
+            Preferences.getInstance().getDouble("R_D", 0.15));
+   }
+
+   private void readConfigValues()
+   {
+      // Reads values from Ws Config
+      m_targetSpeedLeft = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5450.0);
+      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
+      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 5400.0);
+      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5550.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 1.0);
+      m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+   }
+
+   private void configureFlywheelTalon(CANTalon p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
@@ -201,10 +236,10 @@ public class Shooter implements Subsystem
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
-      p_talon.setF(0.02366); // 0.1998
-      p_talon.setP(0.013); // (10% X 1023) / (error)
-      p_talon.setI(0);
-      p_talon.setD(0.15);
+      p_talon.setF(p_fGain);
+      p_talon.setP(p_pGain);
+      p_talon.setI(p_iGain);
+      p_talon.setD(p_pGain);
    }
 
    @Override
@@ -279,12 +314,15 @@ public class Shooter implements Subsystem
 
       updateDashboardData();
 
-      Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
-      Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
-      Core.getStateTracker().addState("Left shooter voltage", "Shooter", m_CANFlywheelLeft.getOutputVoltage());
-      Core.getStateTracker().addState("Right shooter voltage", "Shooter", m_CANFlywheelRight.getOutputVoltage());
-      Core.getStateTracker().addState("Left shooter current", "Shooter", m_CANFlywheelLeft.getOutputCurrent());
-      Core.getStateTracker().addState("Right shooter current", "Shooter", m_CANFlywheelRight.getOutputCurrent());
+      if (RobotTemplate.LOG_STATE)
+      {
+         Core.getStateTracker().addState("Left shooter (RPM)", "Shooter", m_CANFlywheelLeft.getSpeed());
+         Core.getStateTracker().addState("Right shooter (RPM)", "Shooter", m_CANFlywheelRight.getSpeed());
+         Core.getStateTracker().addState("Left shooter voltage", "Shooter", m_CANFlywheelLeft.getOutputVoltage());
+         Core.getStateTracker().addState("Right shooter voltage", "Shooter", m_CANFlywheelRight.getOutputVoltage());
+         Core.getStateTracker().addState("Left shooter current", "Shooter", m_CANFlywheelLeft.getOutputCurrent());
+         Core.getStateTracker().addState("Right shooter current", "Shooter", m_CANFlywheelRight.getOutputCurrent());
+      }
    }
 
    // Flywheel stuff
@@ -346,8 +384,7 @@ public class Shooter implements Subsystem
 
    public void updateGates()
    {
-      // Tests to see if the left and right flywheel is up to speed and ready to
-      // shoot a ball.
+      // Tests to see if the left and right flywheel is up to speed and ready to shoot a ball.
       // Sets a conditional toggle to true if that flywheel is ready.
       // Can be overriden so gates can open even if flywheel isn't up to speed
 
@@ -386,12 +423,12 @@ public class Shooter implements Subsystem
 
    public boolean checkLeftFeedJammed()
    {
-      return m_leftFeed.isJammed(m_leftFeedCurrent);
+      return m_leftFeed.isJammed(pdp.getCurrent(11));
    }
 
    public boolean checkRightFeedJammed()
    {
-      return m_rightFeed.isJammed(m_rightFeedCurrent);
+      return m_rightFeed.isJammed(pdp.getCurrent(4));
    }
 
    public void updateFeed()
@@ -410,7 +447,17 @@ public class Shooter implements Subsystem
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);
       runFeedBelt(m_rightFeed, m_rightFeedDirection);
+      
+      if (m_leftFeedDirection == FeedDirection.SHOOT || m_rightFeedDirection == FeedDirection.SHOOT)
+      {
+         m_blender.runIn();
+      }
+      else
+      {
+         m_blender.turnOff();
+      }
    }
+
 
    private void runFeedBelt(Feed p_feed, FeedDirection p_direction)
    {
@@ -440,24 +487,24 @@ public class Shooter implements Subsystem
    public void updateDashboardData()
    {
       SmartDashboard.putBoolean("Left flywheel on", m_leftFlywheel.isRunning());
-      SmartDashboard.putBoolean("right flywheel on", m_rightFlywheel.isRunning());
+      SmartDashboard.putBoolean("Right flywheel on", m_rightFlywheel.isRunning());
 
-      SmartDashboard.putNumber("left flywheel speed", m_leftFlywheel.getSpeed());
-      SmartDashboard.putNumber("right flywheel speed", m_rightFlywheel.getSpeed());
+      SmartDashboard.putNumber("Left flywheel speed", m_leftFlywheel.getSpeed());
+      SmartDashboard.putNumber("Right flywheel speed", m_rightFlywheel.getSpeed());
 
-      SmartDashboard.putNumber("left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
-      SmartDashboard.putNumber("right flywheel error", m_CANFlywheelRight.getClosedLoopError());
+      SmartDashboard.putNumber("Left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
+      SmartDashboard.putNumber("Right flywheel error", m_CANFlywheelRight.getClosedLoopError());
 
-      SmartDashboard.putBoolean("Gates is open", m_gate.isOpen());
+      SmartDashboard.putBoolean("Gates open", m_gate.isOpen());
 
-      SmartDashboard.putBoolean("left feed jammed", m_leftFeed.isJammed(m_leftFeedCurrent));
-      SmartDashboard.putBoolean("right feed jammed", m_rightFeed.isJammed(m_rightFeedCurrent));
+      SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
+      SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));
 
       // WS config
-      SmartDashboard.putNumber("flywheel left target speed", m_targetSpeedLeft);
-      SmartDashboard.putNumber("flywheel right target speed", m_targetSpeedRight);
-      SmartDashboard.putNumber("flywheel low limit speed", m_lowLimitSpeed);
-      SmartDashboard.putNumber("flywheel high limit speed", m_highLimitSpeed);
+      SmartDashboard.putNumber("Left flywheel target", m_targetSpeedLeft);
+      SmartDashboard.putNumber("Right flywheel target", m_targetSpeedRight);
+      SmartDashboard.putNumber("Flywheel low limit", m_lowLimitSpeed);
+      SmartDashboard.putNumber("Flywheel high limit", m_highLimitSpeed);
    }
 
 }

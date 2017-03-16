@@ -8,7 +8,7 @@ public class Gate extends Shooter
    // Needs comments
    private WsSolenoid m_solenoid;
 
-   private boolean OPEN_STATE = true;
+   private boolean OPEN_STATE = false;
 
    // Creating a gate object so that both gates can be declared in the Shooter
    // subclass

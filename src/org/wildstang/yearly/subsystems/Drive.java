@@ -9,17 +9,8 @@ import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
-import org.wildstang.yearly.robot.CANConstants;
-import org.wildstang.yearly.robot.RobotTemplate;
-import org.wildstang.yearly.robot.WSInputs;
-import org.wildstang.yearly.robot.WSOutputs;
-import org.wildstang.yearly.subsystems.drive.CheesyDriveHelper;
-import org.wildstang.yearly.subsystems.drive.DriveConstants;
-import org.wildstang.yearly.subsystems.drive.DriveSignal;
-import org.wildstang.yearly.subsystems.drive.DriveState;
-import org.wildstang.yearly.subsystems.drive.DriveType;
-import org.wildstang.yearly.subsystems.drive.Path;
-import org.wildstang.yearly.subsystems.drive.PathFollower;
+import org.wildstang.yearly.robot.*;
+import org.wildstang.yearly.subsystems.drive.*;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.StatusFrameRate;
@@ -31,15 +22,41 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive implements Subsystem
 {
+   // Constants
+   private static final double ROBOT_WIDTH_INCHES = 30;
+   private static final double WHEEL_DIAMETER_INCHES = 4;
+   private static final double ENCODER_CPR = 4096;
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
+   private static final double RADIANS = Math.PI / 180;
+   private final double CORRECTION_HEADING_LEVEL = 1.2;
+   private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
+   private int pathNum = 1;
+
    // Hold a reference to the input test for fast equality test during
    // inputUpdate()
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
    private WsSolenoid m_shifterSolenoid;
-   private DigitalInput m_rawModeInput;
+//   private DigitalInput m_rawModeInput;
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
+   private DigitalInput m_autoDropInput;
 
+   // Talons for output
+   private CANTalon m_leftMaster;
+   private CANTalon m_rightMaster;
+   private CANTalon m_leftFollower;
+   private CANTalon m_rightFollower;
+
+   private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
+
+   // Drive state information
+   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
+   private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
+
+   // ALL variables below here are state that needs to be reset in resetState()
+   private boolean m_gearDropFinished = false;
+   
    // Values from inputs
    private double m_throttleValue;
    private double m_headingValue;
@@ -53,31 +70,15 @@ public class Drive implements Subsystem
    private boolean m_rawModePrev = false;
    private boolean m_rawMode = false;
 
-   // Talons for output
-   private CANTalon m_leftMaster;
-   private CANTalon m_rightMaster;
-   private CANTalon m_leftFollower;
-   private CANTalon m_rightFollower;
+   private boolean m_autoDropCurrent = false;
+   private boolean m_autoDropPrev = false;
+   private boolean m_autoDropMode = false;
 
-   // State information
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
-   private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
-   private static final double ROBOT_WIDTH_INCHES = 30;
-   private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double ENCODER_CPR = 4096;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
-   private static final double RADIANS = Math.PI / 180;
-   private DriveState absoluteDriveState = new DriveState(0, 0, 0, 0, 0, 0, 0);
    double maxSpeed = 0;
-
-   private LinkedList<DriveState> driveStates = new LinkedList<DriveState>();
-
    private boolean m_brakeMode = true;
-
-   // TODO Remove this
-   private PowerDistributionPanel pdp;
 
    // While this is really a temporary variable, declared here to prevent
    // constant stack allocation
@@ -86,10 +87,8 @@ public class Drive implements Subsystem
    @Override
    public void init()
    {
-      pdp = new PowerDistributionPanel();
-      
       // Add any additional items to track in the logger
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
@@ -116,14 +115,45 @@ public class Drive implements Subsystem
       m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
-      m_quickTurnInput.addInputListener(this);
+      m_autoDropInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.AUTO_GEAR_DROP.getName());
+      m_autoDropInput.addInputListener(this);
 
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
       
-      resetEncoders();
+      resetState();
    }
+
+   
+   
+   @Override
+   public void resetState()
+   {
+      resetEncoders();
+      setBrakeMode(false);
+      setHighGear(true);
+      setOpenLoopDrive();
+      m_gearDropFinished = false;
+      setThrottle(0);
+      setHeading(0);
+      m_quickTurn = false;
+
+      m_shifterCurrent = false;
+      m_shifterPrev = false;
+
+      m_rawModeCurrent = false;
+      m_rawModePrev = false;
+      m_rawMode = false;
+
+      m_autoDropCurrent = false;
+      m_autoDropPrev = false;
+      m_autoDropMode = false;
+
+      maxSpeed = 0;
+   }
+
+
 
    public void initDriveTalons()
    {
@@ -177,6 +207,8 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("RightEncPresent", true);
       }
 
+      m_leftMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
+      m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
 
       // Load PID profiles
       // Path following profile
@@ -197,14 +229,10 @@ public class Drive implements Subsystem
          m_throttleValue = m_throttleInput.getValue();
          
 //         m_quickTurn = m_cheesyHelper.handleDeadband(m_throttleValue, CheesyDriveHelper.kThrottleDeadband) == 0.0;
-
-         SmartDashboard.putNumber("throttleValue", m_throttleValue);
       }
       else if (p_source == m_headingInput)
       {
          m_headingValue = m_headingInput.getValue();
-         // headingValue *= -1;
-         SmartDashboard.putNumber("heading value", m_headingValue);
       }
       else if (p_source == m_shifterInput)
       {
@@ -212,19 +240,36 @@ public class Drive implements Subsystem
          // Check and toggle shifter state
          toggleShifter();
       }
+      else if (p_source == m_autoDropInput)
+      {
+         m_autoDropCurrent = m_autoDropInput.getValue();
+         // Check and toggle auto gear drop state
+         toggleAutoDrop();
+         if (m_autoDropMode)
+         {
+            setAutoGearMode();
+            SmartDashboard.putBoolean("Auto gear mode", true);
+         }
+         else
+         {
+            setOpenLoopDrive();
+            setHeading(0);
+            SmartDashboard.putBoolean("Auto gear mode", false);
+         }
+      }
       // TODO: Do we want to make quickturn automatic?
       else if (p_source == m_quickTurnInput)
       {
          m_quickTurn = m_quickTurnInput.getValue();
       }
-      // If SELECT is pressed, use Raw mode
-      else if (p_source == m_rawModeInput)
-      {
-         m_rawModeCurrent = m_rawModeInput.getValue();
-
-         // Determine drive state override
-         calculateRawMode();
-      }
+//      // If SELECT is pressed, use Raw mode
+//      else if (p_source == m_rawModeInput)
+//      {
+//         m_rawModeCurrent = m_rawModeInput.getValue();
+//
+//         // Determine drive state override
+//         calculateRawMode();
+//      }
    }
 
    @Override
@@ -250,18 +295,35 @@ public class Drive implements Subsystem
          m_shifterSolenoid.setValue(false);
       }
 
+      SmartDashboard.putNumber("throttleValue", m_throttleValue);
+      SmartDashboard.putNumber("heading value", m_headingValue);
+      SmartDashboard.putString("Drive mode", m_driveMode.name());
+      
       switch (m_driveMode)
       {
          case PATH:
-            //collectDriveState();
+            collectDriveState();
             break;
 
          case CHEESY:
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
-            //collectDriveState();
+            
+            if (RobotTemplate.LOG_STATE)
+            {
+               double tempMax = Math.max(Math.abs(m_leftMaster.getSpeed()), Math.abs(m_rightMaster.getSpeed()));
+               if (tempMax > maxSpeed)
+               {
+                  maxSpeed = tempMax;
+               }
+                
+               SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
+            }
             break;
          case FULL_BRAKE:
+            break;
+         case AUTO_GEAR_DROP:
+            autoGear();
             break;
          case RAW:
          default:
@@ -274,7 +336,7 @@ public class Drive implements Subsystem
       SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
       
       
-      if (Core.getStateTracker().isTrackingState())
+      if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
@@ -303,25 +365,23 @@ public class Drive implements Subsystem
       maxSpeed = 0; // Easy way to reset max speed.
    }
 
+   private void toggleAutoDrop()
+   {
+      if (m_autoDropCurrent && !m_autoDropPrev)
+      {
+         m_autoDropMode = !m_autoDropMode;
+      }
+      m_autoDropPrev = m_autoDropCurrent;
+   }
+
    private void collectDriveState()
    {
       // Calculate all changes in DriveState
-      double deltaLeftTicks = m_leftMaster.getEncPosition()
-            - absoluteDriveState.getDeltaLeftEncoderTicks();
-      double deltaRightTicks = m_rightMaster.getEncPosition()
-            - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
-      double deltaTime = System.currentTimeMillis()
-            - absoluteDriveState.getDeltaTime();
+      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
 
-      if (Math.abs(m_leftMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_leftMaster.getSpeed());
-      } else if (Math.abs(m_rightMaster.getSpeed()) > maxSpeed) {
-    	  maxSpeed = Math.abs(m_rightMaster.getSpeed());
-      }
-      
-      SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
-      
       
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();
@@ -337,36 +397,27 @@ public class Drive implements Subsystem
       }
       else
       {
-    	 straightLineInches = deltaLeftInches; 
+         straightLineInches = deltaLeftInches;
          deltaTheta = 0;
       }
 
       double c;
       double rLong;
-      // double deltaXRight; // delta X and Y relative to the robots position
-      // double deltaXLeft;
-      // double deltaYRight;
-      // double deltaYLeft;
+
       if (deltaTheta < 0)
       {
-         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES)
-               / (deltaLeftTicks - deltaRightTicks));
-
+         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
       }
       else if (deltaTheta > 0)
       {
-         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES)
-               / (deltaRightTicks - deltaLeftTicks));
-
+         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
       }
       else
       {
          c = (double) Integer.MAX_VALUE;
-
       }
 
-      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
-                                      // larger turn radius.
+      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the larger turn radius.
 
       // System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
@@ -375,16 +426,43 @@ public class Drive implements Subsystem
       driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
-      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime()
-            + deltaTime);
-      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks()
-            + deltaRightTicks);
-      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks()
-            + deltaLeftTicks);
-      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle()
-            + deltaHeading);
-
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
+      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
    }
+
+   private void autoGear()
+   {
+      double xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
+      double distance = RobotTemplate.getVisionServer().getDistance();
+
+      setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
+
+      if (distance < 36)
+      {
+         setThrottle(.15);
+      }
+      else
+      {
+         setThrottle(.3);
+      }
+
+      if (distance < 10)
+      {
+         setThrottle(0);
+         m_gearDropFinished = true;
+      }
+      
+      m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
+      setMotorSpeeds(m_driveSignal);
+   }
+   
+   public boolean isGearDropFinished()
+   {
+      return m_gearDropFinished;
+   }
+
    private void calculateRawMode()
    {
       if (m_rawModeCurrent && !m_rawModePrev)
@@ -423,6 +501,26 @@ public class Drive implements Subsystem
       m_rightMaster.set(p_signal.rightMotor);
    }
 
+   public void setAutoGearMode()
+   {
+      DriverStation.reportWarning("Set Auto Gear mode", false);
+      // Stop following any current path
+      if (m_driveMode == DriveType.PATH)
+      {
+         abortFollowingPath();
+         pathCleanup();
+      }
+
+      m_driveMode = DriveType.AUTO_GEAR_DROP;
+
+      setHighGear(true);
+      m_gearDropFinished = false;
+      
+      // Reconfigure motor controllers
+      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
+      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
+   }
+   
    public void setPathFollowingMode()
    {
 	   DriverStation.reportWarning("Set Path Following Mode", false);
@@ -437,7 +535,7 @@ public class Drive implements Subsystem
       m_rightMaster.setProfile(0);
 
       // Go as fast as possible
-      setHighGear(true);
+//      setHighGear(true);
 
       // Use brake mode to stop quickly at end of path, since Talons will put
       // output to neutral
@@ -461,8 +559,9 @@ public class Drive implements Subsystem
       }
 
       m_driveMode = DriveType.CHEESY;
-      setBrakeMode(false);
 
+      m_gearDropFinished = true;
+      
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
@@ -518,7 +617,6 @@ public class Drive implements Subsystem
          }
       }
 
-      System.out.println("Drive.setPath(): Creating new PathFollower");
       m_pathFollower = new PathFollower(p_path, m_leftMaster, m_rightMaster);
    }
 
@@ -556,6 +654,7 @@ public class Drive implements Subsystem
       {
          m_pathFollower.stop();
          m_pathFollower = null;
+         writeDriveStatesToFile(DRIVER_STATES_FILENAME + pathNum++ + ".txt");
       }
    }
 
@@ -592,11 +691,9 @@ public class Drive implements Subsystem
          {
             bw.close();
          }
-         if (fw != null)
-         {
-            fw.close();
-         }
-      }//373x45=>31 ft, 1 inch x 3 ft 9 inches
+      }
+      
+      //373x45=>31 ft, 1 inch x 3 ft 9 inches
       // We got 23 ft 9 inches x 11 ft 4 inches
       // Our calculations were 7 ft 4 inches too short in the x direction, but
       // we were 7 ft 7 inches too long in the y direction
@@ -618,9 +715,15 @@ public class Drive implements Subsystem
       m_throttleValue = newThrottle;
    }
    
-   public int getEncoderDistance(){
-      int leftTick = m_leftMaster.getEncPosition();
-      int rightTick = m_rightMaster.getEncPosition();
-      return (int)((((leftTick + rightTick) / 2) / 4096) * (4 * 3.1415));
+   /**
+    * Returns distance traveled since encoders were set to zero, in inches.
+    * @return
+    */
+   public int getEncoderDistanceInches()
+   {
+      long leftTick = Math.abs(m_leftMaster.getEncPosition());
+      long rightTick = Math.abs(m_rightMaster.getEncPosition());
+
+      return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
 }

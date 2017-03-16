@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,14 +30,12 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.auto.programs.GearDriveWithVision;
+import org.wildstang.yearly.auto.programs.BoilerShoot;
 import org.wildstang.yearly.auto.programs.HopperShoot;
+import org.wildstang.yearly.auto.programs.LeftGear;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
-import org.wildstang.yearly.auto.testprograms.TEST10FtStraightLinePath;
-import org.wildstang.yearly.auto.testprograms.TEST20FtStraightLinePath;
-import org.wildstang.yearly.auto.testprograms.TESTHopperToBoilerPath;
-import org.wildstang.yearly.auto.testprograms.TESTWallToGearCenterPath;
+import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
@@ -58,13 +58,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotTemplate extends IterativeRobot
 {
 
+   public static boolean LOG_STATE = true;
+
    private static long lastCycleTime = 0;
    private StateLogger m_stateLogger = null;
    private Core m_core = null;
    private static Logger s_log = Logger.getLogger(RobotTemplate.class.getName());
 
-   private static VisionServer m_visionServer = new VisionServer(5080);
-   
+   private static VisionServer m_visionServer = new VisionServer(5800);
+
    private boolean exceptionThrown = false;
 
    private boolean m_firstDisabled = true;
@@ -76,12 +78,14 @@ public class RobotTemplate extends IterativeRobot
    static boolean teleopPerodicCalled = false;
 
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/driver_states.txt";
-
+   private static final String ERROR_MSG_KEY = "Last error";
+   
    private void startloggingState()
    {
       Writer outputWriter = null;
 
-      outputWriter = getFileWriter();
+      String dateStr = (new SimpleDateFormat("YYYY-MM-dd-HH-mm")).format(new Date());
+      outputWriter = getFileWriter(dateStr);
       // outputWriter = getNetworkWriter("10.1.11.12", 17654);
 
       m_stateLogger.setWriter(outputWriter);
@@ -105,19 +109,17 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (UnknownHostException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
       return output;
    }
 
-   private FileWriter getFileWriter()
+   private FileWriter getFileWriter(String p_date)
    {
       FileWriter output = null;
 
@@ -135,7 +137,7 @@ public class RobotTemplate extends IterativeRobot
          }
          else
          {
-            outputFile = new File("/home/lvuser/log.txt");
+            outputFile = new File("/home/lvuser/log-" + p_date + ".txt");
          }
          if (outputFile.exists())
          {
@@ -146,7 +148,7 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
+         SmartDashboard.putString(ERROR_MSG_KEY, "Failed to open log file for writing");
          e.printStackTrace();
       }
 
@@ -173,22 +175,38 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
-      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
-      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
-      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
-      
-      AutoManager.getInstance().addProgram(new HopperShoot());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
+//      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
+//      AutoManager.getInstance().addProgram(new VisionTest());
+
+      AutoManager.getInstance().addProgram(new BoilerShoot());
+      AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
-      AutoManager.getInstance().addProgram(new GearDriveWithVision());
-      
+      AutoManager.getInstance().addProgram(new HopperShoot());
+
       // 3. Start Vision server
       if (m_visionServer != null)
       {
          m_visionServer.startVisionServer();
       }
-      
+
+    // Send alliance colour to LEDs
+    if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+    }
+    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+    }
+    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+    {
+       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+    }
+
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
       startupTimer.endTimingSection();
@@ -222,7 +240,7 @@ public class RobotTemplate extends IterativeRobot
       }
       catch (FileNotFoundException e)
       {
-         // TODO Auto-generated catch block
+         SmartDashboard.putString(ERROR_MSG_KEY, "Couldn't find config file to load");
          e.printStackTrace();
       }
 
@@ -234,7 +252,7 @@ public class RobotTemplate extends IterativeRobot
          }
          catch (IOException e)
          {
-            // TODO Auto-generated catch block
+            SmartDashboard.putString(ERROR_MSG_KEY, "Failed to close config file");
             e.printStackTrace();
          }
       }
@@ -250,16 +268,14 @@ public class RobotTemplate extends IterativeRobot
       initTimer.startTimingSection();
       AutoManager.getInstance().clear();
 
-      loadConfig();
-
       initTimer.endTimingSection();
       s_log.logp(Level.ALL, this.getClass().getName(), "disabledInit", "Disabled Init Complete");
-
    }
 
    public void disabledPeriodic()
    {
 
+      // Stop and remove any current path
       if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
       {
          if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
@@ -268,41 +284,33 @@ public class RobotTemplate extends IterativeRobot
          }
       }
 
-      if (m_firstDisabled)
-      {
-         // Send alliance colour to LEDs
-         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-         }
-         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-         }
-         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-         {
-            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-         }
-         m_firstDisabled = false;
-      }
-      else
-      {
-         // Send rainbow colour to LEDs
-         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
-      }
+//      if (m_firstDisabled)
+//      {
+//         // Send alliance colour to LEDs
+//         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+//         }
+//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+//         }
+//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+//         {
+//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+//         }
+//         m_firstDisabled = false;
+//      }
+//      else
+//      {
+//      }
 
       // If we are finished with teleop, finish and close the log file
-      if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower() != null)
-      {
-         if (((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).getPathFollower().isActive())
-         {
-            ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName())).pathCleanup();
-         }
-      }
-
       if (teleopPerodicCalled)
       {
          m_stateLogger.stop();
+         // Send rainbow colour to LEDs
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
       }
 
       resetRobotState();
@@ -321,6 +329,9 @@ public class RobotTemplate extends IterativeRobot
 
    public void autonomousInit()
    {
+      // Reset any subsystem state
+      Core.getSubsystemManager().resetState();
+
       m_core.setAutoManager(AutoManager.getInstance());
       AutoManager.getInstance().startCurrentProgram();
    }
@@ -328,11 +339,12 @@ public class RobotTemplate extends IterativeRobot
    public void autonomousPeriodic()
    {
       // Update all inputs, outputs and subsystems
-
       m_core.executeUpdate();
-//      double time = System.currentTimeMillis();
-//      SmartDashboard.putNumber("Cycle Time", time - oldTime);
-//      oldTime = time;
+
+      double time = System.currentTimeMillis();
+      SmartDashboard.putNumber("Cycle time", time - oldTime);
+      oldTime = time;
+
       if (AutoFirstRun)
       {
          AutoFirstRun = false;
@@ -349,8 +361,12 @@ public class RobotTemplate extends IterativeRobot
       // Remove the AutoManager from the Core
       m_core.setAutoManager(null);
 
+      // Reset any subsystem state
+      Core.getSubsystemManager().resetState();
+
       Drive driveBase = ((Drive) Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName()));
       driveBase.setOpenLoopDrive();
+      driveBase.setBrakeMode(false);
 
       periodTimer.startTimingSection();
    }
@@ -368,10 +384,15 @@ public class RobotTemplate extends IterativeRobot
       {
 
          // Update all inputs, outputs and subsystems
+         long start = System.currentTimeMillis();
          m_core.executeUpdate();
+         long end = System.currentTimeMillis();
+         
+         SmartDashboard.putNumber("Cycle Time", (end - start));
       }
       catch (Throwable e)
       {
+         SmartDashboard.putString(ERROR_MSG_KEY, "Exception thrown during teleopPeriodic");
          SmartDashboard.putString("Exception thrown", e.toString());
          exceptionThrown = true;
          throw e;
@@ -394,7 +415,7 @@ public class RobotTemplate extends IterativeRobot
    {
       // Watchdog.getInstance().feed();
    }
-   
+
    public static VisionServer getVisionServer()
    {
       return m_visionServer;
