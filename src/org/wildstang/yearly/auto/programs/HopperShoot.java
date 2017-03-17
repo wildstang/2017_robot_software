@@ -20,6 +20,7 @@ public class HopperShoot extends AutoProgram
    public void initialize()
    {
       super.initialize();
+ 
       
       // Read config values
       // 10000 = ten seconds
