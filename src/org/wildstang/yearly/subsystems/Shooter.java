@@ -196,14 +196,14 @@ public class Shooter implements Subsystem
    {
       // Configure left talon
       configureFlywheelTalon(m_CANFlywheelLeft, 
-            0.024,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+            0.0238,//Preferences.getInstance().getDouble("L_F", 0.02366), 
   0.013,//          0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
             0,//Preferences.getInstance().getDouble("L_I", 0), 
       0);//      0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
 
       // Configure right talon
       configureFlywheelTalon(m_CANFlywheelRight, 
-            0.0238,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+            0.0237,//Preferences.getInstance().getDouble("L_F", 0.02366), 
 0.013,//            0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
             0,//Preferences.getInstance().getDouble("L_I", 0), 
 0);//            0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
