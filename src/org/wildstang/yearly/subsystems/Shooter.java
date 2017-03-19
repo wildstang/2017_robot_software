@@ -196,17 +196,17 @@ public class Shooter implements Subsystem
    {
       // Configure left talon
       configureFlywheelTalon(m_CANFlywheelLeft, 
-            Preferences.getInstance().getDouble("L_F", 0.02366), 
-            Preferences.getInstance().getDouble("L_P", 0.013), 
-            Preferences.getInstance().getDouble("L_I", 0), 
-            Preferences.getInstance().getDouble("L_D", 0.15));
+            0.0238,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+  0.013,//          0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
+            0,//Preferences.getInstance().getDouble("L_I", 0), 
+      0);//      0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
 
       // Configure right talon
       configureFlywheelTalon(m_CANFlywheelRight, 
-            Preferences.getInstance().getDouble("R_F", 0.02366), 
-            Preferences.getInstance().getDouble("R_P", 0.013), 
-            Preferences.getInstance().getDouble("R_I", 0), 
-            Preferences.getInstance().getDouble("R_D", 0.15));
+            0.0237,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+0.013,//            0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
+            0,//Preferences.getInstance().getDouble("L_I", 0), 
+0);//            0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
    }
 
    private void readConfigValues()
@@ -257,10 +257,7 @@ public class Shooter implements Subsystem
       }
       else if (p_source == m_gateButton)
       {
-         m_gateCurrent = m_gateButton.getValue();
-         // CIR: No toggle for now - default to open in reset state, and use momentary to close if required
-         m_gateOpen = m_gateCurrent;
-         
+         m_gateOpen = !m_gateButton.getValue();
          // Toggle for gate left
 //         if (m_gateCurrent && !m_gatePrev)
 //         {

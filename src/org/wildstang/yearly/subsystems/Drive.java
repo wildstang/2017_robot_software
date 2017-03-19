@@ -126,7 +126,6 @@ public class Drive implements Subsystem
    }
 
    
-   
    @Override
    public void resetState()
    {
@@ -441,11 +440,11 @@ public class Drive implements Subsystem
 
       if (distance < 36)
       {
-         setThrottle(.15);
+         setThrottle(.2);
       }
       else
       {
-         setThrottle(.3);
+         setThrottle(.35);
       }
 
       if (distance < 10)
