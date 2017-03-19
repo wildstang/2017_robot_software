@@ -110,7 +110,7 @@ public class Shooter implements Subsystem
       m_leftJoyAxis = 0;
       m_rightJoyAxis = 0;
       
-      m_gateOpen = false;
+      m_gateOpen = true;
       m_flywheelOn = false;
 
       // Toggle state variables
@@ -258,12 +258,15 @@ public class Shooter implements Subsystem
       else if (p_source == m_gateButton)
       {
          m_gateCurrent = m_gateButton.getValue();
+         // CIR: No toggle for now - default to open in reset state, and use momentary to close if required
+         m_gateOpen = m_gateCurrent;
+         
          // Toggle for gate left
-         if (m_gateCurrent && !m_gatePrev)
-         {
-            m_gateOpen = !m_gateOpen;
-         }
-         m_gatePrev = m_gateCurrent;
+//         if (m_gateCurrent && !m_gatePrev)
+//         {
+//            m_gateOpen = !m_gateOpen;
+//         }
+//         m_gatePrev = m_gateCurrent;
       }
       // Sets feed enumaration based on joystick
       else if (p_source == m_leftBeltJoystick)
@@ -499,6 +502,9 @@ public class Shooter implements Subsystem
 
       SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
       SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));
+
+      SmartDashboard.putBoolean("Left ready", readyToShootLeft);
+      SmartDashboard.putBoolean("Right ready", readyToShootRight);
 
       // WS config
       SmartDashboard.putNumber("Left flywheel target", m_targetSpeedLeft);
