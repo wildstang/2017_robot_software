@@ -24,6 +24,7 @@ public class MiddleGear extends AutoProgram
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
+      addStep(new AutoStepDelay(500));
 //      addStep(new DriveDistanceStraightStep(0.5, 48));
       addStep(new TrackVisionToGearStep());
 

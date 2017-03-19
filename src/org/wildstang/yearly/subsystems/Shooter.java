@@ -452,6 +452,10 @@ public class Shooter implements Subsystem
       {
          m_blender.runIn();
       }
+      else if (m_leftFeedDirection == FeedDirection.REVERSE || m_rightFeedDirection == FeedDirection.REVERSE)
+      {
+         m_blender.runOut();
+      }
       else
       {
          m_blender.turnOff();
