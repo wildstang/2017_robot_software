@@ -17,10 +17,11 @@ import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive implements Subsystem
+public class Drive implements Subsystem, PIDOutput
 {
    // Constants
    private static final double ROBOT_WIDTH_INCHES = 30;
@@ -726,4 +727,14 @@ public class Drive implements Subsystem
 
       return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
+
+
+
+   @Override
+   public void pidWrite(double p_output)
+   {
+   }
+   
+   
+   
 }
