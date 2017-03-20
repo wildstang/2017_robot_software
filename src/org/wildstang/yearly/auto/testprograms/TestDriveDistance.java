@@ -5,7 +5,6 @@ import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.yearly.auto.steps.DriveDistanceStraightStep;
 import org.wildstang.yearly.auto.steps.FloodGatesCloseStep;
 import org.wildstang.yearly.auto.steps.FloodGatesOpenStep;
-import org.wildstang.yearly.auto.steps.WaitStep;
 
 public class TestDriveDistance extends AutoProgram
 {
