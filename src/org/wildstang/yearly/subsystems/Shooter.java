@@ -504,6 +504,9 @@ public class Shooter implements Subsystem
       SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
       SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));
 
+      SmartDashboard.putBoolean("Left ready", readyToShootLeft);
+      SmartDashboard.putBoolean("Right ready", readyToShootRight);
+
       // WS config
       SmartDashboard.putNumber("Left flywheel target", m_targetSpeedLeft);
       SmartDashboard.putNumber("Right flywheel target", m_targetSpeedRight);
