@@ -110,7 +110,7 @@ public class Shooter implements Subsystem
       m_leftJoyAxis = 0;
       m_rightJoyAxis = 0;
       
-      m_gateOpen = false;
+      m_gateOpen = true;
       m_flywheelOn = false;
 
       // Toggle state variables
@@ -196,17 +196,17 @@ public class Shooter implements Subsystem
    {
       // Configure left talon
       configureFlywheelTalon(m_CANFlywheelLeft, 
-            Preferences.getInstance().getDouble("L_F", 0.02366), 
-            Preferences.getInstance().getDouble("L_P", 0.013), 
-            Preferences.getInstance().getDouble("L_I", 0), 
-            Preferences.getInstance().getDouble("L_D", 0.15));
+            0.0238,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+  0.013,//          0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
+            0,//Preferences.getInstance().getDouble("L_I", 0), 
+      0);//      0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
 
       // Configure right talon
       configureFlywheelTalon(m_CANFlywheelRight, 
-            Preferences.getInstance().getDouble("R_F", 0.02366), 
-            Preferences.getInstance().getDouble("R_P", 0.013), 
-            Preferences.getInstance().getDouble("R_I", 0), 
-            Preferences.getInstance().getDouble("R_D", 0.15));
+            0.0237,//Preferences.getInstance().getDouble("L_F", 0.02366), 
+0.013,//            0.204,//Preferences.getInstance().getDouble("L_P", 0.013), 
+            0,//Preferences.getInstance().getDouble("L_I", 0), 
+0);//            0.15);//Preferences.getInstance().getDouble("L_D", 0.15));
    }
 
    private void readConfigValues()
@@ -257,13 +257,13 @@ public class Shooter implements Subsystem
       }
       else if (p_source == m_gateButton)
       {
-         m_gateCurrent = m_gateButton.getValue();
+         m_gateOpen = !m_gateButton.getValue();
          // Toggle for gate left
-         if (m_gateCurrent && !m_gatePrev)
-         {
-            m_gateOpen = !m_gateOpen;
-         }
-         m_gatePrev = m_gateCurrent;
+//         if (m_gateCurrent && !m_gatePrev)
+//         {
+//            m_gateOpen = !m_gateOpen;
+//         }
+//         m_gatePrev = m_gateCurrent;
       }
       // Sets feed enumaration based on joystick
       else if (p_source == m_leftBeltJoystick)
@@ -452,6 +452,10 @@ public class Shooter implements Subsystem
       {
          m_blender.runIn();
       }
+      else if (m_leftFeedDirection == FeedDirection.REVERSE || m_rightFeedDirection == FeedDirection.REVERSE)
+      {
+         m_blender.runOut();
+      }
       else
       {
          m_blender.turnOff();
@@ -499,6 +503,9 @@ public class Shooter implements Subsystem
 
       SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
       SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));
+
+      SmartDashboard.putBoolean("Left ready", readyToShootLeft);
+      SmartDashboard.putBoolean("Right ready", readyToShootRight);
 
       // WS config
       SmartDashboard.putNumber("Left flywheel target", m_targetSpeedLeft);

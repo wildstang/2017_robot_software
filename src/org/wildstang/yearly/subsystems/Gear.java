@@ -23,8 +23,12 @@ public class Gear implements Subsystem
    private boolean m_doorCurrent;
    private boolean m_doorOpen;
    
+   private boolean m_receivePrev;
+   private boolean m_receiveCurrent;
+
    private DigitalInput m_tiltButton;
    private DigitalInput m_doorButton;
+   private DigitalInput m_receiveButton;
    
    private WsSolenoid m_tiltSolenoid;
    private WsSolenoid m_doorSolenoid;
@@ -68,6 +72,9 @@ public class Gear implements Subsystem
       m_doorButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName());
       m_doorButton.addInputListener(this);
       
+      m_receiveButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_RECEIVE.getName());
+      m_receiveButton.addInputListener(this);
+
       m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
       m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
       
@@ -99,6 +106,22 @@ public class Gear implements Subsystem
            m_doorOpen = !m_doorOpen;
         }
         m_doorPrev = m_doorCurrent;
+      }
+      if (source == m_receiveButton)
+      {
+        m_receiveCurrent = m_receiveButton.getValue();
+        
+        if (m_receiveCurrent && !m_receivePrev)
+        {
+//           m_receive = true;
+           m_doorOpen = DOOR_OPEN;
+           m_receiveGear = GEAR_BACK;
+        }
+//        else
+//        {
+//           m_doorOpen = DOOR_CLOSED;
+//        }
+        m_receivePrev = m_receiveCurrent;
       }
    }
 
