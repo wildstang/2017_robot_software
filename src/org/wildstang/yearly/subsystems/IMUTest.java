@@ -35,9 +35,9 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-//		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
+		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
 		 
-//		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
+		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
 	}
 	
 	
