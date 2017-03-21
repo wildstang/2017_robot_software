@@ -19,7 +19,6 @@ public class ShootStep extends AutoStep
    @Override
    public void update()
    {
-      shooter.openBothGate();
       shooter.turnFeedOn();
       
       setFinished(true);
