@@ -34,11 +34,16 @@ public class TurnToHeadingStep extends AutoStep
       m_PidController.setContinuous();
       m_PidController.setSetpoint(m_heading);
       m_PidController.setOutputRange(-1.0, 1.0);
+      
+      
    }
 
    @Override
    public void update()
    {
+      m_drive.setHighGear(false);
+      m_drive.setQuickTurn(true);
+      
       if (!m_started)
       {
          m_PidController.enable();
@@ -47,6 +52,7 @@ public class TurnToHeadingStep extends AutoStep
       
       if (m_PidController.onTarget())
       {
+         m_PidController.disable();
          setFinished(true);
       }
    }

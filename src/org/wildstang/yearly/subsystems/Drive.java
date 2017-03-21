@@ -716,6 +716,15 @@ public class Drive implements Subsystem, PIDOutput
       m_throttleValue = newThrottle;
    }
    
+   
+   
+   public void setQuickTurn(boolean p_quickTurn)
+   {
+      m_quickTurn = p_quickTurn;
+   }
+
+
+
    /**
     * Returns distance traveled since encoders were set to zero, in inches.
     * @return
@@ -733,6 +742,7 @@ public class Drive implements Subsystem, PIDOutput
    @Override
    public void pidWrite(double p_output)
    {
+      setHeading(p_output);
    }
    
    
