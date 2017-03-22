@@ -95,6 +95,16 @@ public class Shooter implements Subsystem
    // Enumeration variable for SHOOT, REVERSE, and STOP
    private FeedDirection m_leftFeedDirection;
    private FeedDirection m_rightFeedDirection;
+   
+   private double m_LF;
+   private double m_LP;
+   private double m_LI;
+   private double m_LD;
+   
+   private double m_RF;
+   private double m_RP;
+   private double m_RI;
+   private double m_RD;
 
 
    @Override
@@ -196,17 +206,17 @@ public class Shooter implements Subsystem
    {
       // Configure left talon
       configureFlywheelTalon(m_CANFlywheelLeft, 
-            Preferences.getInstance().getDouble("L_F", 0.02366), 
-            Preferences.getInstance().getDouble("L_P", 0.013), 
-            Preferences.getInstance().getDouble("L_I", 0), 
-            Preferences.getInstance().getDouble("L_D", 0.15));
+            m_LF, 
+            m_LP, 
+            m_LI, 
+            m_LD);
 
       // Configure right talon
       configureFlywheelTalon(m_CANFlywheelRight, 
-            Preferences.getInstance().getDouble("R_F", 0.02366), 
-            Preferences.getInstance().getDouble("R_P", 0.013), 
-            Preferences.getInstance().getDouble("R_I", 0), 
-            Preferences.getInstance().getDouble("R_D", 0.15));
+            m_RF, 
+            m_RP, 
+            m_RI, 
+            m_RD);
    }
 
    private void readConfigValues()
@@ -218,6 +228,16 @@ public class Shooter implements Subsystem
       m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5550.0);
       m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 1.0);
       m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
+      
+      m_LF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_F",  0.0238);
+      m_LP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_P", 0.013);
+      m_LI = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_I", 0);
+      m_LD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_D", 0);
+      
+      m_RF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_F", 0.0237);
+      m_RP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_P", 0.013);
+      m_RI = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_I", 0);
+      m_RD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_D", 0);
    }
 
    private void configureFlywheelTalon(CANTalon p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
