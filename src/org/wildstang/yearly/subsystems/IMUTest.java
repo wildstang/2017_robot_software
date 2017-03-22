@@ -35,9 +35,9 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-//		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
+		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
 		 
-//		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
+		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
 	}
 	
 	
@@ -58,9 +58,7 @@ public class IMUTest implements Subsystem{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		CompassHeading = (double)((HeadingBytes[0] * 100) + HeadingBytes[1]);
-		SmartDashboard.putNumber("Low Byte", HeadingBytes[1]);
-		SmartDashboard.putNumber("High Byte", (HeadingBytes[0] * 100));
+		CompassHeading = (double)HeadingBytes[0] * 2;
 		SmartDashboard.putNumber("IMU Test Heading", CompassHeading);
 	}
 
