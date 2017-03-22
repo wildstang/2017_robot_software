@@ -92,7 +92,7 @@ public enum WSInputs implements Inputs
    FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),
    //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
    //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),
-   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging());
+   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), getLogging()),
 
 
    // ********************************             
@@ -105,7 +105,7 @@ public enum WSInputs implements Inputs
    // ********************************             
    // Others ...                                   
    // ********************************             
-//   IMU("IMU", WSInputType.I2C,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), getLogging());
+   IMU("IMU", WSInputType.COMPASS,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), getLogging());
 
 
    private final String m_name;
@@ -117,8 +117,7 @@ public enum WSInputs implements Inputs
 
    private static boolean isLogging = true;
 
-   WSInputs(String p_name, InputType p_type, InputConfig p_config,
-         boolean p_trackingState)
+   WSInputs(String p_name, InputType p_type, InputConfig p_config, boolean p_trackingState)
    {
       m_name = p_name;
       m_type = p_type;
