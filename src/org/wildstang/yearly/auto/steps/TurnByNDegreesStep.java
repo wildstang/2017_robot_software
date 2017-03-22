@@ -9,15 +9,17 @@ import org.wildstang.yearly.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.PIDController;
 
-public class TurnToHeadingStep extends AutoStep
+public class TurnByNDegreesStep extends AutoStep
 {
    private PIDController m_PidController = null;
    private WsCompassInput m_compass;
    private Drive m_drive;
    private boolean m_started = false;
    private double m_heading;
+   private double m_target;
+   private boolean m_firstrun = true;
    
-   public TurnToHeadingStep(double p_heading)
+   public TurnByNDegreesStep(double p_heading)
    {
       m_heading = p_heading;
    }
@@ -32,7 +34,6 @@ public class TurnToHeadingStep extends AutoStep
       m_PidController.setAbsoluteTolerance(2.0);
       m_PidController.setInputRange(0, 360);
       m_PidController.setContinuous();
-      m_PidController.setSetpoint(m_heading);
       m_PidController.setOutputRange(-1.0, 1.0);
       
       
@@ -43,6 +44,14 @@ public class TurnToHeadingStep extends AutoStep
    {
       m_drive.setHighGear(false);
       m_drive.setQuickTurn(true);
+      
+      if (m_firstrun)
+      {
+         double currentHeading = m_compass.getValue()[0] * 2;
+         m_target = (currentHeading + m_heading) % 360;
+         m_PidController.setSetpoint(m_target);
+         m_firstrun = false;
+      }
       
       if (!m_started)
       {
