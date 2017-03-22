@@ -30,6 +30,7 @@ public class LeftGear extends AutoProgram
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_LEFT_GEAR));
+      addStep(new AutoStepDelay(500));
 
       addStep(new TrackVisionToGearStep());
       

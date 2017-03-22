@@ -30,6 +30,7 @@ public class RightGear extends AutoProgram
       addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_RIGHT_GEAR));
+      addStep(new AutoStepDelay(500));
 
       addStep(new TrackVisionToGearStep());
       
