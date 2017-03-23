@@ -504,7 +504,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setAutoGearMode()
    {
-      DriverStation.reportWarning("Set Auto Gear mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -524,7 +523,6 @@ public class Drive implements Subsystem, PIDOutput
    
    public void setPathFollowingMode()
    {
-	   DriverStation.reportWarning("Set Path Following Mode", false);
 
       m_driveMode = DriveType.PATH;
 
@@ -551,7 +549,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setOpenLoopDrive()
    {
-	   DriverStation.reportWarning("Set Open Loop Drive", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -578,7 +575,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setFullBrakeMode()
    {
-	   DriverStation.reportWarning("Set Full Brake Mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
