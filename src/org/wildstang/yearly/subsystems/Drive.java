@@ -295,6 +295,7 @@ public class Drive implements Subsystem, PIDOutput
          m_shifterSolenoid.setValue(false);
       }
 
+      SmartDashboard.putBoolean("High Gear", m_highGear);
       SmartDashboard.putNumber("throttleValue", m_throttleValue);
       SmartDashboard.putNumber("heading value", m_headingValue);
       SmartDashboard.putString("Drive mode", m_driveMode.name());

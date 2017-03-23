@@ -26,7 +26,6 @@ public class VisionServer implements Runnable
    
    public void startVisionServer()
    {
-	   SmartDashboard.putBoolean("VisionServer", isRunning());
       SmartDashboard.putBoolean("Camera", false);
 
       // Create Server Socket
@@ -46,6 +45,7 @@ public class VisionServer implements Runnable
          Thread t = new Thread(this);
          t.start();
          m_running = true;
+         SmartDashboard.putBoolean("VisionServer", isRunning());
       }
    }
 
