@@ -16,7 +16,7 @@ public class TEST10FtStraightLinePath extends AutoProgram
    @Override
    public String toString()
    {
-      return "TEST - 10ft straight line";
+      return "10ft straight line";
    }
 
 

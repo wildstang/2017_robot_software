@@ -3,26 +3,24 @@ package org.wildstang.yearly.auto.programs;
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.auto.steps.FeedOffStep;
-import org.wildstang.yearly.auto.steps.FeedOnStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
-import org.wildstang.yearly.auto.steps.WaitStep;
 
 public class HopperShoot extends AutoProgram
 {
 
-   private long hopperWaitTime;
-   private long delayWhileShooting;
+   private int hopperWaitTime;
+   private int delayWhileShooting;
 
    @Override
    public void initialize()
    {
       super.initialize();
+ 
       
       // Read config values
       // 10000 = ten seconds
@@ -41,7 +39,7 @@ public class HopperShoot extends AutoProgram
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
 //      addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(3000));
+      addStep(new AutoStepDelay(hopperWaitTime));
 //      addStep(new FeedOffStep());
       
       
@@ -59,7 +57,7 @@ public class HopperShoot extends AutoProgram
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(10000));
+      addStep(new AutoStepDelay(delayWhileShooting));
       addStep(new StopShooting());
       
       // TODO: Back up over auto line?

@@ -11,6 +11,9 @@ import org.wildstang.yearly.subsystems.drive.PathFollower;
 import org.wildstang.yearly.subsystems.drive.PathReader;
 import org.wildstang.yearly.subsystems.drive.Trajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 public class PathFollowerStep extends AutoStep
 {
 
@@ -21,6 +24,8 @@ public class PathFollowerStep extends AutoStep
    
    private boolean m_started = false;
    
+//   private SendableChooser chooser;
+   
    public PathFollowerStep(String p_path)
    {
       m_filePath = p_path;
@@ -29,13 +34,24 @@ public class PathFollowerStep extends AutoStep
    @Override
    public void initialize()
    {
+//      chooser = new SendableChooser();
+//      chooser.addDefault("Red", true);
+//      chooser.addObject("Blue", false);
+
       m_path = new Path();
       File leftFile = new File(m_filePath + ".left");
       File rightFile = new File(m_filePath + ".right");
+      Trajectory leftTrajectory;
+      Trajectory rightTrajectory;
       
-      Trajectory leftTrajectory = PathReader.readTrajectory(leftFile);
-      Trajectory rightTrajectory = PathReader.readTrajectory(rightFile);
-
+//       (chooser.getSelected().equals("Blue"))
+      if (DriverStation.getInstance().getAlliance().equals(DriverStation.Alliance.Blue)) {
+         leftTrajectory = PathReader.readTrajectory(rightFile);
+         rightTrajectory = PathReader.readTrajectory(leftFile);
+      } else {
+         leftTrajectory = PathReader.readTrajectory(leftFile);
+         rightTrajectory = PathReader.readTrajectory(rightFile);
+      }
       System.out.println("Left has " + leftTrajectory.getTalonPoints().size() + " points");
       System.out.println("right has " + rightTrajectory.getTalonPoints().size() + " points");
       

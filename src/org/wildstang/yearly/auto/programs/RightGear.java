@@ -6,13 +6,11 @@ import org.wildstang.framework.config.Config;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.CloseGearHolderStep;
 import org.wildstang.yearly.auto.steps.DeliverGearStep;
-import org.wildstang.yearly.auto.steps.DriveDistanceStraightStep;
 import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
-import org.wildstang.yearly.auto.steps.WaitStep;
 
 public class RightGear extends AutoProgram
 {
@@ -38,7 +36,7 @@ public class RightGear extends AutoProgram
       addStep(new DeliverGearStep());
       addStep(new OpenGearHolderStep());
       // Wait to let it settle
-      addStep(new AutoStepDelay(500));
+      addStep(new AutoStepDelay(waitTime));
 
       // Go backwards 2ft
 //      addStep(new DriveDistanceStraightStep(-0.5, 24));

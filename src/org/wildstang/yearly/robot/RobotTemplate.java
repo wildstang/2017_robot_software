@@ -175,7 +175,7 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-//      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
