@@ -107,11 +107,11 @@ public class LED implements Subsystem
       m_leftJammedLast = isLeftFeedJammed;
       
       boolean isRightFeedJammed = shooter.checkRightFeedJammed();
-      m_newDataAvailable = isRightFeedJammed && !m_rightJammedLast;
+      m_newDataAvailable |= isRightFeedJammed && !m_rightJammedLast;
       m_rightJammedLast = isRightFeedJammed;
       
       boolean isFlywheelsReady = (shooter.isLeftReadyToShoot() && shooter.isRightReadyToShoot());
-      m_newDataAvailable = isFlywheelsReady && !m_isFlywheelReady;
+      m_newDataAvailable |= isFlywheelsReady && !m_isFlywheelReady;
       m_isFlywheelReady = isFlywheelsReady;
 
       m_normal = !m_turbo;
