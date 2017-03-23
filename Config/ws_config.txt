@@ -19,6 +19,16 @@ org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
 org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
 
+org.wildstang.yearly.subsystems.Shooter.L_F=0.0238
+org.wildstang.yearly.subsystems.Shooter.L_P=0.013
+org.wildstang.yearly.subsystems.Shooter.L_I=0
+org.wildstang.yearly.subsystems.Shooter.L_D=0
+
+org.wildstang.yearly.subsystems.Shooter.R_F=0.0237
+org.wildstang.yearly.subsystems.Shooter.R_P=0.013
+org.wildstang.yearly.subsystems.Shooter.R_I=0
+org.wildstang.yearly.subsystems.Shooter.R_D=0
+
 
 // Vision
 org.wildstang.yearly.robot.vision.VisionHandler.h_min=74
