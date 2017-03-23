@@ -342,7 +342,16 @@ public class Shooter implements Subsystem
       }
    }
 
-
+   public boolean isFlywheelOn()
+   {
+      return m_flywheelOn;
+   }
+   
+   public boolean isShooting()
+   {
+      return isFlywheelOn() && (m_leftFeedDirection == FeedDirection.SHOOT) || (m_rightFeedDirection == FeedDirection.SHOOT);
+   }
+   
    public boolean isLeftReadyToShoot()
    {
       return isReadyToShoot(m_CANFlywheelLeft);
