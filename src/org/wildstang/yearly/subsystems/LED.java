@@ -123,26 +123,26 @@ public class LED implements Subsystem
          {
             if (m_newDataAvailable)
             {
+               LedCmd command = offCmd;
+               if (m_shooterOn)
+               {
+                  command = shooterOnCmd;
+               }
+               if (m_shooting)
+               {
+                  command = shootingCmd;
+               }
                if (isLeftFeedJammed)
                {
-                  m_ledOutput.setValue(leftFeedCmd.getBytes());
+                  command = leftFeedCmd;
                }
-               else if (isRightFeedJammed)
+               if (isRightFeedJammed)
                {
-                  m_ledOutput.setValue(rightFeedCmd.getBytes());
+                  command = rightFeedCmd;
                }
-               else if (m_shooterOn)
-               {
-                  m_ledOutput.setValue(shooterOnCmd.getBytes());
-               }
-               else if (m_shooting)
-               {
-                  m_ledOutput.setValue(shootingCmd.getBytes());
-               }
-               else
-               {
-                  
-               }
+               
+               m_ledOutput.setValue(command.getBytes());
+               
             }
             m_newDataAvailable = false;
 

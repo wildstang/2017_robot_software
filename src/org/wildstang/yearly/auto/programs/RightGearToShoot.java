@@ -47,11 +47,13 @@ public class RightGearToShoot extends AutoProgram
       // Go backwards 2ft
 //      addStep(new DriveDistanceStraightStep(-0.5, 24));
       addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
+
       addStep(new TurnByNDegreesStep(-175d)); //Not sure if negative or positive 175 degrees
+
       addStep(new PathFollowerStep(PathNameConstants.RIGHT_GEAR_TO_BOILER));
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
-      addStep(new AutoStepDelay(2000));
+      addStep(new AutoStepDelay(10000));
       addStep(new StopShooting());
    }
 
