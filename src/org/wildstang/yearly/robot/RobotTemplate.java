@@ -193,19 +193,19 @@ public class RobotTemplate extends IterativeRobot
          m_visionServer.startVisionServer();
       }
 
-    // Send alliance colour to LEDs
-    if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-    }
-    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-    }
-    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-    }
+      // Send alliance colour to LEDs
+      if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+      }
+      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+      }
+      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+      }
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 

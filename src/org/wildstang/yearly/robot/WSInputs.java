@@ -66,7 +66,6 @@ public enum WSInputs implements Inputs
    // Driver Buttons                               
    //---------------------------------             
    AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), getLogging()),     // Intake Subsystem
-   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), getLogging()),     // Intake Subsystem
    SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), getLogging()),     // Driver Subsystem
    QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), getLogging()),     // Driver Subsystem
 
@@ -88,7 +87,7 @@ public enum WSInputs implements Inputs
    GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), getLogging()),      // Gear Subsystem
    GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), getLogging()),      // Gear Subsystem
    GEAR_RECEIVE("Gear Receive",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), getLogging()),      // Gear Subsystem
-   //GATE("Gate Button",                            WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),        // Shooter Subsystem
+   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), getLogging()),     // Intake Subsystem
    FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), getLogging()),
    //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), getLogging()),        // Shooter Subsystem
    //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), getLogging()),

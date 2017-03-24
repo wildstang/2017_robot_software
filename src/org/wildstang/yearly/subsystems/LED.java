@@ -29,6 +29,7 @@ public class LED implements Subsystem
    private static final int LEFTJAM_ID = 9;
    private static final int RIGHTJAM_ID = 10;
    private static final int INTAKE_ID = 11;
+   private static final int OFF_ID = 12;
 
    // Sent states
    boolean autoDataSent = false;
@@ -41,7 +42,8 @@ public class LED implements Subsystem
 
    boolean m_turbo;
    boolean m_normal = true;
-   boolean m_shooter;
+   boolean m_shooterOn;
+   boolean m_shooting;
    boolean m_intake;
 
    boolean m_leftJammedLast = false;
@@ -51,8 +53,8 @@ public class LED implements Subsystem
    private Shooter shooter;
 
    // Reused commands from year to year
-   public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 0, 0);
-   public static LedCmd autoCmd = new LedCmd(AUTO_ID, 0, 0, 0);
+   public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 255, 0);
+   public static LedCmd autoCmd = new LedCmd(AUTO_ID, 255, 255, 0);
    public static LedCmd redAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 0);
    public static LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
    public static LedCmd purpleAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 255);
@@ -67,6 +69,7 @@ public class LED implements Subsystem
    public static LedCmd climbingCmd = new LedCmd(CLIMBING_ID, 0, 0, 0);
    public static LedCmd leftFeedCmd = new LedCmd(LEFTJAM_ID, 0, 0, 255);
    public static LedCmd rightFeedCmd = new LedCmd(RIGHTJAM_ID, 255, 0, 0);
+   public static LedCmd offCmd = new LedCmd(OFF_ID, 0, 0, 0);
 
    public LED()
    {
@@ -82,8 +85,9 @@ public class LED implements Subsystem
 
       shooter = (Shooter) Core.getSubsystemManager().getSubsystem(WSSubsystems.SHOOTER.getName());
 
-      // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_1.getName()).addInputListener(this);
-      // Core.getInputManager().getInput(WSInputs.DRV_BUTTON_8.getName()).addInputListener(this);
+       Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName()).addInputListener(this);
+       Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName()).addInputListener(this);
+       Core.getInputManager().getInput(WSInputs.FEEDER_RIGHT.getName()).addInputListener(this);
    }
 
    @Override
@@ -103,17 +107,13 @@ public class LED implements Subsystem
       boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
 
       boolean isLeftFeedJammed = shooter.checkLeftFeedJammed();
-      m_newDataAvailable = isLeftFeedJammed && !m_leftJammedLast;
+      m_newDataAvailable |= isLeftFeedJammed && !m_leftJammedLast;
       m_leftJammedLast = isLeftFeedJammed;
       
       boolean isRightFeedJammed = shooter.checkRightFeedJammed();
-      m_newDataAvailable = isRightFeedJammed && !m_rightJammedLast;
+      m_newDataAvailable |= isRightFeedJammed && !m_rightJammedLast;
       m_rightJammedLast = isRightFeedJammed;
       
-      boolean isFlywheelsReady = (shooter.isLeftReadyToShoot() && shooter.isRightReadyToShoot());
-      m_newDataAvailable = isFlywheelsReady && !m_isFlywheelReady;
-      m_isFlywheelReady = isFlywheelsReady;
-
       m_normal = !m_turbo;
 
       if (isRobotEnabled)
@@ -131,9 +131,17 @@ public class LED implements Subsystem
                {
                   m_ledOutput.setValue(rightFeedCmd.getBytes());
                }
-               else if (isFlywheelsReady)
+               else if (m_shooterOn)
                {
                   m_ledOutput.setValue(shooterOnCmd.getBytes());
+               }
+               else if (m_shooting)
+               {
+                  m_ledOutput.setValue(shootingCmd.getBytes());
+               }
+               else
+               {
+                  
                }
             }
             m_newDataAvailable = false;
@@ -153,12 +161,19 @@ public class LED implements Subsystem
    @Override
    public void inputUpdate(Input source)
    {
-      // if (source.getName().equals(WSInputs.DRV_BUTTON_1.getName()))
-      // {
-      // m_shooter = ((DigitalInput) source).getValue();
-      // }
-
-      // m_newDataAvailable = true;
+      if (source.getName().equals(WSInputs.FLYWHEEL.getName()))
+      {
+         m_shooterOn = shooter.isFlywheelOn();
+      }
+      else if (source.getName().equals(WSInputs.FEEDER_LEFT))
+      {
+         m_shooting = shooter.isShooting();
+      }
+      else if (source.getName().equals(WSInputs.FEEDER_RIGHT))
+      {
+         m_shooting = shooter.isShooting();
+      }
+      m_newDataAvailable = true;
    }
 
 //   public void sendCommand(LedCmd p_command)
