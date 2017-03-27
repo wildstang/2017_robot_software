@@ -181,6 +181,7 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
 
+      AutoManager.getInstance().addProgram(new TestTurn());
       AutoManager.getInstance().addProgram(new BoilerShoot());
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());

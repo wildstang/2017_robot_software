@@ -21,42 +21,42 @@ public enum WSOutputs implements Outputs
    //---------------------------------             
    // Motors
    //---------------------------------             
-   FEEDER_LEFT("Left Feeder Motor",          WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), getLogging()),   // Shooter Subsystem
-   FEEDER_RIGHT("Right Feeder Motor",        WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), getLogging()),   // Shooter Subsystem
-   INTAKE("Intake Motor",                    WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), getLogging()),   // Intake Subsystem
-   WINCH("Winch motor",                      WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), getLogging()),   // Winch Subsystem
-   BLENDER("Blender motor",                  WSOutputType.VICTOR,    new WsVictorConfig(4, 0.0), getLogging()),   // Blender Subsystem
+   FEEDER_LEFT("Left Feeder Motor",          WSOutputType.VICTOR,    new WsVictorConfig(0, 0.0), true),   // Shooter Subsystem
+   FEEDER_RIGHT("Right Feeder Motor",        WSOutputType.VICTOR,    new WsVictorConfig(1, 0.0), true),   // Shooter Subsystem
+   INTAKE("Intake Motor",                    WSOutputType.VICTOR,    new WsVictorConfig(2, 0.0), true),   // Intake Subsystem
+   WINCH("Winch motor",                      WSOutputType.VICTOR,    new WsVictorConfig(3, 0.0), true),   // Winch Subsystem
+   BLENDER("Blender motor",                  WSOutputType.VICTOR,    new WsVictorConfig(4, 0.0), true),   // Blender Subsystem
                                              
    //---------------------------------             
    // Servos
    //---------------------------------             
-   //SERVO_0("Test Servo 0",                   WSOutputType.SERVO,     new WsServoConfig(0, 0.0), getLogging()),    // PWM 0, Initial Rotation Angle 0.0
+   //SERVO_0("Test Servo 0",                   WSOutputType.SERVO,     new WsServoConfig(0, 0.0), true),    // PWM 0, Initial Rotation Angle 0.0
 
    // ********************************
    // DIO Outputs                             
    // ********************************
-   //DIO_O_0("Test Digital Output 0",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(0, false), getLogging()), // Channel 0, Initially Low
+   //DIO_O_0("Test Digital Output 0",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(0, false), true), // Channel 0, Initially Low
 
    // ********************************
    // Solenoids
    // ********************************
-   SHIFTER("Shifter single solenoid",        WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 7, false), getLogging()),  // Ctrl 1, Pins 0 Driver Subsystem
-   //GATE("Gate",                              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 4, false), getLogging()),  // Ctrl 1, Pin  1 Shooter Subsystem
-   GEAR_HOLD("Gear Doors",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 6, false), getLogging()),  // Ctrl 1, Pin  2 Gear Subsystem
-   GEAR_TILT("Gear Tilt",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), getLogging()),  // Ctrl 1, Pin  3 Gear Subsystem
+   SHIFTER("Shifter single solenoid",        WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 7, false), true),  // Ctrl 1, Pins 0 Driver Subsystem
+   //GATE("Gate",                              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 4, false), true),  // Ctrl 1, Pin  1 Shooter Subsystem
+   GEAR_HOLD("Gear Doors",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 6, false), true),  // Ctrl 1, Pin  2 Gear Subsystem
+   GEAR_TILT("Gear Tilt",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), true),  // Ctrl 1, Pin  3 Gear Subsystem
 
    // ********************************
    // Relays
    // ********************************
-   //RELAY_0("Relay 0",                        WSOutputType.RELAY, new WsRelayConfig(0, WsRelayState.RELAY_OFF), getLogging()), // Relay 0, Both Off
-   //RELAY_1("Relay 1",                        WSOutputType.RELAY, new WsRelayConfig(1, WsRelayState.RELAY_OFF), getLogging()), // Relay 1, Both Off
-   //RELAY_2("Relay 2",                        WSOutputType.RELAY, new WsRelayConfig(2, WsRelayState.RELAY_OFF), getLogging()), // Relay 2, Both Off
-   //RELAY_3("Relay 3",                        WSOutputType.RELAY, new WsRelayConfig(3, WsRelayState.RELAY_OFF), getLogging()), // Relay 3, Both Off
+   //RELAY_0("Relay 0",                        WSOutputType.RELAY, new WsRelayConfig(0, WsRelayState.RELAY_OFF), true), // Relay 0, Both Off
+   //RELAY_1("Relay 1",                        WSOutputType.RELAY, new WsRelayConfig(1, WsRelayState.RELAY_OFF), true), // Relay 1, Both Off
+   //RELAY_2("Relay 2",                        WSOutputType.RELAY, new WsRelayConfig(2, WsRelayState.RELAY_OFF), true), // Relay 2, Both Off
+   //RELAY_3("Relay 3",                        WSOutputType.RELAY, new WsRelayConfig(3, WsRelayState.RELAY_OFF), true), // Relay 3, Both Off
 
    // ********************************
    // Others ...
    // ********************************
-   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kMXP, 0x10), getLogging());
+   LED("LEDs",                               WSOutputType.I2C, new WsI2COutputConfig(I2C.Port.kMXP, 0x10), true);
 
    
    private String m_name;

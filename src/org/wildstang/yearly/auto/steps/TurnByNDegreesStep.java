@@ -8,6 +8,7 @@ import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnByNDegreesStep extends AutoStep
 {
@@ -35,8 +36,6 @@ public class TurnByNDegreesStep extends AutoStep
       m_PidController.setInputRange(0, 360);
       m_PidController.setContinuous();
       m_PidController.setOutputRange(-1.0, 1.0);
-      
-      
    }
 
    @Override
@@ -61,9 +60,15 @@ public class TurnByNDegreesStep extends AutoStep
       
       if (m_PidController.onTarget())
       {
+         SmartDashboard.putBoolean("On target", true);
          m_PidController.disable();
          setFinished(true);
       }
+      else
+      {
+         SmartDashboard.putBoolean("On target", false);
+      }
+      SmartDashboard.putNumber("Compass", m_compass.getValue()[0] * 2);
    }
 
    @Override
