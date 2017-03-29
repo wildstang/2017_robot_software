@@ -157,4 +157,20 @@ public class VisionServer implements Runnable
       return m_distance;
    }
    
+   public void startVideoLogging()
+   {
+      if (m_handler != null)
+      {
+         m_handler.enableVideoLogging();
+      }
+   }
+   
+   public void stopVideoLogging()
+   {
+      if (m_handler != null)
+      {
+         m_handler.disableVideoLogging();
+      }
+   }
+   
 }

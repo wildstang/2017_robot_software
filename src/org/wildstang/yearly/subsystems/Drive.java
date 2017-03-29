@@ -252,6 +252,7 @@ public class Drive implements Subsystem, PIDOutput
          }
          else
          {
+            exitAutoGearMode();
             setOpenLoopDrive();
             setHeading(0);
             SmartDashboard.putBoolean("Auto gear mode", false);
@@ -512,6 +513,7 @@ public class Drive implements Subsystem, PIDOutput
       }
 
       m_driveMode = DriveType.AUTO_GEAR_DROP;
+      RobotTemplate.getVisionServer().startVideoLogging();
 
       setHighGear(true);
       m_gearDropFinished = false;
@@ -519,6 +521,14 @@ public class Drive implements Subsystem, PIDOutput
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
+   }
+   
+   public void exitAutoGearMode()
+   {
+      if (RobotTemplate.getVisionServer() != null)
+      {
+         RobotTemplate.getVisionServer().stopVideoLogging();
+      }
    }
    
    public void setPathFollowingMode()
