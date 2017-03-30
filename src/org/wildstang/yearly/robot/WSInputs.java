@@ -59,8 +59,8 @@ public enum WSInputs implements Inputs
    //---------------------------------
    // Driver Joysticks
    //---------------------------------
-   DRV_THROTTLE("Driver throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), true),     // Driver Subsystem
-   DRV_HEADING("Driver heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), true),    // Driver Subsystem
+   DRV_THROTTLE("Throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), true),     // Driver Subsystem
+   DRV_HEADING("Heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), true),    // Driver Subsystem
                                                 
    //---------------------------------             
    // Driver Buttons                               

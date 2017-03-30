@@ -85,6 +85,10 @@ public class Drive implements Subsystem, PIDOutput
    // constant stack allocation
    private DriveSignal m_driveSignal;
 
+   double m_visionXCorrection;
+   double m_visionDistance;
+
+   
    @Override
    public void init()
    {
@@ -101,6 +105,10 @@ public class Drive implements Subsystem, PIDOutput
          Core.getStateTracker().addIOInfo("Left 2 voltage", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 1 voltage", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 2 voltage", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Drive heading", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Drive throttle", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Vision distance", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Vision correction", "Drive", "Input", null);
       }
       
       // Drive
@@ -340,6 +348,11 @@ public class Drive implements Subsystem, PIDOutput
       
       if (RobotTemplate.LOG_STATE)
       {
+         Core.getStateTracker().addState("Drive heading", "Drive", m_headingValue);
+         Core.getStateTracker().addState("Drive throttle", "Drive", m_throttleValue);
+         Core.getStateTracker().addState("Vision distance", "Drive", m_visionDistance);
+         Core.getStateTracker().addState("Vision correction", "Drive", m_visionXCorrection);
+
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
    
@@ -436,12 +449,12 @@ public class Drive implements Subsystem, PIDOutput
 
    private void autoGear()
    {
-      double xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
-      double distance = RobotTemplate.getVisionServer().getDistance();
+      m_visionXCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
+      m_visionDistance = RobotTemplate.getVisionServer().getDistance();
 
-      setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
+      setHeading(m_visionXCorrection * CORRECTION_HEADING_LEVEL);
 
-      if (distance < 36)
+      if (m_visionDistance < 36)
       {
          setThrottle(.18);
       }
@@ -450,7 +463,7 @@ public class Drive implements Subsystem, PIDOutput
          setThrottle(.3);
       }
 
-      if (distance < 10)
+      if (m_visionDistance < 10)
       {
          setThrottle(0);
          m_gearDropFinished = true;
