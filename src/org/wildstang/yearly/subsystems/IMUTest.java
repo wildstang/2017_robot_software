@@ -6,12 +6,15 @@ import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.inputs.WsI2CInput;
 import org.wildstang.yearly.robot.WSInputs;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IMUTest implements Subsystem{
 	
 	private byte[] HeadingBytes = new byte [2];
 	private double CompassHeading;
+	Gyro m_gyro = new AnalogGyro(0);
 	
 	private String m_name;
 	
@@ -38,6 +41,8 @@ public class IMUTest implements Subsystem{
 		 Core.getInputManager().getInput(WSInputs.IMU.getName()).addInputListener(this);
 		 
 		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
+		 
+		 m_gyro.calibrate();
 	}
 	
 	
@@ -60,6 +65,7 @@ public class IMUTest implements Subsystem{
 		// TODO Auto-generated method stub
 		CompassHeading = (double)HeadingBytes[0] * 2;
 		SmartDashboard.putNumber("IMU Test Heading", CompassHeading);
+      SmartDashboard.putNumber("Gyro Heading", m_gyro.getAngle());
 	}
 
 	@Override
