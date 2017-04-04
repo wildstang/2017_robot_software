@@ -85,6 +85,10 @@ public class Drive implements Subsystem, PIDOutput
    // constant stack allocation
    private DriveSignal m_driveSignal;
 
+   double m_visionXCorrection;
+   double m_visionDistance;
+
+   
    @Override
    public void init()
    {
@@ -101,6 +105,10 @@ public class Drive implements Subsystem, PIDOutput
          Core.getStateTracker().addIOInfo("Left 2 voltage", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 1 voltage", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 2 voltage", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Drive heading", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Drive throttle", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Vision distance", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Vision correction", "Drive", "Input", null);
       }
       
       // Drive
@@ -252,6 +260,7 @@ public class Drive implements Subsystem, PIDOutput
          }
          else
          {
+            exitAutoGearMode();
             setOpenLoopDrive();
             setHeading(0);
             SmartDashboard.putBoolean("Auto gear mode", false);
@@ -295,6 +304,7 @@ public class Drive implements Subsystem, PIDOutput
          m_shifterSolenoid.setValue(false);
       }
 
+      SmartDashboard.putBoolean("High Gear", m_highGear);
       SmartDashboard.putNumber("throttleValue", m_throttleValue);
       SmartDashboard.putNumber("heading value", m_headingValue);
       SmartDashboard.putString("Drive mode", m_driveMode.name());
@@ -338,6 +348,11 @@ public class Drive implements Subsystem, PIDOutput
       
       if (RobotTemplate.LOG_STATE)
       {
+         Core.getStateTracker().addState("Drive heading", "Drive", m_headingValue);
+         Core.getStateTracker().addState("Drive throttle", "Drive", m_throttleValue);
+         Core.getStateTracker().addState("Vision distance", "Drive", m_visionDistance);
+         Core.getStateTracker().addState("Vision correction", "Drive", m_visionXCorrection);
+
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
    
@@ -434,21 +449,21 @@ public class Drive implements Subsystem, PIDOutput
 
    private void autoGear()
    {
-      double xCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
-      double distance = RobotTemplate.getVisionServer().getDistance();
+      m_visionXCorrection = RobotTemplate.getVisionServer().getXCorrectionLevel();
+      m_visionDistance = RobotTemplate.getVisionServer().getDistance();
 
-      setHeading(xCorrection * CORRECTION_HEADING_LEVEL);
+      setHeading(m_visionXCorrection * CORRECTION_HEADING_LEVEL);
 
-      if (distance < 36)
+      if (m_visionDistance < 36)
       {
-         setThrottle(.2);
+         setThrottle(.18);
       }
       else
       {
-         setThrottle(.35);
+         setThrottle(.3);
       }
 
-      if (distance < 10)
+      if (m_visionDistance < 10)
       {
          setThrottle(0);
          m_gearDropFinished = true;
@@ -503,7 +518,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setAutoGearMode()
    {
-      DriverStation.reportWarning("Set Auto Gear mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -512,6 +526,7 @@ public class Drive implements Subsystem, PIDOutput
       }
 
       m_driveMode = DriveType.AUTO_GEAR_DROP;
+      RobotTemplate.getVisionServer().startVideoLogging();
 
       setHighGear(true);
       m_gearDropFinished = false;
@@ -521,9 +536,16 @@ public class Drive implements Subsystem, PIDOutput
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
    }
    
+   public void exitAutoGearMode()
+   {
+      if (RobotTemplate.getVisionServer() != null)
+      {
+         RobotTemplate.getVisionServer().stopVideoLogging();
+      }
+   }
+   
    public void setPathFollowingMode()
    {
-	   DriverStation.reportWarning("Set Path Following Mode", false);
 
       m_driveMode = DriveType.PATH;
 
@@ -550,7 +572,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setOpenLoopDrive()
    {
-	   DriverStation.reportWarning("Set Open Loop Drive", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {
@@ -577,7 +598,6 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setFullBrakeMode()
    {
-	   DriverStation.reportWarning("Set Full Brake Mode", false);
       // Stop following any current path
       if (m_driveMode == DriveType.PATH)
       {

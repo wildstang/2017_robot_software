@@ -18,7 +18,6 @@ public class StopShooting extends AutoStep
    @Override
    public void update()
    {
-      m_shooter.closeBothGate();
       m_shooter.turnFeedOff();
       m_shooter.turnFlywheelOff();
       

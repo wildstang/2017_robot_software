@@ -10,31 +10,31 @@ boiler.to.hopper.auto.red=/home/lvuser/path.test.txt
 boiler.to.hopper.auto.blue="/home/lvuser/path.test.txt"
 
 //Shooter
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5500.0
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5500.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5175.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5175.0
 org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=5500.0
 org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=5650.0
-org.wildstang.yearly.subsystems.Shooter.feedSpeed=1.0
+org.wildstang.yearly.subsystems.Shooter.feedSpeed=0.8
 org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
 org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
 
-org.wildstang.yearly.subsystems.Shooter.L_F=0.0238
-org.wildstang.yearly.subsystems.Shooter.L_P=0.013
-org.wildstang.yearly.subsystems.Shooter.L_I=0
-org.wildstang.yearly.subsystems.Shooter.L_D=0
+org.wildstang.yearly.subsystems.Shooter.L_F=0.024
+org.wildstang.yearly.subsystems.Shooter.L_P=0.011
+org.wildstang.yearly.subsystems.Shooter.L_I=0.0
+org.wildstang.yearly.subsystems.Shooter.L_D=0.0
 
-org.wildstang.yearly.subsystems.Shooter.R_F=0.0237
-org.wildstang.yearly.subsystems.Shooter.R_P=0.013
-org.wildstang.yearly.subsystems.Shooter.R_I=0
-org.wildstang.yearly.subsystems.Shooter.R_D=0
+org.wildstang.yearly.subsystems.Shooter.R_F=0.024
+org.wildstang.yearly.subsystems.Shooter.R_P=0.011
+org.wildstang.yearly.subsystems.Shooter.R_I=0.0
+org.wildstang.yearly.subsystems.Shooter.R_D=0.0
 
 
 // Vision
-org.wildstang.yearly.robot.vision.VisionHandler.h_min=74
-org.wildstang.yearly.robot.vision.VisionHandler.s_min=77
-org.wildstang.yearly.robot.vision.VisionHandler.v_min=166
-org.wildstang.yearly.robot.vision.VisionHandler.h_max=94
+org.wildstang.yearly.robot.vision.VisionHandler.h_min=66
+org.wildstang.yearly.robot.vision.VisionHandler.s_min=74
+org.wildstang.yearly.robot.vision.VisionHandler.v_min=150
+org.wildstang.yearly.robot.vision.VisionHandler.h_max=101
 org.wildstang.yearly.robot.vision.VisionHandler.s_max=255
 org.wildstang.yearly.robot.vision.VisionHandler.v_max=255
 org.wildstang.yearly.robot.vision.VisionHandler.center=0

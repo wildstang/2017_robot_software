@@ -23,6 +23,8 @@ public class VisionHandler implements Runnable
    private OutputStream m_outputStream;
    private VisionServer m_visionServer;
    private String m_ip;
+   BufferedReader m_in = null;
+   PrintWriter m_out = null;
 
    private int h_min;
    private int s_min;
@@ -81,30 +83,28 @@ public class VisionHandler implements Runnable
    @Override
    public void run()
    {
-      BufferedReader in = null;
-      PrintWriter out = null;
       String line = null;
       String delims = "[,|]";
 
       try
       {
          m_inputStream = m_socket.getInputStream();
-         in = new BufferedReader(new InputStreamReader(m_inputStream));
+         m_in = new BufferedReader(new InputStreamReader(m_inputStream));
 
          m_outputStream = m_socket.getOutputStream();
-         out = new PrintWriter(m_outputStream);
+         m_out = new PrintWriter(m_outputStream);
       }
       catch (IOException e)
       {
          e.printStackTrace();
       }
 
-      if (in != null && out != null)
+      if (m_in != null && m_out != null)
       {
          System.out.println("Camera connection: " + true);
 
          // We've just connected - send the required HSV values to the client
-         sendPreferences(out);
+         sendPreferences(m_out);
 
          m_running = true;
          m_lastMsgReceived = System.currentTimeMillis();
@@ -118,7 +118,7 @@ public class VisionHandler implements Runnable
             // value to be used
             try
             {
-               line = in.readLine();
+               line = m_in.readLine();
 
                if (line != null)
                {
@@ -166,6 +166,24 @@ public class VisionHandler implements Runnable
          System.out.println("Camera connection: " + false);
       }
 
+   }
+   
+   public void enableVideoLogging()
+   {
+      if (m_out != null)
+      {
+         m_out.println('b');
+         m_out.flush();
+      }
+   }
+   
+   public void disableVideoLogging()
+   {
+      if (m_out != null)
+      {
+         m_out.println('e');
+         m_out.flush();
+      }
    }
 
    private void startHeartbeatThread()

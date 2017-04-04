@@ -15,7 +15,6 @@ import org.wildstang.yearly.robot.WSOutputs;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
 import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
-import org.wildstang.yearly.subsystems.shooter.Gate;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -41,11 +40,6 @@ public class Shooter implements Subsystem
    private double m_lowLimitSpeed;
    private double m_highLimitSpeed;
 
-   // Gate
-   private WsSolenoid m_gateSolenoid;
-
-   private Gate m_gate;
-
    // Feeds
    private WsVictor m_leftFeedVictor;
    private WsVictor m_rightFeedVictor;
@@ -65,7 +59,6 @@ public class Shooter implements Subsystem
 
    // Inputs
    private DigitalInput m_flywheelButton;
-   private DigitalInput m_gateButton;
    private DigitalInput m_overrideButton;
    private AnalogInput m_leftBeltJoystick;
    private AnalogInput m_rightBeltJoystick;
@@ -75,11 +68,6 @@ public class Shooter implements Subsystem
    private boolean m_flywheelOn = false;
    private boolean m_shooterCurrent;
    private boolean m_shooterPrev;
-
-   // For toggling
-   private boolean m_gateOpen = false;
-   private boolean m_gateCurrent;
-   private boolean m_gatePrev;
 
    private double m_leftJoyAxis;
    private double m_rightJoyAxis;
@@ -120,14 +108,12 @@ public class Shooter implements Subsystem
       m_leftJoyAxis = 0;
       m_rightJoyAxis = 0;
       
-      m_gateOpen = true;
       m_flywheelOn = false;
 
       // Toggle state variables
       m_shooterCurrent = false;
       m_shooterPrev = false;
-      m_gateCurrent = false;
-      m_gatePrev = false;
+
    }
 
    @Override
@@ -168,10 +154,6 @@ public class Shooter implements Subsystem
       m_leftFlywheel = new Flywheel(m_CANFlywheelLeft, m_targetSpeedLeft);
       m_rightFlywheel = new Flywheel(m_CANFlywheelRight, m_targetSpeedRight);
 
-      // Gates
-      m_gateSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.GATE.getName());
-      m_gate = new Gate(m_gateSolenoid);
-
       // Feeds
       m_leftFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_LEFT.getName());
       m_rightFeedVictor = (WsVictor) Core.getOutputManager().getOutput(WSOutputs.FEEDER_RIGHT.getName());
@@ -187,9 +169,6 @@ public class Shooter implements Subsystem
       // Input Listeners
       m_flywheelButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.FLYWHEEL.getName());
       m_flywheelButton.addInputListener(this);
-
-      m_gateButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.GATE.getName());
-      m_gateButton.addInputListener(this);
 
       m_leftBeltJoystick = (AnalogInput) Core.getInputManager().getInput(WSInputs.FEEDER_LEFT.getName());
       m_leftBeltJoystick.addInputListener(this);
@@ -275,17 +254,7 @@ public class Shooter implements Subsystem
          }
          m_shooterPrev = m_shooterCurrent;
       }
-      else if (p_source == m_gateButton)
-      {
-         m_gateOpen = !m_gateButton.getValue();
-         // Toggle for gate left
-//         if (m_gateCurrent && !m_gatePrev)
-//         {
-//            m_gateOpen = !m_gateOpen;
-//         }
-//         m_gatePrev = m_gateCurrent;
-      }
-      // Sets feed enumaration based on joystick
+    
       else if (p_source == m_leftBeltJoystick)
       {
          m_leftJoyAxis = m_leftBeltJoystick.getValue();
@@ -329,7 +298,6 @@ public class Shooter implements Subsystem
    public void update()
    {
       updateFlywheels();
-      updateGates();
       updateFeed();
 
       updateDashboardData();
@@ -374,17 +342,16 @@ public class Shooter implements Subsystem
       }
    }
 
-   // Gate Opens
-   public void openBothGate()
+   public boolean isFlywheelOn()
    {
-      m_gateOpen = true;
+      return m_flywheelOn;
    }
-
-   public void closeBothGate()
+   
+   public boolean isShooting()
    {
-      m_gateOpen = false;
+      return isFlywheelOn() && (m_leftFeedDirection == FeedDirection.SHOOT) || (m_rightFeedDirection == FeedDirection.SHOOT);
    }
-
+   
    public boolean isLeftReadyToShoot()
    {
       return isReadyToShoot(m_CANFlywheelLeft);
@@ -402,29 +369,6 @@ public class Shooter implements Subsystem
       return (speed >= m_lowLimitSpeed && speed <= m_highLimitSpeed);
    }
 
-   public void updateGates()
-   {
-      // Tests to see if the left and right flywheel is up to speed and ready to shoot a ball.
-      // Sets a conditional toggle to true if that flywheel is ready.
-      // Can be overriden so gates can open even if flywheel isn't up to speed
-
-      // LEFT SIDE
-      readyToShootLeft = isLeftReadyToShoot(); // || m_shootOverride;
-      // RIGHT SIDE
-      readyToShootRight = isRightReadyToShoot(); // || m_shootOverride;
-
-      // Opens the gate if the flywheel is up to speed and the button is pressed
-      // LEFT SIDE
-      if (m_gateOpen) // && readyToShootLeft)
-      {
-         m_gate.openGate();
-      }
-      else
-      {
-         m_gate.closeGate();
-      }
-
-   }
 
    // Feed Stuff
    // Turns on the belts w/out buttons for auto
@@ -518,8 +462,6 @@ public class Shooter implements Subsystem
 
       SmartDashboard.putNumber("Left flywheel error", m_CANFlywheelLeft.getClosedLoopError());
       SmartDashboard.putNumber("Right flywheel error", m_CANFlywheelRight.getClosedLoopError());
-
-      SmartDashboard.putBoolean("Gates open", m_gate.isOpen());
 
       SmartDashboard.putBoolean("Left feed jammed", m_leftFeed.isJammed(pdp.getCurrent(11)));
       SmartDashboard.putBoolean("Right feed jammed", m_rightFeed.isJammed(pdp.getCurrent(4)));

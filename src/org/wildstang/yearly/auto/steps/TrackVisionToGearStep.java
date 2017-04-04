@@ -26,6 +26,7 @@ public class TrackVisionToGearStep extends AutoStep
       if (m_drive.isGearDropFinished())
       {
          setFinished(true);
+         m_drive.exitAutoGearMode();
       }
    }
 

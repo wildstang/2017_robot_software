@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//import org.opencv.core.Mat;
 import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.logger.StateLogger;
@@ -41,6 +42,10 @@ import org.wildstang.yearly.robot.vision.VisionServer;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 
+//import edu.wpi.cscore.CvSink;
+//import edu.wpi.cscore.CvSource;
+//import edu.wpi.cscore.UsbCamera;
+//import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -181,6 +186,7 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
 
+      AutoManager.getInstance().addProgram(new TestTurn());
       AutoManager.getInstance().addProgram(new BoilerShoot());
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
@@ -193,22 +199,43 @@ public class RobotTemplate extends IterativeRobot
          m_visionServer.startVisionServer();
       }
 
-    // Send alliance colour to LEDs
-    if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-    }
-    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-    }
-    else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-    {
-       ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-    }
+//      // Send alliance colour to LEDs
+//      if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+//      {
+//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+//      }
+//      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+//      {
+//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+//      }
+//      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+//      {
+//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+//      }
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
+/******************
+      // Untested!!  Set up USB camera as additional vision back to dashboard.
+      // Processing should not be necessary, but code is here for reference.
+      // Code used is to resize for bandwidth restrictions in case setResolution() is not sufficient.
+//      new Thread(() -> {
+         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+         camera.setResolution(320, 240);
+         
+//         CvSink cvSink = CameraServer.getInstance().getVideo();
+//         CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+//         
+//         Mat source = new Mat();
+//         Mat output = new Mat();
+//         
+//         while(!Thread.interrupted()) {
+//             cvSink.grabFrame(source);
+//             outputStream.putFrame(output);
+//         }
+//     }).start();
+*******************/
+      
       startupTimer.endTimingSection();
 
    }
@@ -284,26 +311,27 @@ public class RobotTemplate extends IterativeRobot
          }
       }
 
-//      if (m_firstDisabled)
-//      {
-//         // Send alliance colour to LEDs
-//         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-//         {
-//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-//         }
-//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-//         {
-//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-//         }
-//         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-//         {
-//            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-//         }
-//         m_firstDisabled = false;
-//      }
-//      else
-//      {
-//      }
+      if (m_firstDisabled)
+      {
+         // Send alliance colour to LEDs
+         if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+         }
+         else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+         {
+            ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+         }
+         m_firstDisabled = false;
+      }
+      else
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.disabledCmd.getBytes());
+      }
 
       // If we are finished with teleop, finish and close the log file
       if (teleopPerodicCalled)
