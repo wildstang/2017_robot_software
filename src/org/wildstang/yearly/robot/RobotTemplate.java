@@ -192,6 +192,7 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new HopperShoot());
+      AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
 
       // 3. Start Vision server
       if (m_visionServer != null)

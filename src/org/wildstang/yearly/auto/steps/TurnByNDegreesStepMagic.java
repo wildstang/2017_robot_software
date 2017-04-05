@@ -100,7 +100,7 @@ public class TurnByNDegreesStepMagic extends AutoStep
    
    private int getCompassHeading(int p_relative)
    {
-      return p_relative % 360;
+      return (p_relative + 360) % 360;
    }
    
    @Override
