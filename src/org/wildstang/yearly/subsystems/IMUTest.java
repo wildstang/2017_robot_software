@@ -1,5 +1,7 @@
 package org.wildstang.yearly.subsystems;
 
+import javax.swing.Timer;
+
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.subsystems.Subsystem;
@@ -14,7 +16,12 @@ public class IMUTest implements Subsystem{
 	
 	private byte[] HeadingBytes = new byte [2];
 	private double CompassHeading;
-	Gyro m_gyro = new AnalogGyro(0);
+//	Gyro m_gyro = new AnalogGyro(0);
+//	double angle = 0;
+//	double startTime;
+//	private final double DRIFT_PER_NANO_FIXED = .903; //GOOD DEFAULT VALUE TO USE
+//	private double DRIFT_PER_NANO = DRIFT_PER_NANO_FIXED;
+//	boolean firstRun = true;
 	
 	private String m_name;
 	
@@ -42,7 +49,8 @@ public class IMUTest implements Subsystem{
 		 
 		 m_IMUInput = (WsI2CInput) Core.getInputManager().getInput(WSInputs.IMU.getName());
 		 
-		 m_gyro.calibrate();
+//		 m_gyro.calibrate();
+//		 startTime = System.nanoTime();
 	}
 	
 	
@@ -62,11 +70,21 @@ public class IMUTest implements Subsystem{
 
 	@Override
 	public void update() {
+//	   if (firstRun) {
+//	      DRIFT_PER_NANO = m_gyro.getAngle() / (System.nanoTime() - startTime);
+//	      firstRun = false;
+//	   }
 		// TODO Auto-generated method stub
 		CompassHeading = (double)HeadingBytes[0] * 2;
+//		angle = m_gyro.getAngle() - getAdjustment();
 		SmartDashboard.putNumber("IMU Test Heading", CompassHeading);
-      SmartDashboard.putNumber("Gyro Heading", m_gyro.getAngle());
+//      SmartDashboard.putNumber("Gyro Heading", m_gyro.getAngle());
+//      SmartDashboard.putNumber("Robot Angle", angle);
 	}
+	
+//	public double getAdjustment() {
+//	   return  (System.nanoTime() - startTime) * DRIFT_PER_NANO;
+//	}
 
 	@Override
 	public String getName() {
