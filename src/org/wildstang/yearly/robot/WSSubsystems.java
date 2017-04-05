@@ -23,8 +23,6 @@ public enum WSSubsystems implements Subsystems
    GEAR("Gear",                  Gear.class),
    SHOOTER("Shooter",            Shooter.class),
    CLIMBER("Climber",            Climber.class),
-   GYRO("WsGyro", WsGyro.class),
-   IMU("IMU Test", IMUTest.class),
    LED("LED",                    LED.class);
    
    //DO NOT REMOVE THIS COMMENT.  DO NOT PLACE ANY ENUMERATION DEFINITIONS AFTER IT.

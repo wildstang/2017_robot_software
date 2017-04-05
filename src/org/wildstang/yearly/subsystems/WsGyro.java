@@ -14,18 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WsGyro implements Subsystem{
    
-   private byte[] HeadingBytes = new byte [2];
-   private double CompassHeading;
    Gyro m_gyro = new AnalogGyro(0); // Still need input type for gyro, this works for now
    double angle = 0;
    double startTime;
+
    private final double DRIFT_PER_NANO_FIXED = .903; //GOOD DEFAULT VALUE TO USE
+   
    private double DRIFT_PER_NANO = DRIFT_PER_NANO_FIXED;
+   
    boolean firstRun = true;
    
    private String m_name;
-   
-   WsI2CInput m_IMUInput;
    
    public WsGyro()
    {
@@ -39,7 +38,6 @@ public class WsGyro implements Subsystem{
 
    @Override
    public void init() {
-      // TODO Auto-generated method stub    
        m_gyro.calibrate();
        startTime = System.nanoTime();
    }
