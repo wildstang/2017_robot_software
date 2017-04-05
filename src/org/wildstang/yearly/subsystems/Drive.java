@@ -26,7 +26,7 @@ public class Drive implements Subsystem, PIDOutput
    // Constants
    private static final double ROBOT_WIDTH_INCHES = 30;
    private static final double WHEEL_DIAMETER_INCHES = 4;
-   private static final double ENCODER_CPR = 4096;
+   public static final double ENCODER_CPR = 4096;
    private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
    private static final double RADIANS = Math.PI / 180;
    private final double CORRECTION_HEADING_LEVEL = 1.2;
@@ -223,8 +223,8 @@ public class Drive implements Subsystem, PIDOutput
       m_leftMaster.setPID(DriveConstants.PATH_P_GAIN, DriveConstants.PATH_I_GAIN, DriveConstants.PATH_D_GAIN, DriveConstants.PATH_F_GAIN, 0, 0, DriveConstants.PATH_PROFILE_SLOT);
       m_rightMaster.setPID(DriveConstants.PATH_P_GAIN, DriveConstants.PATH_I_GAIN, DriveConstants.PATH_D_GAIN, DriveConstants.PATH_F_GAIN, 0, 0, DriveConstants.PATH_PROFILE_SLOT);
 
-      m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+      m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       
    }
 
@@ -334,6 +334,8 @@ public class Drive implements Subsystem, PIDOutput
             break;
          case AUTO_GEAR_DROP:
             autoGear();
+            break;
+         case MAGIC:
             break;
          case RAW:
          default:
@@ -508,6 +510,67 @@ public class Drive implements Subsystem, PIDOutput
       }
 
    }
+   
+   public void setMotionMagicMode(boolean p_quickTurn)
+   {
+      // Stop following any current path
+      stopPathFollowing();
+
+      // Set talons to hold their current position
+      if (m_driveMode != DriveType.MAGIC)
+      {
+         // Set up Talons for the Motion Magic mode
+
+         m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+
+         m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+
+         if (p_quickTurn)
+         {
+            m_leftMaster.setMotionMagicAcceleration(400);  // RPM
+            m_leftMaster.setMotionMagicCruiseVelocity(400);  // RPM
+            m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+
+            m_rightMaster.setMotionMagicAcceleration(400);  // RPM
+            m_rightMaster.setMotionMagicCruiseVelocity(400);  // RPM
+            m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         }
+         else
+         {
+            m_leftMaster.setMotionMagicAcceleration(800);  // RPM
+            m_leftMaster.setMotionMagicCruiseVelocity(800);  // RPM
+            m_leftMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+
+            m_rightMaster.setMotionMagicAcceleration(800);  // RPM
+            m_rightMaster.setMotionMagicCruiseVelocity(800);  // RPM
+            m_rightMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         }
+
+         resetEncoders();
+         
+         m_driveMode = DriveType.MAGIC;
+
+         setBrakeMode(true);
+      }
+   }
+
+   
+   public void setMotionMagicTarget(double p_leftTarget, double p_rightTarget)
+   {
+      m_leftMaster.set(p_leftTarget);
+      m_rightMaster.set(p_rightTarget);
+   }
+
+   private void stopPathFollowing()
+   {
+      if (m_driveMode == DriveType.PATH)
+      {
+         abortFollowingPath();
+         pathCleanup();
+      }
+   }
 
    public void setMotorSpeeds(DriveSignal p_signal)
    {
@@ -518,12 +581,7 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setAutoGearMode()
    {
-      // Stop following any current path
-      if (m_driveMode == DriveType.PATH)
-      {
-         abortFollowingPath();
-         pathCleanup();
-      }
+      stopPathFollowing();
 
       m_driveMode = DriveType.AUTO_GEAR_DROP;
       RobotTemplate.getVisionServer().startVideoLogging();
@@ -572,12 +630,7 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setOpenLoopDrive()
    {
-      // Stop following any current path
-      if (m_driveMode == DriveType.PATH)
-      {
-         abortFollowingPath();
-         pathCleanup();
-      }
+      stopPathFollowing();
 
       m_driveMode = DriveType.CHEESY;
 
@@ -598,12 +651,7 @@ public class Drive implements Subsystem, PIDOutput
 
    public void setFullBrakeMode()
    {
-      // Stop following any current path
-      if (m_driveMode == DriveType.PATH)
-      {
-         abortFollowingPath();
-         pathCleanup();
-      }
+      stopPathFollowing();
 
       // Set talons to hold their current position
       if (m_driveMode != DriveType.FULL_BRAKE)
@@ -619,6 +667,10 @@ public class Drive implements Subsystem, PIDOutput
          m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
          m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
          m_rightMaster.set(m_rightMaster.getPosition());
+
+         
+         m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
          m_driveMode = DriveType.FULL_BRAKE;
 
