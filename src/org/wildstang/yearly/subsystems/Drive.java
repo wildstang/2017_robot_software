@@ -32,6 +32,8 @@ public class Drive implements Subsystem, PIDOutput
    private final double CORRECTION_HEADING_LEVEL = 1.2;
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
    private int pathNum = 1;
+   private static final double ANTI_TURBO_FACTOR = 0.7;
+   
 
    // Hold a reference to the input test for fast equality test during
    // inputUpdate()
@@ -42,6 +44,7 @@ public class Drive implements Subsystem, PIDOutput
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
    private DigitalInput m_autoDropInput;
+   private DigitalInput m_antiTurboInput;
 
    // Talons for output
    private CANTalon m_leftMaster;
@@ -75,6 +78,8 @@ public class Drive implements Subsystem, PIDOutput
    private boolean m_autoDropPrev = false;
    private boolean m_autoDropMode = false;
 
+   private boolean m_antiTurbo = false;
+   
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
 
@@ -127,6 +132,9 @@ public class Drive implements Subsystem, PIDOutput
       m_autoDropInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.AUTO_GEAR_DROP.getName());
       m_autoDropInput.addInputListener(this);
 
+      m_antiTurboInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.ANTITURBO.getName());
+      m_antiTurboInput.addInputListener(this);
+
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
@@ -157,6 +165,8 @@ public class Drive implements Subsystem, PIDOutput
       m_autoDropCurrent = false;
       m_autoDropPrev = false;
       m_autoDropMode = false;
+      
+      m_antiTurbo = false;
 
       maxSpeed = 0;
    }
@@ -271,6 +281,10 @@ public class Drive implements Subsystem, PIDOutput
       {
          m_quickTurn = m_quickTurnInput.getValue();
       }
+      else if (p_source == m_antiTurboInput)
+      {
+         m_antiTurbo = m_antiTurboInput.getValue();
+      }
 //      // If SELECT is pressed, use Raw mode
 //      else if (p_source == m_rawModeInput)
 //      {
@@ -316,6 +330,11 @@ public class Drive implements Subsystem, PIDOutput
             break;
 
          case CHEESY:
+            if (m_antiTurbo)
+            {
+               m_throttleValue *= ANTI_TURBO_FACTOR;
+            }
+            
             m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
             
@@ -370,6 +389,11 @@ public class Drive implements Subsystem, PIDOutput
       }
    }
 
+   public void setAntiTurbo(boolean p_antiTurbo)
+   {
+      m_antiTurbo = p_antiTurbo;
+   }
+   
    private void toggleShifter()
    {
       if (m_shifterCurrent && !m_shifterPrev)

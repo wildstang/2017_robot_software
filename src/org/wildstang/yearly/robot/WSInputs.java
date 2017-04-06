@@ -67,6 +67,7 @@ public enum WSInputs implements Inputs
    // Driver Buttons                               
    //---------------------------------             
    AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true),     // Intake Subsystem
+   ANTITURBO("Antiturbo",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true),     // Drive Subsystem
    SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true),     // Driver Subsystem
    QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),     // Driver Subsystem
 
@@ -105,8 +106,8 @@ public enum WSInputs implements Inputs
    // ********************************             
    // Others ...                                   
    // ********************************             
-   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, true), true),
-   IMU("IMU", WSInputType.COMPASS,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), true);
+   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, true), true);
+//   IMU("IMU", WSInputType.COMPASS,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), true);
 
 
    private final String m_name;

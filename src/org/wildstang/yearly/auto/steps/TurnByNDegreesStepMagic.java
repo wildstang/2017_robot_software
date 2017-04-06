@@ -57,7 +57,6 @@ public class TurnByNDegreesStepMagic extends AutoStep
    public void update()
    {      
       m_drive.setHighGear(false);
-//      m_drive.setQuickTurn(true);
       
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
 
@@ -69,8 +68,8 @@ public class TurnByNDegreesStepMagic extends AutoStep
 //         double rotations = getRotationsForDeltaAngle(m_currentHeading - m_target);
 //         
 //         // Turning left means right is a positive count
-//         double rightTarget = rotations;
-//         double leftTarget = -rotations;
+//         m_rightTarget = rotations;
+//         m_leftTarget = -rotations;
          
          m_drive.setMotionMagicTarget(m_leftTarget, m_rightTarget);
 //      }
@@ -79,7 +78,6 @@ public class TurnByNDegreesStepMagic extends AutoStep
       {
          SmartDashboard.putBoolean("Gyro turn on target", true);
          m_drive.setOpenLoopDrive();
-         m_drive.setBrakeMode(true);
          m_drive.setThrottle(0);
          setFinished(true);
       }
