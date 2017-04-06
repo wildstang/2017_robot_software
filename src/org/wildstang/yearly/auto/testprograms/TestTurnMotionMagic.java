@@ -11,9 +11,9 @@ public class TestTurnMotionMagic extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new TurnByNDegreesStepMagic(359));
-      addStep(new AutoStepDelay(2000));
-      addStep(new TurnByNDegreesStepMagic(-180));
+      addStep(new TurnByNDegreesStepMagic(400));
+      addStep(new AutoStepDelay(5000));
+      addStep(new TurnByNDegreesStepMagic(-5));
    }
 
    @Override

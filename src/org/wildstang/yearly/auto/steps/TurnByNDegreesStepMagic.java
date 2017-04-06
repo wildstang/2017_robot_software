@@ -42,16 +42,15 @@ public class TurnByNDegreesStepMagic extends AutoStep
       // first time through update()
       m_currentHeading = (int)m_gyro.getValue();
       m_target = getCompassHeading((m_currentHeading + m_deltaHeading));
-
-      double rotations = getRotationsForDeltaAngle(m_currentHeading - m_target);
+      double rotations = getRotationsForDeltaAngle((int)modAngle(m_deltaHeading));
       
       // Turning left means right is a positive count
-      m_rightTarget = rotations;
-      m_leftTarget = -rotations;
+      m_rightTarget = -rotations;
+      m_leftTarget = rotations;
 
       SmartDashboard.putNumber("Initial heading", m_currentHeading);
       SmartDashboard.putNumber("Target heading", m_target);
-      
+      SmartDashboard.putNumber("Target Encoder Ticks", rotations * 4096);
    }
 
    @Override
@@ -92,15 +91,29 @@ public class TurnByNDegreesStepMagic extends AutoStep
       SmartDashboard.putNumber("Current heading", m_currentHeading);
    }
 
-   private int getRotationsForDeltaAngle(int p_delta)
+   private double getRotationsForDeltaAngle(int p_delta)
    {
-      int ticks = p_delta * TICKS_PER_DEGREE;
+      double ticks = p_delta * TICKS_PER_DEGREE;
+      SmartDashboard.putNumber("p_delta", p_delta);
       return ticks / 4096;
    }
    
    private int getCompassHeading(int p_relative)
    {
       return (p_relative + 360) % 360;
+   }
+   
+   public double modAngle(double initAngle) {
+      double modAngle = initAngle; 
+      while (modAngle > 180) { //should account for all angles
+         modAngle -= 360;
+      }
+      while (modAngle < -180) {
+         modAngle += 360;
+      }
+
+      
+      return modAngle;
    }
    
    @Override

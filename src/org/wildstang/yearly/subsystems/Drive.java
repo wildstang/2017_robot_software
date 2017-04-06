@@ -529,7 +529,7 @@ public class Drive implements Subsystem, PIDOutput
 
          if (p_quickTurn)
          {
-            m_leftMaster.setMotionMagicAcceleration(400);  // RPM
+            m_leftMaster.setMotionMagicAcceleration(800);  // RPM
             m_leftMaster.setMotionMagicCruiseVelocity(400);  // RPM
             m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
