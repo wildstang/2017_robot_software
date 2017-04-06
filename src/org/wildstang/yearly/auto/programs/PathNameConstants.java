@@ -24,4 +24,9 @@ public class PathNameConstants
    public static final String STRAIGHT_LINE_10_FT_TEST = "/home/lvuser/paths/10_ft_straight.path";
    public static final String STRAIGHT_LINE_20_FT_TEST = "/home/lvuser/paths/20_ft_straight.path";
    
+   public static final String HOPPER_SHOOT_1 = "/home/lvuser/paths/hopper_shoot_1.path";
+   public static final String HOPPER_SHOOT_2 = "/home/lvuser/paths/hopper_shoot_2.path";
+   public static final String HOPPER_SHOOT_3 = "/home/lvuser/paths/hopper_shoot_3.path";
+   public static final String HOPPER_SHOOT_4 = "/home/lvuser/paths/hopper_shoot_4.path";
+   public static final String HOPPER_SHOOT_5 = "/home/lvuser/paths/hopper_shoot_5.path";
 }
