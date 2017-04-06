@@ -14,7 +14,7 @@ import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
 import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
-import org.wildstang.yearly.auto.steps.TurnByNDegreesStep;
+import org.wildstang.yearly.auto.steps.TurnByNDegreesStepMagic;
 
 public class RightGearToShoot extends AutoProgram
 {
@@ -48,7 +48,7 @@ public class RightGearToShoot extends AutoProgram
 //      addStep(new DriveDistanceStraightStep(-0.5, 24));
       addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
 
-      addStep(new TurnByNDegreesStep(-175d)); //Not sure if negative or positive 175 degrees
+      addStep(new TurnByNDegreesStepMagic(-175)); //Not sure if negative or positive 175 degrees
 
       addStep(new PathFollowerStep(PathNameConstants.RIGHT_GEAR_TO_BOILER));
       addStep(new ShooterOnAndReady());
