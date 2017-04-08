@@ -31,4 +31,8 @@ public class PathNameConstants
    public static final String HOPPER_SHOOT_5 = "/home/lvuser/paths/hopper_shoot_5.path";
    
    public static final String GEAR_AUTO_FORWARD = "/home/lvuser/paths/Gear_Auto_Forward.path";
+   
+   public static final String GEAR_BACKUP_FAR = "/home/lvuser/paths/gear_backup_far.path";
+   public static final String GEAR_TO_BOILER = "/home/lvuser/paths/gear_to_boiler.path";
+   
 }
