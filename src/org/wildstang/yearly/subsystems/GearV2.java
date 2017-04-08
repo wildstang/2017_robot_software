@@ -5,8 +5,11 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
+import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,40 +18,36 @@ public class GearV2 implements Subsystem
    // add variables here
    
 
-   private boolean m_gearPrev;
-   private boolean m_gearCurrent;
-   private boolean m_receiveGear;
+   private boolean m_mechUpPrev;
+   private boolean m_mechUpCurrent;
+   private boolean m_mechUp;
    
-   private boolean m_doorPrev;
-   private boolean m_doorCurrent;
-   private boolean m_doorOpen;
+   private boolean m_rollerIn;
+   private boolean m_rollerOut;
    
-   private boolean m_receivePrev;
-   private boolean m_receiveCurrent;
+   private DigitalInput m_mechUpButton;
+   private DigitalInput m_rollerInButton;
+   private DigitalInput m_rollerOutButton;
+   private DigitalInput m_deliverGearButton;
+   
+   private WsSolenoid m_mechUpSolenoid;
+   
+   private CANTalon m_rollerTalon;
+   
+   private static final boolean MECH_UP = true;
 
-   private DigitalInput m_tiltButton;
-   private DigitalInput m_doorButton;
-   private DigitalInput m_receiveButton;
-   
-   private WsSolenoid m_tiltSolenoid;
-   private WsSolenoid m_doorSolenoid;
-   
-   private static final boolean DOOR_OPEN = true;
-   private static final boolean GEAR_BACK = true;
-
-   private static final boolean DOOR_CLOSED = !DOOR_OPEN;
-   private static final boolean GEAR_FORWARD = !GEAR_BACK;
+   private static final boolean MECH_DOWN = !MECH_UP;
 
    @Override
    public void resetState()
    {
-      m_doorOpen = DOOR_CLOSED;
-      m_receiveGear = GEAR_FORWARD;
+      m_mechUp = MECH_DOWN;
       
-      m_gearPrev = false;
-      m_gearCurrent = false;
-      m_doorPrev = false;
-      m_doorCurrent = false;
+      m_mechUpPrev = false;
+      m_mechUpCurrent = false;
+      
+      m_rollerIn = false;
+      m_rollerOut = false;
    }
 
    @Override
@@ -66,17 +65,22 @@ public class GearV2 implements Subsystem
    public void init()
    {
 	   // Register the sensors that this subsystem wants to be notified about
-      m_tiltButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_TILT_BUTTON.getName());
-      m_tiltButton.addInputListener(this);
+      m_mechUpButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_PICKUP_BUTTON.getName());
+      m_mechUpButton.addInputListener(this);
       
-      m_doorButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName());
-      m_doorButton.addInputListener(this);
+      m_rollerInButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.ROLLER_IN_BUTTON.getName());
+      m_rollerInButton.addInputListener(this);
       
-      m_receiveButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_RECEIVE.getName());
-      m_receiveButton.addInputListener(this);
+      m_rollerOutButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.ROLLER_OUT_BUTTON.getName());
+      m_rollerOutButton.addInputListener(this);
 
-      m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
-      m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
+      m_deliverGearButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.DELIVER_GEAR_BUTTON.getName());
+      m_deliverGearButton.addInputListener(this);
+      
+      m_mechUpSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
+      m_rollerTalon = new CANTalon(CANConstants.GEAR_ROLLER_ID);
+      
+      m_rollerTalon.enableBrakeMode(true);
       
       resetState();
    }
@@ -86,72 +90,92 @@ public class GearV2 implements Subsystem
    public void inputUpdate(Input source)
    { 
       // This section reads the input sensors and places them into local variables
-      if (source == m_tiltButton)
+      if (source == m_mechUpButton)
       {
-    	  m_gearCurrent = m_tiltButton.getValue();
+    	  m_mechUpCurrent = m_mechUpButton.getValue();
     	  
-        if (m_gearCurrent && !m_gearPrev)
+        if (m_mechUpCurrent && !m_mechUpPrev)
         {
-           m_receiveGear = !m_receiveGear;
+           m_mechUp = !m_mechUp;
         }
-        m_gearPrev = m_gearCurrent;
+        m_mechUpPrev = m_mechUpCurrent;
       }
       
-      if (source == m_doorButton)
+      if (source == m_rollerInButton)
       {
-        m_doorCurrent = m_doorButton.getValue();
-        
-        if (m_doorCurrent && !m_doorPrev)
-        {
-           m_doorOpen = !m_doorOpen;
-        }
-        m_doorPrev = m_doorCurrent;
+        m_rollerIn = m_rollerInButton.getValue();
       }
-      if (source == m_receiveButton)
+      if (source == m_rollerOutButton)
       {
-        m_receiveCurrent = m_receiveButton.getValue();
-        
-        if (m_receiveCurrent && !m_receivePrev)
-        {
-//           m_receive = true;
-           m_doorOpen = DOOR_OPEN;
-           m_receiveGear = GEAR_BACK;
-        }
-//        else
-//        {
-//           m_doorOpen = DOOR_CLOSED;
-//        }
-        m_receivePrev = m_receiveCurrent;
+         m_rollerOut = m_rollerOutButton.getValue();
+      }
+      if (source == m_deliverGearButton)
+      {
+         if (m_deliverGearButton.getValue())
+         {
+            deliverGear();
+         }
+         else
+         {
+            // Stop the roller running
+            m_rollerOut = false;
+         }
       }
    }
 
    @Override
    public void update()
    {
-      m_tiltSolenoid.setValue(m_receiveGear);
-      m_doorSolenoid.setValue(m_doorOpen);
+      m_mechUpSolenoid.setValue(m_mechUp);
+      
+      if (m_rollerIn)
+      {
+         m_rollerTalon.set(1);
+      }
+      else if (m_rollerOut)
+      {
+         m_rollerTalon.set(-0.2);
+      }
+      else
+      {
+         m_rollerTalon.set(0);
+      }
 	   
-	   SmartDashboard.putBoolean("Gear door open", m_doorOpen);
-	   SmartDashboard.putBoolean("Gear back", m_receiveGear);
+	   SmartDashboard.putBoolean("Gear back", m_mechUp);
    }
    
-   public void openDoor()
+   public void rollerIn()
    {
-      m_doorOpen = DOOR_OPEN;
+      m_rollerIn = true;
+      m_rollerOut = false;
    }
    
-   public void closeDoor()
+   public void rollerOut()
    {
-      m_doorOpen = DOOR_CLOSED;
+      m_rollerIn = false;
+      m_rollerOut = true;
    }
    
-   public void tiltGearBack()
+   public void rollerOff()
    {
-      m_receiveGear = GEAR_BACK;
+      m_rollerIn = false;
+      m_rollerOut = false;
    }
    
-   public void tiltGearForward()
+   public void deliverGear()
    {
-      m_receiveGear = GEAR_FORWARD;
+      m_rollerOut = true;
+      m_rollerIn = false;
+      m_mechUp = MECH_DOWN;
+   }
+   
+   public void mechUp()
+   {
+      m_mechUp = MECH_UP;
+   }
+   
+   public void mechDown()
+   {
+      m_mechUp = MECH_DOWN;
    }
 }

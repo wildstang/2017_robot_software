@@ -10,5 +10,6 @@ public class CANConstants
    public static final int FLYWHEEL_LEFT_TALON_ID = 5;
    public static final int FLYWHEEL_RIGHT_TALON_ID = 6;
    
+   public static final int GEAR_ROLLER_ID = 7;
    
 }

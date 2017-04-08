@@ -66,13 +66,13 @@ public class Gear implements Subsystem
    public void init()
    {
 	   // Register the sensors that this subsystem wants to be notified about
-      m_tiltButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_TILT_BUTTON.getName());
+      m_tiltButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_PICKUP_BUTTON.getName());
       m_tiltButton.addInputListener(this);
       
-      m_doorButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_HOLD_BUTTON.getName());
+      m_doorButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.ROLLER_IN_BUTTON.getName());
       m_doorButton.addInputListener(this);
       
-      m_receiveButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_RECEIVE.getName());
+      m_receiveButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.ROLLER_OUT_BUTTON.getName());
       m_receiveButton.addInputListener(this);
 
       m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
