@@ -14,7 +14,7 @@ org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5175.0
 org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5175.0
 org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=5500.0
 org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=5650.0
-org.wildstang.yearly.subsystems.Shooter.feedSpeed=0.8
+org.wildstang.yearly.subsystems.Shooter.feedSpeed=1.0
 org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
 org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0

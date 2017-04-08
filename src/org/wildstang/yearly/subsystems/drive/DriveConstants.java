@@ -22,7 +22,7 @@ public class DriveConstants
    public static final double BASE_D_GAIN = 0.0;
 
    // Motion Magic quickturn PID constants
-   public static final double MM_QUICK_F_GAIN = .93;
+   public static final double MM_QUICK_F_GAIN = .85;
    public static final double MM_QUICK_P_GAIN = 0.0;
    public static final double MM_QUICK_I_GAIN = 0.0;
    public static final double MM_QUICK_D_GAIN = 0.0;
