@@ -29,4 +29,6 @@ public class PathNameConstants
    public static final String HOPPER_SHOOT_3 = "/home/lvuser/paths/hopper_shoot_3.path";
    public static final String HOPPER_SHOOT_4 = "/home/lvuser/paths/hopper_shoot_4.path";
    public static final String HOPPER_SHOOT_5 = "/home/lvuser/paths/hopper_shoot_5.path";
+   
+   public static final String GEAR_AUTO_FORWARD = "/home/lvuser/paths/Gear_Auto_Forward.path";
 }

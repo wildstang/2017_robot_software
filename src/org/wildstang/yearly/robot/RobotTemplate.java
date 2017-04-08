@@ -34,9 +34,12 @@ import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.programs.BoilerShoot;
 import org.wildstang.yearly.auto.programs.HopperShoot;
+import org.wildstang.yearly.auto.programs.HopperShootStraight;
 import org.wildstang.yearly.auto.programs.LeftGear;
+import org.wildstang.yearly.auto.programs.LeftGearAutoNew;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
+import org.wildstang.yearly.auto.programs.RightGearAutoNew;
 import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
@@ -197,7 +200,9 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new HopperShoot());
       AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
-
+      AutoManager.getInstance().addProgram(new HopperShootStraight());
+      AutoManager.getInstance().addProgram(new RightGearAutoNew());
+      AutoManager.getInstance().addProgram(new LeftGearAutoNew());
       // 3. Start Vision server
       if (m_visionServer != null)
       {

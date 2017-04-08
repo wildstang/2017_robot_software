@@ -536,7 +536,7 @@ public class Drive implements Subsystem, PIDOutput
 
    }
    
-   public void setMotionMagicMode(boolean p_quickTurn)
+   public void setMotionMagicMode(boolean p_quickTurn, double f_gain)
    {
       // Stop following any current path
       stopPathFollowing();
@@ -552,6 +552,8 @@ public class Drive implements Subsystem, PIDOutput
          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
          m_rightMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
 
+         m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          if (p_quickTurn)
          {
             m_leftMaster.setMotionMagicAcceleration(800);  // RPM
