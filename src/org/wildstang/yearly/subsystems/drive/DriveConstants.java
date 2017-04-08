@@ -10,10 +10,10 @@ public class DriveConstants
    
    
    // Path following PID constants
-   public static final double PATH_F_GAIN = 0.215;
+   public static final double PATH_F_GAIN = 0.23;
+   public static final double PATH_P_GAIN = 0;//1.5;
    public static final double PATH_I_GAIN = 0.0;
-   public static final double PATH_P_GAIN = 1.5;
-   public static final double PATH_D_GAIN = 2.0;
+   public static final double PATH_D_GAIN = 0;//2.0;
    
    // Base lock PID constants
    public static final double BASE_F_GAIN = 1;
