@@ -21,7 +21,11 @@ public class PathNameConstants
    
    public static final String GEAR_CENTER_TO_WALL = "/home/lvuser/paths/path.airship2.to.start2";
    
+   public static final String STRAIGHT_LINE_5_FT_TEST = "/home/lvuser/paths/5_ft_straight.path";
    public static final String STRAIGHT_LINE_10_FT_TEST = "/home/lvuser/paths/10_ft_straight.path";
+   public static final String STRAIGHT_LINE_10_FT_FAST_TEST = "/home/lvuser/paths/10_ft_straight_fast.path";
+   public static final String STRAIGHT_LINE_10_FT_MEDIUM_TEST = "/home/lvuser/paths/10_ft_straight_medium.path";
+   public static final String STRAIGHT_LINE_10_FT_SLOW_TEST = "/home/lvuser/paths/10_ft_straight_slow.path";
    public static final String STRAIGHT_LINE_20_FT_TEST = "/home/lvuser/paths/20_ft_straight.path";
    
    public static final String HOPPER_SHOOT_1 = "/home/lvuser/paths/hopper_shoot_1.path";
@@ -31,4 +35,8 @@ public class PathNameConstants
    public static final String HOPPER_SHOOT_5 = "/home/lvuser/paths/hopper_shoot_5.path";
    
    public static final String GEAR_AUTO_FORWARD = "/home/lvuser/paths/Gear_Auto_Forward.path";
+   
+   public static final String GEAR_BACKUP_FAR = "/home/lvuser/paths/gear_backup_far.path";
+   public static final String GEAR_TO_BOILER = "/home/lvuser/paths/gear_to_boiler.path";
+   
 }

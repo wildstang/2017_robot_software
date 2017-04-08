@@ -40,7 +40,6 @@ import org.wildstang.yearly.auto.programs.LeftGearAutoNew;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
 import org.wildstang.yearly.auto.programs.RightGearAutoNew;
-import org.wildstang.yearly.auto.programs.TurnTesting;
 import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
@@ -190,7 +189,10 @@ public class RobotTemplate extends IterativeRobot
 
       // 2. Add Auto programs
       AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
-//      AutoManager.getInstance().addProgram(new TEST20FtStraightLinePath());
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLineFastPath());
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLineMediumPath());
+      AutoManager.getInstance().addProgram(new TEST10FtStraightLineSlowPath());
+      AutoManager.getInstance().addProgram(new TEST5FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
