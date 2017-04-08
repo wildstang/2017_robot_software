@@ -40,6 +40,7 @@ import org.wildstang.yearly.auto.programs.LeftGearAutoNew;
 import org.wildstang.yearly.auto.programs.MiddleGear;
 import org.wildstang.yearly.auto.programs.RightGear;
 import org.wildstang.yearly.auto.programs.RightGearAutoNew;
+import org.wildstang.yearly.auto.programs.TurnTesting;
 import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
@@ -203,6 +204,7 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new HopperShootStraight());
       AutoManager.getInstance().addProgram(new RightGearAutoNew());
       AutoManager.getInstance().addProgram(new LeftGearAutoNew());
+      AutoManager.getInstance().addProgram(new TurnTesting());
       // 3. Start Vision server
       if (m_visionServer != null)
       {

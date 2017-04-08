@@ -20,12 +20,15 @@ public class TurnByNDegreesStepMagic extends AutoStep
    double m_rightTarget;
    double m_leftTarget;
    
+   boolean fakeFinished = false;
+   
    private int m_currentHeading;
    
    private long m_cycleCount = 0;
    
    private static final int TOLERANCE = 1;
-   private static final int TICKS_PER_DEGREE = 101;
+   private static final int TICKS_PER_DEGREE_LEFT = 103;
+   private static final int TICKS_PER_DEGREE_RIGHT = 105;
    
    public TurnByNDegreesStepMagic(int p_deltaHeading, double f_gain)
    {
@@ -51,21 +54,22 @@ public class TurnByNDegreesStepMagic extends AutoStep
       m_currentHeading = (int)m_gyro.getValue();
       m_target = getCompassHeading((m_currentHeading + m_deltaHeading));
       if (m_deltaHeading < 0) { // here we add a little overshoot to make up for increased friction on carpet
-         m_deltaHeading -= 10;
+         m_deltaHeading -= 0;
       } else if (m_deltaHeading > 0){
-         m_deltaHeading += 10;
+         m_deltaHeading += 0;
       }
-      double rotations = getRotationsForDeltaAngle((int)modAngle(m_deltaHeading));
-      
+      double rotationsLeft = getRotationsForDeltaAngle((int)modAngle(m_deltaHeading), true);
+      double rotationsRight = -getRotationsForDeltaAngle((int)modAngle(m_deltaHeading), false);
       // Turning left means right is a positive count
-      m_rightTarget = -rotations;
-      m_leftTarget = rotations;
+      m_rightTarget = rotationsRight;
+      m_leftTarget = rotationsLeft;
 
       SmartDashboard.putNumber("Initial heading", m_currentHeading);
       SmartDashboard.putNumber("Target heading", m_target);
-      SmartDashboard.putNumber("Target Encoder Ticks", rotations * 4096);
+      SmartDashboard.putNumber("Target Encoder Ticks Right", rotationsRight * 4096);
+      SmartDashboard.putNumber("Target Encoder Ticks Right", rotationsLeft * 4096);
    }
-
+ //35,399 and 40,626
    @Override
    public void update()
    {      
@@ -83,8 +87,10 @@ public class TurnByNDegreesStepMagic extends AutoStep
 //         // Turning left means right is a positive count
 //         m_rightTarget = rotations;
 //         m_leftTarget = -rotations;
-         
-         m_drive.setMotionMagicTarget(m_leftTarget, m_rightTarget);
+         if (!fakeFinished)
+         {
+            m_drive.setMotionMagicTarget(m_leftTarget, m_rightTarget);
+         }
 //      }
             
       if (Math.abs(m_target - m_currentHeading) <= TOLERANCE)
@@ -92,7 +98,8 @@ public class TurnByNDegreesStepMagic extends AutoStep
          SmartDashboard.putBoolean("Gyro turn on target", true);
          m_drive.setOpenLoopDrive();
          m_drive.setThrottle(0);
-         setFinished(true);
+         fakeFinished = true;
+//         setFinished(true);
       }
       else
       {
@@ -102,11 +109,17 @@ public class TurnByNDegreesStepMagic extends AutoStep
       SmartDashboard.putNumber("Current heading", m_currentHeading);
    }
 
-   private double getRotationsForDeltaAngle(int p_delta)
+   private double getRotationsForDeltaAngle(int p_delta, boolean left)
    {
-      double ticks = p_delta * TICKS_PER_DEGREE;
+      if (left) {
+      double ticksLeft = p_delta * TICKS_PER_DEGREE_LEFT;
       SmartDashboard.putNumber("p_delta", p_delta);
-      return ticks / 4096;
+      return ticksLeft / 4096;
+      } else {
+         double ticksRight = p_delta * TICKS_PER_DEGREE_RIGHT;
+         SmartDashboard.putNumber("p_delta", p_delta);
+         return ticksRight / 4096; 
+      }
    }
    
    private int getCompassHeading(int p_relative)

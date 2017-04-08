@@ -556,12 +556,12 @@ public class Drive implements Subsystem, PIDOutput
          m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          if (p_quickTurn)
          {
-            m_leftMaster.setMotionMagicAcceleration(800);  // RPM
-            m_leftMaster.setMotionMagicCruiseVelocity(400);  // RPM
+            m_leftMaster.setMotionMagicAcceleration(350);  // RPM
+            m_leftMaster.setMotionMagicCruiseVelocity(350);  // RPM
             m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
-            m_rightMaster.setMotionMagicAcceleration(400);  // RPM
-            m_rightMaster.setMotionMagicCruiseVelocity(400);  // RPM
+            m_rightMaster.setMotionMagicAcceleration(350);  // RPM
+            m_rightMaster.setMotionMagicCruiseVelocity(350);  // RPM
             m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          }
          else
