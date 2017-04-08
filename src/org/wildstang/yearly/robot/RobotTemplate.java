@@ -85,8 +85,8 @@ public class RobotTemplate extends IterativeRobot
 
    private boolean m_firstDisabled = true;
 
-   private boolean firstRun = true;
    private boolean AutoFirstRun = true;
+   private boolean firstRun = true;
    private double oldTime = System.currentTimeMillis();
 
    static boolean teleopPerodicCalled = false;
@@ -212,18 +212,19 @@ public class RobotTemplate extends IterativeRobot
       }
 
 //      // Send alliance colour to LEDs
-//      if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
-//      {
-//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
-//      }
-//      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
-//      {
-//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
-//      }
-//      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
-//      {
-//         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
-//      }
+      SmartDashboard.putString("Alliance", DriverStation.getInstance().getAlliance().name());
+      if (DriverStation.getInstance().getAlliance().equals(Alliance.Red))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.redAllianceCmd.getBytes());
+      }
+      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Blue))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.blueAllianceCmd.getBytes());
+      }
+      else if (DriverStation.getInstance().getAlliance().equals(Alliance.Invalid))
+      {
+         ((WsI2COutput) Core.getOutputManager().getOutput(WSOutputs.LED.getName())).setValue(LED.purpleAllianceCmd.getBytes());
+      }
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
@@ -380,7 +381,7 @@ public class RobotTemplate extends IterativeRobot
       m_core.executeUpdate();
 
       double time = System.currentTimeMillis();
-      SmartDashboard.putNumber("Cycle time", time - oldTime);
+      SmartDashboard.putNumber("Cycle Time", time - oldTime);
       oldTime = time;
 
       if (AutoFirstRun)

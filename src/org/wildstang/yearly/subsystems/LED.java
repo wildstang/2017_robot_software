@@ -44,6 +44,7 @@ public class LED implements Subsystem
    boolean m_normal = true;
    boolean m_shooterOn;
    boolean m_shooting;
+   boolean m_climbing = false;
    boolean m_intake;
 
    boolean m_leftJammedLast = false;
@@ -53,7 +54,7 @@ public class LED implements Subsystem
    private Shooter shooter;
 
    // Reused commands from year to year
-   public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 0, 255, 0);
+   public static LedCmd disabledCmd = new LedCmd(DISABLED_ID, 255, 255, 255);
    public static LedCmd autoCmd = new LedCmd(AUTO_ID, 255, 255, 0);
    public static LedCmd redAllianceCmd = new LedCmd(ALLIANCE_ID, 255, 0, 0);
    public static LedCmd blueAllianceCmd = new LedCmd(ALLIANCE_ID, 0, 0, 255);
@@ -140,6 +141,10 @@ public class LED implements Subsystem
                {
                   command = rightFeedCmd;
                }
+               if (m_climbing)
+               {
+                  command = climbingCmd;
+               }
                
                m_ledOutput.setValue(command.getBytes());
                
@@ -172,6 +177,10 @@ public class LED implements Subsystem
       else if (source.getName().equals(WSInputs.FEEDER_RIGHT))
       {
          m_shooting = shooter.isShooting();
+      }
+      else if (source.getName().equals(WSInputs.CLIMBER_UP))
+      {
+         m_climbing = ((DigitalInput)source).getValue();
       }
       m_newDataAvailable = true;
    }
