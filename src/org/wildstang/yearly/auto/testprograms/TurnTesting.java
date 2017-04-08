@@ -1,4 +1,4 @@
-package org.wildstang.yearly.auto.programs;
+package org.wildstang.yearly.auto.testprograms;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
