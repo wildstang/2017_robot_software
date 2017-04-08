@@ -5,9 +5,9 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.GearV2;
 
-public class DeliverGearStep extends AutoStep
+public class GearMechDownStep extends AutoStep
 {
-   GearV2 m_gearSubsystem;
+   private GearV2 m_gearSubsystem;
    
    @Override
    public void initialize()
@@ -18,14 +18,14 @@ public class DeliverGearStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.deliverGear();
+      m_gearSubsystem.mechDown();
       setFinished(true);
    }
 
    @Override
    public String toString()
    {
-      return "Deliver Gear Step";
+      return "Gear mech up step";
    }
 
 }
