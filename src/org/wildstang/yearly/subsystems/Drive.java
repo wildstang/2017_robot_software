@@ -32,7 +32,7 @@ public class Drive implements Subsystem, PIDOutput
    private final double CORRECTION_HEADING_LEVEL = 1.2;
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
    private int pathNum = 1;
-   private static final double ANTI_TURBO_FACTOR = 0.7;
+   private static final double ANTI_TURBO_FACTOR = 0.5;
    
 
    // Hold a reference to the input test for fast equality test during
@@ -330,12 +330,13 @@ public class Drive implements Subsystem, PIDOutput
             break;
 
          case CHEESY:
+            double effectiveThrottle = m_throttleValue;
             if (m_antiTurbo)
             {
-               m_throttleValue *= ANTI_TURBO_FACTOR;
+               effectiveThrottle = m_throttleValue * ANTI_TURBO_FACTOR;
             }
             
-            m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
+            m_driveSignal = m_cheesyHelper.cheesyDrive(effectiveThrottle, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
             
             if (RobotTemplate.LOG_STATE)

@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.opencv.core.Mat;
 //import org.opencv.core.Mat;
 import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
@@ -46,6 +47,10 @@ import org.wildstang.yearly.robot.vision.VisionServer;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 //import edu.wpi.cscore.CvSink;
 //import edu.wpi.cscore.CvSource;
 //import edu.wpi.cscore.UsbCamera;
@@ -222,16 +227,15 @@ public class RobotTemplate extends IterativeRobot
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
-/******************
       // Untested!!  Set up USB camera as additional vision back to dashboard.
       // Processing should not be necessary, but code is here for reference.
       // Code used is to resize for bandwidth restrictions in case setResolution() is not sufficient.
 //      new Thread(() -> {
          UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-         camera.setResolution(320, 240);
-         
+//         camera.setResolution(320, 240);
+//         
 //         CvSink cvSink = CameraServer.getInstance().getVideo();
-//         CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+//         CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 320, 240);
 //         
 //         Mat source = new Mat();
 //         Mat output = new Mat();
@@ -241,7 +245,6 @@ public class RobotTemplate extends IterativeRobot
 //             outputStream.putFrame(output);
 //         }
 //     }).start();
-*******************/
       
       startupTimer.endTimingSection();
 

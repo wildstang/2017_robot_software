@@ -121,9 +121,9 @@ public class LED implements Subsystem
          // Robot is enabled - teleop or auto
          if (isRobotTeleop)
          {
+            LedCmd command = offCmd;
             if (m_newDataAvailable)
             {
-               LedCmd command = offCmd;
                if (m_shooterOn)
                {
                   command = shooterOnCmd;
