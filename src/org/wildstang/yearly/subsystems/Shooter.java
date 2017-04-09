@@ -231,7 +231,7 @@ public class Shooter implements Subsystem
 
       p_talon.configNominalOutputVoltage(+0.0f, -0.0f);
       p_talon.configPeakOutputVoltage(+12.0f, 0.0f);
-      // p_talon.setVoltageRampRate(24.0); // Max spinup of 24V/s - start here
+      p_talon.setVoltageRampRate(12.0); // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
