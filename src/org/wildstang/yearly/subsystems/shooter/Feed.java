@@ -27,7 +27,6 @@ public class Feed extends Shooter
    // This function is setup in the shooter class to determine whether or not
    // the belt is jammed testing if the voltage out to that port is higher than
    // is usual voltage pull
-
    public boolean isJammed(double p_current)
    {
       if (p_current > limit)
@@ -39,7 +38,6 @@ public class Feed extends Shooter
          jammed = false;
       }
 
-      // TODO
       return jammed;
    }
 

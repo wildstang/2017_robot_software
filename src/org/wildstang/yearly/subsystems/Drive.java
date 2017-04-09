@@ -483,11 +483,11 @@ public class Drive implements Subsystem, PIDOutput
 
       if (m_visionDistance < 36)
       {
-         setThrottle(.23);
+         setThrottle(.2);
       }
       else
       {
-         setThrottle(.4);
+         setThrottle(.35);
       }
 
       if (m_visionDistance < 10)

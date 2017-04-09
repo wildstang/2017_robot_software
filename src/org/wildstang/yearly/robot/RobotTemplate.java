@@ -71,7 +71,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotTemplate extends IterativeRobot
 {
 
-   public static boolean LOG_STATE = true;
+   public static boolean LOG_STATE = false;
 
    private static long lastCycleTime = 0;
    private StateLogger m_stateLogger = null;
