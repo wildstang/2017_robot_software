@@ -13,6 +13,9 @@ public class Feed extends Shooter
    private boolean jammed = false;
 
    private boolean ballReady;
+   
+   private double m_currentSpeed = 0;
+   private static final double RAMP_AMOUNT = 0.1;
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
@@ -45,21 +48,34 @@ public class Feed extends Shooter
 
    public void runForward()
    {
-      m_victor.setValue(-feedSpeed);
+      if (m_currentSpeed > -feedSpeed)
+      {
+         m_currentSpeed -= RAMP_AMOUNT;
+         m_currentSpeed = Math.min(m_currentSpeed, -feedSpeed);
+      }
+
+      m_victor.setValue(m_currentSpeed);
    }
 
    // Basically does the same as the function above, but in reverse
 
    public void runBackwards()
    {
-      m_victor.setValue(feedSpeed);
+      if (m_currentSpeed < feedSpeed)
+      {
+         m_currentSpeed += RAMP_AMOUNT;
+         m_currentSpeed = Math.max(m_currentSpeed, -feedSpeed);
+      }
+
+      m_victor.setValue(m_currentSpeed);
    }
 
    // This function turns the motors off
 
    public void stop()
    {
-      m_victor.setValue(0);
+      m_currentSpeed = 0;
+      m_victor.setValue(m_currentSpeed);
    }
 
    // This function may or may not be used. Either way, the purpose of this
