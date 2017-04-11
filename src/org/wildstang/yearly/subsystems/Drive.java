@@ -273,6 +273,7 @@ public class Drive implements Subsystem, PIDOutput
             exitAutoGearMode();
             setOpenLoopDrive();
             setHeading(0);
+            setThrottle(0);
             SmartDashboard.putBoolean("Auto gear mode", false);
          }
       }
