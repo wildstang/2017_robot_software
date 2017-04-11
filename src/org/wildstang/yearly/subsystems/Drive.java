@@ -585,10 +585,16 @@ public class Drive implements Subsystem, PIDOutput
    }
 
    
-   public void setMotionMagicTarget(double p_leftTarget, double p_rightTarget)
+   public void setMotionMagicTargetAbsolute(double p_leftTarget, double p_rightTarget)
    {
       m_leftMaster.set(p_leftTarget);
       m_rightMaster.set(p_rightTarget);
+   }
+
+   public void setMotionMagicTargetDelta(double p_leftDelta, double p_rightDelta)
+   {
+      m_leftMaster.set(m_leftMaster.getEncPosition() + p_leftDelta);
+      m_rightMaster.set(m_rightMaster.getEncPosition() + p_rightDelta);
    }
 
    private void stopPathFollowing()

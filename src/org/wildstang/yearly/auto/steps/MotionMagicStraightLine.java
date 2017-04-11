@@ -24,7 +24,7 @@ public class MotionMagicStraightLine extends AutoStep
    public void update()
    {
       // TODO Auto-generated method stub
-      m_drive.setMotionMagicTarget(6, 6);
+      m_drive.setMotionMagicTargetAbsolute(6, 6);
    }
 
    @Override

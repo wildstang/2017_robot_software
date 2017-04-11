@@ -79,19 +79,22 @@ public class TurnByNDegreesStepMagic extends AutoStep
 
       // Every 5 cycles (about 100ms) recalculate to adjust for slipping
       // This will also execute on the first run, setting the initial targets
-//      if (m_cycleCount++ % 5 == 0)
-//      {
+      if (m_cycleCount > 0 && m_cycleCount++ % 5 == 0)
+      {
          // These values are rotations, for Motion Magic
 //         double rotations = getRotationsForDeltaAngle(m_currentHeading - m_target);
-//         
-//         // Turning left means right is a positive count
-//         m_rightTarget = rotations;
-//         m_leftTarget = -rotations;
-//         if (!fakeFinished)
+         double rotationsLeft = getRotationsForDeltaAngle((int)modAngle(m_currentHeading - m_target), true);
+         double rotationsRight = -getRotationsForDeltaAngle((int)modAngle(m_currentHeading - m_target), false);
+         
+         // Turning left means right is a positive count
+         m_rightTarget = rotationsRight;
+         m_leftTarget = rotationsLeft;
+
+         //         if (!fakeFinished)
 //         {
-            m_drive.setMotionMagicTarget(m_leftTarget, m_rightTarget);
+            m_drive.setMotionMagicTargetDelta(m_leftTarget, m_rightTarget);
 //         }
-//      }
+      }
             
       if (Math.abs(m_target - m_currentHeading) <= TOLERANCE)
       {
