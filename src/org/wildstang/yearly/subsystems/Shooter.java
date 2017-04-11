@@ -12,6 +12,7 @@ import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
 import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
@@ -27,6 +28,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
 {
+   // Send signals directly from this subsystem
+   private LED m_led;
+   
    // Flywheels
    private CANTalon m_CANFlywheelLeft;
    private CANTalon m_CANFlywheelRight;
@@ -177,6 +181,8 @@ public class Shooter implements Subsystem
 
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
+      
+      m_led = (LED)Core.getSubsystemManager().getSubsystem(WSSubsystems.LED.getName());
       
       resetState();
    }
@@ -401,12 +407,14 @@ public class Shooter implements Subsystem
       if (checkLeftFeedJammed())
       {
          m_leftFeedDirection = FeedDirection.STOP;
+         m_led.sendLeftFeedJammed();
       }
 
       // RIGHT SIDE
       if (checkRightFeedJammed())
       {
          m_rightFeedDirection = FeedDirection.STOP;
+         m_led.sendLeftFeedJammed();
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);
