@@ -64,7 +64,7 @@ public class Feed extends Shooter
       if (m_currentSpeed < feedSpeed)
       {
          m_currentSpeed += RAMP_AMOUNT;
-         m_currentSpeed = Math.max(m_currentSpeed, -feedSpeed);
+         m_currentSpeed = Math.max(m_currentSpeed, feedSpeed);
       }
 
       m_victor.setValue(m_currentSpeed);
