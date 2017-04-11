@@ -28,7 +28,7 @@ public class DriveConstants
    public static final double MM_QUICK_D_GAIN = 0.0;
 
    // Motion Magic regular PID constants
-   public static final double MM_DRIVE_F_GAIN = 0.33;
+   public static final double MM_DRIVE_F_GAIN = 0.28;
    public static final double MM_DRIVE_P_GAIN = 0.0;
    public static final double MM_DRIVE_I_GAIN = 0.0;
    public static final double MM_DRIVE_D_GAIN = 0.0;

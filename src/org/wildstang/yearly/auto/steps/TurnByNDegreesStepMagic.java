@@ -20,7 +20,7 @@ public class TurnByNDegreesStepMagic extends AutoStep
    double m_rightTarget;
    double m_leftTarget;
    
-   boolean fakeFinished = false;
+   //boolean fakeFinished = false;
    
    private int m_currentHeading;
    
@@ -87,10 +87,10 @@ public class TurnByNDegreesStepMagic extends AutoStep
 //         // Turning left means right is a positive count
 //         m_rightTarget = rotations;
 //         m_leftTarget = -rotations;
-         if (!fakeFinished)
-         {
+//         if (!fakeFinished)
+//         {
             m_drive.setMotionMagicTarget(m_leftTarget, m_rightTarget);
-         }
+//         }
 //      }
             
       if (Math.abs(m_target - m_currentHeading) <= TOLERANCE)
@@ -98,8 +98,8 @@ public class TurnByNDegreesStepMagic extends AutoStep
          SmartDashboard.putBoolean("Gyro turn on target", true);
          m_drive.setOpenLoopDrive();
          m_drive.setThrottle(0);
-         fakeFinished = true;
-//         setFinished(true);
+         //fakeFinished = true;
+         setFinished(true);
       }
       else
       {
