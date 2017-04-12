@@ -6,7 +6,6 @@ import org.wildstang.hardware.crio.inputs.WsAnalogGyro;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
-import org.wildstang.yearly.subsystems.drive.DriveConstants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,7 +14,6 @@ public class TurnByNDegreesStep extends AutoStep
    private WsAnalogGyro m_gyro;
    private Drive m_drive;
    private int m_deltaHeading;
-   private double f_gain;
    private int m_target;
    double m_rightTarget;
    double m_leftTarget;
@@ -23,23 +21,13 @@ public class TurnByNDegreesStep extends AutoStep
    //boolean fakeFinished = false;
    
    private int m_currentHeading;
-   
-   private long m_cycleCount = 0;
-   
+      
    private static final int TOLERANCE = 1;
-   private static final int TICKS_PER_DEGREE_LEFT = 103;
-   private static final int TICKS_PER_DEGREE_RIGHT = 105;
    private static final double MIN_ROTATION_OUTPUT = 0.2;
    
-   public TurnByNDegreesStep(int p_deltaHeading, double f_gain)
-   {
-      m_deltaHeading = p_deltaHeading;
-      this.f_gain = f_gain;
-   }
    public TurnByNDegreesStep(int p_deltaHeading) 
    {
-      // TODO Auto-generated constructor stub
-      this(p_deltaHeading, DriveConstants.MM_DRIVE_F_GAIN );
+      m_deltaHeading = p_deltaHeading;
    }
    
    @Override
@@ -48,27 +36,22 @@ public class TurnByNDegreesStep extends AutoStep
       m_gyro = (WsAnalogGyro)Core.getInputManager().getInput(WSInputs.GYRO.getName());
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
 
-//      m_drive.setMotionMagicMode(true, f_gain);
-      
       // The gyro drift compensation means we should be able to set the target in initialize() rather than on
       // first time through update()
-      m_currentHeading = (int)m_gyro.getValue();
+      m_currentHeading = getCompassHeading((int)m_gyro.getValue());
       m_target = getCompassHeading((m_currentHeading + m_deltaHeading));
-      if (m_deltaHeading < 0) { // here we add a little overshoot to make up for increased friction on carpet
+      if (m_deltaHeading < 0)
+      { 
+         // here we add a little overshoot to make up for increased friction on carpet
          m_deltaHeading -= 0;
-      } else if (m_deltaHeading > 0){
+      }
+      else if (m_deltaHeading > 0)
+      {
          m_deltaHeading += 0;
       }
-      double rotationsLeft = getRotationsForDeltaAngle((int)modAngle(m_deltaHeading), true);
-      double rotationsRight = -getRotationsForDeltaAngle((int)modAngle(m_deltaHeading), false);
-      // Turning left means right is a positive count
-      m_rightTarget = rotationsRight;
-      m_leftTarget = rotationsLeft;
 
       SmartDashboard.putNumber("Initial heading", m_currentHeading);
       SmartDashboard.putNumber("Target heading", m_target);
-      SmartDashboard.putNumber("Target Encoder Ticks Right", rotationsRight * 4096);
-      SmartDashboard.putNumber("Target Encoder Ticks Right", rotationsLeft * 4096);
    }
  //35,399 and 40,626
    @Override
@@ -187,21 +170,7 @@ public class TurnByNDegreesStep extends AutoStep
    }
 
 
-   
-   private double getRotationsForDeltaAngle(int p_delta, boolean left)
-   {
-      if (left) {
-      double ticksLeft = p_delta * TICKS_PER_DEGREE_LEFT;
-      SmartDashboard.putNumber("p_delta", p_delta);
-      return ticksLeft / 4096;
-      } else {
-         double ticksRight = p_delta * TICKS_PER_DEGREE_RIGHT;
-         SmartDashboard.putNumber("p_delta", p_delta);
-         return ticksRight / 4096; 
-      }
-   }
-   
-   private int getCompassHeading(int p_relative)
+      private int getCompassHeading(int p_relative)
    {
       return (p_relative + 360) % 360;
    }
