@@ -407,14 +407,14 @@ public class Shooter implements Subsystem
       if (checkLeftFeedJammed())
       {
          m_leftFeedDirection = FeedDirection.STOP;
-         m_led.sendLeftFeedJammed();
+//         m_led.sendLeftFeedJammed();
       }
 
       // RIGHT SIDE
       if (checkRightFeedJammed())
       {
          m_rightFeedDirection = FeedDirection.STOP;
-         m_led.sendLeftFeedJammed();
+//         m_led.sendLeftFeedJammed();
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);

@@ -15,7 +15,7 @@ public class LeftGearAutoNew extends AutoProgram
       // TODO Auto-generated method stub
       addStep(new PathFollowerStep(PathNameConstants.GEAR_AUTO_FORWARD));
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStepMagic(60));
+      addStep(new TurnByNDegreesStepMagic(70));
       addStep(new AutoStepDelay(200));
       addStep(new TrackVisionToGearStep());
    }
