@@ -35,7 +35,7 @@ public enum WSOutputs implements Outputs
    // ********************************
    // DIO Outputs                             
    // ********************************
-   //DIO_O_0("Test Digital Output 0",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(0, false), true), // Channel 0, Initially Low
+   //DIO_O_0("Test Digital Output 0",          WSOutputType.DIGITAL_OUTPUT, new WsDigitalOutputConfig(0, true), true), // Channel 0, Initially Low
 
    // ********************************
    // Solenoids

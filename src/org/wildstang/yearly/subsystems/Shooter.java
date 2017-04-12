@@ -12,6 +12,7 @@ import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
+import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
 import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
@@ -27,6 +28,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
 {
+   // Send signals directly from this subsystem
+   private LED m_led;
+   
    // Flywheels
    private CANTalon m_CANFlywheelLeft;
    private CANTalon m_CANFlywheelRight;
@@ -178,6 +182,8 @@ public class Shooter implements Subsystem
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
       
+      m_led = (LED)Core.getSubsystemManager().getSubsystem(WSSubsystems.LED.getName());
+      
       resetState();
    }
 
@@ -205,7 +211,7 @@ public class Shooter implements Subsystem
       m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
       m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 5400.0);
       m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5550.0);
-      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 1.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.8);
       m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
       
       m_LF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_F",  0.0238);
@@ -231,7 +237,7 @@ public class Shooter implements Subsystem
 
       p_talon.configNominalOutputVoltage(+0.0f, -0.0f);
       p_talon.configPeakOutputVoltage(+12.0f, 0.0f);
-      // p_talon.setVoltageRampRate(24.0); // Max spinup of 24V/s - start here
+      p_talon.setVoltageRampRate(12.0); // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
@@ -401,12 +407,14 @@ public class Shooter implements Subsystem
       if (checkLeftFeedJammed())
       {
          m_leftFeedDirection = FeedDirection.STOP;
+//         m_led.sendLeftFeedJammed();
       }
 
       // RIGHT SIDE
       if (checkRightFeedJammed())
       {
          m_rightFeedDirection = FeedDirection.STOP;
+//         m_led.sendLeftFeedJammed();
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);

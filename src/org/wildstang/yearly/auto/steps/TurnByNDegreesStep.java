@@ -10,7 +10,7 @@ import org.wildstang.yearly.subsystems.drive.DriveConstants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TurnByNDegreesStepMagic extends AutoStep
+public class TurnByNDegreesStep extends AutoStep
 {
    private WsAnalogGyro m_gyro;
    private Drive m_drive;
@@ -29,13 +29,14 @@ public class TurnByNDegreesStepMagic extends AutoStep
    private static final int TOLERANCE = 1;
    private static final int TICKS_PER_DEGREE_LEFT = 103;
    private static final int TICKS_PER_DEGREE_RIGHT = 105;
+   private static final double MIN_ROTATION_OUTPUT = 0.2;
    
-   public TurnByNDegreesStepMagic(int p_deltaHeading, double f_gain)
+   public TurnByNDegreesStep(int p_deltaHeading, double f_gain)
    {
       m_deltaHeading = p_deltaHeading;
       this.f_gain = f_gain;
    }
-   public TurnByNDegreesStepMagic(int p_deltaHeading) 
+   public TurnByNDegreesStep(int p_deltaHeading) 
    {
       // TODO Auto-generated constructor stub
       this(p_deltaHeading, DriveConstants.MM_DRIVE_F_GAIN );
@@ -47,7 +48,7 @@ public class TurnByNDegreesStepMagic extends AutoStep
       m_gyro = (WsAnalogGyro)Core.getInputManager().getInput(WSInputs.GYRO.getName());
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
 
-      m_drive.setMotionMagicMode(true, f_gain);
+//      m_drive.setMotionMagicMode(true, f_gain);
       
       // The gyro drift compensation means we should be able to set the target in initialize() rather than on
       // first time through update()
@@ -74,6 +75,7 @@ public class TurnByNDegreesStepMagic extends AutoStep
    public void update()
    {      
       m_drive.setHighGear(false);
+      m_drive.setQuickTurn(true);
       
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
 
@@ -89,7 +91,10 @@ public class TurnByNDegreesStepMagic extends AutoStep
 //         m_leftTarget = -rotations;
 //         if (!fakeFinished)
 //         {
-            m_drive.setMotionMagicTargetAbsolute(m_leftTarget, m_rightTarget);
+      double throttle = calculateRotationSpeed(m_currentHeading, m_target, TOLERANCE);
+      m_drive.setHeading(throttle);
+      
+//            m_drive.setMotionMagicTargetAbsolute(m_leftTarget, m_rightTarget);
 //         }
 //      }
             
@@ -109,6 +114,80 @@ public class TurnByNDegreesStepMagic extends AutoStep
       SmartDashboard.putNumber("Current heading", m_currentHeading);
    }
 
+   
+   private double calculateRotationSpeed(int p_current, int p_target, int p_tolerance)
+   {
+      double rotationSpeed = 0.0;
+      
+      // Usually the angle changes will be small.  For large changes (> 180 difference)
+      // follow the shortest path to the new position
+      // Smooth the output so that it slows near the target position
+      // Limit the minimum output to some percentage (20%?) to prevent stalling
+      
+      int diff = p_target - p_current;
+      int distanceToTarget = Math.abs(diff);
+      int  dir = 1;
+      
+      if (p_current > p_target)
+      {
+         if (distanceToTarget >= 180)
+         {
+            dir = 1;
+         }
+         else
+         {
+            dir = -1;
+         }
+      }
+      else if (p_current < p_target)
+      {
+         if (distanceToTarget >= 180)
+         {
+            dir = -1;
+         }
+         else
+         {
+            dir = 1;
+         }
+      }
+      else
+      {
+         // Prev and target are equal - nowhere to go
+      }
+      
+      // If we are going past half a rotation, go the shortest route
+      // Direction has already been taken care of above
+      if (distanceToTarget >= 180)
+      {
+         distanceToTarget = 360 - distanceToTarget;
+      }
+
+      // Determine the speed of the motor
+      // Scale based on proportion of distance to travel of 180 degrees
+      // - 180 degrees away results in full speed
+      // - closer is slower
+      // - limit minimum output to 15%
+      rotationSpeed = (double)distanceToTarget / 180;
+
+      // If we are within tolerance of the target angle, stop turning
+      if (distanceToTarget <= p_tolerance)
+      {
+         rotationSpeed = 0.0;
+      }
+      // If we are below our minimum useful output, set it to the minimum
+      else if (rotationSpeed < MIN_ROTATION_OUTPUT)
+      {
+         rotationSpeed = MIN_ROTATION_OUTPUT;
+      }
+
+      // Set the correct direction
+      rotationSpeed *= dir;
+
+      return rotationSpeed;
+   }
+
+
+   
    private double getRotationsForDeltaAngle(int p_delta, boolean left)
    {
       if (left) {
