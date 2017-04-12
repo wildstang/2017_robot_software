@@ -16,6 +16,8 @@ public class Feed extends Shooter
    
    private double m_currentSpeed = 0;
    private static final double RAMP_AMOUNT = 0.1;
+   private static final int RAMP_RATE = 3;
+   private int m_rampCycles = 0;
 
    // Creating a feeder object so that both feeder belts can be declared in the
    // Shooter subclass
@@ -50,8 +52,12 @@ public class Feed extends Shooter
    {
       if (m_currentSpeed > -feedSpeed)
       {
-         m_currentSpeed -= RAMP_AMOUNT;
-         m_currentSpeed = Math.min(m_currentSpeed, -feedSpeed);
+         if (m_rampCycles % RAMP_RATE == 0)
+         {
+            m_currentSpeed -= RAMP_AMOUNT;
+            m_currentSpeed = Math.min(m_currentSpeed, -feedSpeed);
+         }
+         m_rampCycles++;
       }
 
       m_victor.setValue(m_currentSpeed);
@@ -63,8 +69,12 @@ public class Feed extends Shooter
    {
       if (m_currentSpeed < feedSpeed)
       {
-         m_currentSpeed += RAMP_AMOUNT;
-         m_currentSpeed = Math.max(m_currentSpeed, feedSpeed);
+         if (m_rampCycles % RAMP_RATE == 0)
+         {
+            m_currentSpeed += RAMP_AMOUNT;
+            m_currentSpeed = Math.max(m_currentSpeed, feedSpeed);
+         }
+         m_rampCycles++;
       }
 
       m_victor.setValue(m_currentSpeed);
@@ -76,6 +86,7 @@ public class Feed extends Shooter
    {
       m_currentSpeed = 0;
       m_victor.setValue(m_currentSpeed);
+      m_rampCycles = 0;
    }
 
    // This function may or may not be used. Either way, the purpose of this
