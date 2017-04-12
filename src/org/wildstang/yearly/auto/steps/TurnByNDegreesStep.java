@@ -40,15 +40,18 @@ public class TurnByNDegreesStep extends AutoStep
       // first time through update()
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
       m_target = getCompassHeading((m_currentHeading + m_deltaHeading));
-      if (m_deltaHeading < 0)
-      { 
-         // here we add a little overshoot to make up for increased friction on carpet
-         m_deltaHeading -= 0;
-      }
-      else if (m_deltaHeading > 0)
-      {
-         m_deltaHeading += 0;
-      }
+
+//      if (m_deltaHeading < 0)
+//      { 
+//         // here we add a little overshoot to make up for increased friction on carpet
+//         m_deltaHeading -= 0;
+//      }
+//      else if (m_deltaHeading > 0)
+//      {
+//         m_deltaHeading += 0;
+//      }
+      m_drive.setHighGear(false);
+      m_drive.setQuickTurn(true);
 
       SmartDashboard.putNumber("Initial heading", m_currentHeading);
       SmartDashboard.putNumber("Target heading", m_target);
@@ -57,9 +60,6 @@ public class TurnByNDegreesStep extends AutoStep
    @Override
    public void update()
    {      
-      m_drive.setHighGear(false);
-      m_drive.setQuickTurn(true);
-      
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
 
       // Every 5 cycles (about 100ms) recalculate to adjust for slipping
@@ -170,21 +170,24 @@ public class TurnByNDegreesStep extends AutoStep
    }
 
 
-      private int getCompassHeading(int p_relative)
+   private int getCompassHeading(int p_relative)
    {
       return (p_relative + 360) % 360;
    }
    
-   public double modAngle(double initAngle) {
-      double modAngle = initAngle; 
-      while (modAngle > 180) { //should account for all angles
+   public double modAngle(double initAngle)
+   {
+      double modAngle = initAngle;
+
+      while (modAngle > 180)
+      { // should account for all angles
          modAngle -= 360;
       }
-      while (modAngle < -180) {
+      while (modAngle < -180)
+      {
          modAngle += 360;
       }
 
-      
       return modAngle;
    }
    

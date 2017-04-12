@@ -11,10 +11,8 @@ public class TurnTesting extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      // TODO Auto-generated method stub
       //addStep(new PathFollowerStep(PathNameConstants.GEAR_AUTO_FORWARD));
       //addStep(new AutoStepDelay(200));
-      //SmartDashboard.putNumber("Test Turn Angle", 0);
       addStep(new TurnByNDegreesStep((int) SmartDashboard.getNumber("Test Turn Angle", 0)));
       //addStep(new AutoStepDelay(200));
       //addStep(new TrackVisionToGearStep());
@@ -23,7 +21,6 @@ public class TurnTesting extends AutoProgram
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Turn Tester";
    }
 
