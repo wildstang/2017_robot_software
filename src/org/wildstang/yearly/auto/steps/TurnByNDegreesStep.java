@@ -151,7 +151,7 @@ public class TurnByNDegreesStep extends AutoStep
       // - 180 degrees away results in full speed
       // - closer is slower
       // - limit minimum output to 15%
-      rotationSpeed = (double)distanceToTarget / 180 * 1.25;
+      rotationSpeed = (((double)distanceToTarget * (1-MIN_ROTATION_OUTPUT))/ 180) + MIN_ROTATION_OUTPUT;
 
       // If we are within tolerance of the target angle, stop turning
       if (distanceToTarget <= p_tolerance)
