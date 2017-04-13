@@ -158,11 +158,6 @@ public class TurnByNDegreesStep extends AutoStep
       {
          rotationSpeed = 0.0;
       }
-      // If we are below our minimum useful output, set it to the minimum
-      else if (rotationSpeed < MIN_ROTATION_OUTPUT)
-      {
-         rotationSpeed = MIN_ROTATION_OUTPUT;
-      }
 
       // Set the correct direction
       rotationSpeed *= dir;
