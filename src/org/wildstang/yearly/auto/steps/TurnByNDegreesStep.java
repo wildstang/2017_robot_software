@@ -23,7 +23,7 @@ public class TurnByNDegreesStep extends AutoStep
    private int m_currentHeading;
       
    private static final int TOLERANCE = 1;
-   private static final double MIN_ROTATION_OUTPUT = 0.2;
+   private static final double MIN_ROTATION_OUTPUT = 0.3;
    
    public TurnByNDegreesStep(int p_deltaHeading) 
    {
@@ -36,6 +36,7 @@ public class TurnByNDegreesStep extends AutoStep
       m_gyro = (WsAnalogGyro)Core.getInputManager().getInput(WSInputs.GYRO.getName());
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
 
+//      m_gyro.calibrate();
       // The gyro drift compensation means we should be able to set the target in initialize() rather than on
       // first time through update()
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
@@ -150,7 +151,7 @@ public class TurnByNDegreesStep extends AutoStep
       // - 180 degrees away results in full speed
       // - closer is slower
       // - limit minimum output to 15%
-      rotationSpeed = (double)distanceToTarget / 180;
+      rotationSpeed = (double)distanceToTarget / 180 * 1.25;
 
       // If we are within tolerance of the target angle, stop turning
       if (distanceToTarget <= p_tolerance)

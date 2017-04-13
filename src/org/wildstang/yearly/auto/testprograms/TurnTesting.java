@@ -7,7 +7,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnTesting extends AutoProgram
 {
-
+   public TurnTesting()
+   {
+      SmartDashboard.putNumber("Test Turn Angle", 0);
+   }
    @Override
    protected void defineSteps()
    {
