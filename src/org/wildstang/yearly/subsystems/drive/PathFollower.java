@@ -74,7 +74,7 @@ public class PathFollower
 
    public void update()
    {
-      System.out.println("PathFollower.update() called");
+      //System.out.println("PathFollower.update() called");
 
 //      while (m_running)
 //      {
@@ -112,7 +112,7 @@ public class PathFollower
       public void run()
       {
          m_left.processMotionProfileBuffer();
-         System.out.println("Top buffer size: " + m_left.getMotionProfileTopLevelBufferCount());
+         //System.out.println("Top buffer size: " + m_left.getMotionProfileTopLevelBufferCount());
          m_right.processMotionProfileBuffer();
       }
    }
@@ -129,7 +129,7 @@ public class PathFollower
    {
 
       /* create an empty point */
-      System.out.println("PathFollower.fillPathBuffers() called");
+      //System.out.println("PathFollower.fillPathBuffers() called");
 
       /* did we get an underrun condition since last time we checked ? */
       if (m_leftStatus.hasUnderrun)
@@ -157,7 +157,7 @@ public class PathFollower
          m_right.pushMotionProfileTrajectory(rightPoints.get(i));
       }
       
-      System.out.println("PathFollower.fillPathBuffers(): added " + m_left.getMotionProfileTopLevelBufferCount());
+      //System.out.println("PathFollower.fillPathBuffers(): added " + m_left.getMotionProfileTopLevelBufferCount());
 
    }
 

@@ -273,6 +273,7 @@ public class Drive implements Subsystem, PIDOutput
             exitAutoGearMode();
             setOpenLoopDrive();
             setHeading(0);
+            setThrottle(0);
             SmartDashboard.putBoolean("Auto gear mode", false);
          }
       }
@@ -483,11 +484,11 @@ public class Drive implements Subsystem, PIDOutput
 
       if (m_visionDistance < 36)
       {
-         setThrottle(.18);
+         setThrottle(.2);
       }
       else
       {
-         setThrottle(.3);
+         setThrottle(.35);
       }
 
       if (m_visionDistance < 10)
@@ -552,8 +553,8 @@ public class Drive implements Subsystem, PIDOutput
          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
          m_rightMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
 
-         m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//         m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+//         m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          if (p_quickTurn)
          {
             m_leftMaster.setMotionMagicAcceleration(350);  // RPM
@@ -584,10 +585,16 @@ public class Drive implements Subsystem, PIDOutput
    }
 
    
-   public void setMotionMagicTarget(double p_leftTarget, double p_rightTarget)
+   public void setMotionMagicTargetAbsolute(double p_leftTarget, double p_rightTarget)
    {
       m_leftMaster.set(p_leftTarget);
       m_rightMaster.set(p_rightTarget);
+   }
+
+   public void setMotionMagicTargetDelta(double p_leftDelta, double p_rightDelta)
+   {
+      m_leftMaster.set(m_leftMaster.getEncPosition() + p_leftDelta);
+      m_rightMaster.set(m_rightMaster.getEncPosition() + p_rightDelta);
    }
 
    private void stopPathFollowing()
