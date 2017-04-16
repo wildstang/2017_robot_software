@@ -4,13 +4,12 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.config.Config;
 import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.auto.steps.CloseGearHolderStep;
 import org.wildstang.yearly.auto.steps.DeliverGearStep;
-import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
-import org.wildstang.yearly.auto.steps.PathFollowerStep;
+import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
+import org.wildstang.yearly.auto.steps.TurnByNDegreesStep;
 
 public class RightGear extends AutoProgram
 {
@@ -19,7 +18,7 @@ public class RightGear extends AutoProgram
    protected void defineSteps()
    {
       Config config = Core.getConfigManager().getConfig();
-
+      
       int waitTime = config.getInt(this.getClass().getName() + ".deliverWaitTime", 500);
 
       // Use high gear
@@ -27,21 +26,22 @@ public class RightGear extends AutoProgram
 
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));
-      addStep(new CloseGearHolderStep());
 
-      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_RIGHT_GEAR));
-      addStep(new AutoStepDelay(500));
+      // Drive forward and turn 60 degrees towards peg
+      addStep(new MotionMagicStraightLine(87));
+      addStep(new AutoStepDelay(200));
+      addStep(new TurnByNDegreesStep(-60));
+      addStep(new AutoStepDelay(200));
 
+      // Track the vision target
       addStep(new TrackVisionToGearStep());
       
       addStep(new DeliverGearStep());
-      addStep(new OpenGearHolderStep());
       // Wait to let it settle
       addStep(new AutoStepDelay(waitTime));
 
       // Go backwards 2ft
-//      addStep(new DriveDistanceStraightStep(-0.5, 24));
-      addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
+      addStep(new MotionMagicStraightLine(-24));
 
    }
 

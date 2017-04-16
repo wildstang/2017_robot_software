@@ -51,6 +51,7 @@ public class TurnByNDegreesStep extends AutoStep
 //      {
 //         m_deltaHeading += 0;
 //      }
+      m_drive.setOpenLoopDrive();
       m_drive.setHighGear(false);
       m_drive.setQuickTurn(true);
 

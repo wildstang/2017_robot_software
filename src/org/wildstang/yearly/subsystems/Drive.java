@@ -584,6 +584,15 @@ public class Drive implements Subsystem, PIDOutput
       }
    }
 
+   public double getLeftSensorValue()
+   {
+      return m_leftMaster.get();
+   }
+   
+   public double getRightSensorValue()
+   {
+      return m_rightMaster.get();
+   }
    
    public void setMotionMagicTargetAbsolute(double p_leftTarget, double p_rightTarget)
    {
