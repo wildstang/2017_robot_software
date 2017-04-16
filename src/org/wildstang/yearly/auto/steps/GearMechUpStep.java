@@ -3,16 +3,16 @@ package org.wildstang.yearly.auto.steps;
 import org.wildstang.framework.auto.steps.AutoStep;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.robot.WSSubsystems;
-import org.wildstang.yearly.subsystems.GearV2;
+import org.wildstang.yearly.subsystems.Gear;
 
 public class GearMechUpStep extends AutoStep
 {
-   private GearV2 m_gearSubsystem;
+   private Gear m_gearSubsystem;
    
    @Override
    public void initialize()
    {
-      m_gearSubsystem = (GearV2)Core.getSubsystemManager().getSubsystem(WSSubsystems.GEAR.getName());
+      m_gearSubsystem = (Gear)Core.getSubsystemManager().getSubsystem(WSSubsystems.GEAR.getName());
    }
 
    @Override
