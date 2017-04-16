@@ -20,7 +20,7 @@ public class RightGear extends AutoProgram
       Config config = Core.getConfigManager().getConfig();
       
       int waitTime = config.getInt(this.getClass().getName() + ".deliverWaitTime", 500);
-
+      
       // Use high gear
       addStep(new SetHighGearStep(true));
 

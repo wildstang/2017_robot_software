@@ -21,15 +21,12 @@ public class MiddleGear extends AutoProgram
       
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));
-      addStep(new CloseGearHolderStep());
 
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
       addStep(new AutoStepDelay(500));
-//      addStep(new DriveDistanceStraightStep(0.5, 48));
       addStep(new TrackVisionToGearStep());
 
       addStep(new DeliverGearStep());
-      addStep(new OpenGearHolderStep());
       // Wait to let it settle
       addStep(new AutoStepDelay(waitTime));
 

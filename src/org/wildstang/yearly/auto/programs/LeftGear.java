@@ -4,10 +4,8 @@ import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
 import org.wildstang.framework.config.Config;
 import org.wildstang.framework.core.Core;
-import org.wildstang.yearly.auto.steps.CloseGearHolderStep;
 import org.wildstang.yearly.auto.steps.DeliverGearStep;
 import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
-import org.wildstang.yearly.auto.steps.OpenGearHolderStep;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.TrackVisionToGearStep;
@@ -28,7 +26,6 @@ public class LeftGear extends AutoProgram
 
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));
-      addStep(new CloseGearHolderStep());
 
       // Drive forward and turn 60 degrees towards peg
       addStep(new MotionMagicStraightLine(87));
@@ -40,7 +37,6 @@ public class LeftGear extends AutoProgram
       addStep(new TrackVisionToGearStep());
       
       addStep(new DeliverGearStep());
-      addStep(new OpenGearHolderStep());
       // Wait to let it settle
       addStep(new AutoStepDelay(waitTime));
 

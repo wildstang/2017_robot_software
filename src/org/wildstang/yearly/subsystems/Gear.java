@@ -141,7 +141,7 @@ public class Gear implements Subsystem
          m_rollerTalon.set(0);
       }
       
-      SmartDashboard.putBoolean("Gear back", m_mechUp);
+      SmartDashboard.putBoolean("Gear mech up", m_mechUp);
    }
    
    public void rollerIn()
