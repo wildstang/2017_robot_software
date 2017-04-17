@@ -182,7 +182,7 @@ public class Shooter implements Subsystem
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
       
-      m_led = (LED)Core.getSubsystemManager().getSubsystem(WSSubsystems.LED.getName());
+//      m_led = (LED)Core.getSubsystemManager().getSubsystem(WSSubsystems.LED.getName());
       
       resetState();
    }

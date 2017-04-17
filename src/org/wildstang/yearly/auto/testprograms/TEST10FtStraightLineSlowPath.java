@@ -2,6 +2,7 @@ package org.wildstang.yearly.auto.testprograms;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.yearly.auto.programs.PathNameConstants;
+import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 
 public class TEST10FtStraightLineSlowPath extends AutoProgram
@@ -10,7 +11,7 @@ public class TEST10FtStraightLineSlowPath extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_1));
+      addStep(new MotionMagicStraightLine(7));
    }
    
    @Override

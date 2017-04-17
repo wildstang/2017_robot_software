@@ -9,7 +9,14 @@ import org.wildstang.yearly.subsystems.drive.DriveConstants;
 public class MotionMagicStraightLine extends AutoStep
 {
 
+   
+   double rotations;
    Drive m_drive;
+   
+   public MotionMagicStraightLine(double distance) {
+      rotations = distance; //* (12 / (4 * Math.PI));
+   }
+   
    @Override
    public void initialize()
    {
@@ -24,7 +31,9 @@ public class MotionMagicStraightLine extends AutoStep
    public void update()
    {
       // TODO Auto-generated method stub
-      m_drive.setMotionMagicTargetAbsolute(6, 6);
+      m_drive.setMotionMagicTargetAbsolute(rotations, rotations);
+      
+      
    }
 
    @Override

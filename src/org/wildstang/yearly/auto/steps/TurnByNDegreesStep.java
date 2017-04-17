@@ -22,8 +22,8 @@ public class TurnByNDegreesStep extends AutoStep
    
    private int m_currentHeading;
       
-   private static final int TOLERANCE = 1;
-   private static final double MIN_ROTATION_OUTPUT = 0.3;
+   private static final int TOLERANCE = 0;
+   private static final double MIN_ROTATION_OUTPUT = 0.33;
    
    public TurnByNDegreesStep(int p_deltaHeading) 
    {
