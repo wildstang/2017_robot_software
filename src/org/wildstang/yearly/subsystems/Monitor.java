@@ -105,4 +105,10 @@ public class Monitor implements Subsystem
       return m_name;
    }
 
+@Override
+public void resetState() {
+	// TODO Auto-generated method stub
+	
+}
+
 }

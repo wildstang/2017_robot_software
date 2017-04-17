@@ -607,4 +607,10 @@ public class Drive implements Subsystem
       driveStates.clear();
       
    }
+
+@Override
+public void resetState() {
+	// TODO Auto-generated method stub
+	
+}
 }

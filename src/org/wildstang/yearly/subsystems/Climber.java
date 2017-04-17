@@ -162,4 +162,10 @@ public class Climber implements Subsystem
        //Servo_0.setValue(ServoPos_0);
        //Servo_1.setValue(ServoPos_1);
    }
+
+@Override
+public void resetState() {
+	// TODO Auto-generated method stub
+	
+}
 }

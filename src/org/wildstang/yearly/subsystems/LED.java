@@ -214,4 +214,10 @@ public class LED implements Subsystem
          return dataBytes;
       }
    }
+
+@Override
+public void resetState() {
+	// TODO Auto-generated method stub
+	
+}
 }

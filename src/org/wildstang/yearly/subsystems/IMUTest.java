@@ -61,4 +61,10 @@ public class IMUTest implements Subsystem{
 		return "IMU Test";
 	}
 
+	@Override
+	public void resetState() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
