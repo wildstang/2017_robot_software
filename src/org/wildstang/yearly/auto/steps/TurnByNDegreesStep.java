@@ -18,11 +18,9 @@ public class TurnByNDegreesStep extends AutoStep
    double m_rightTarget;
    double m_leftTarget;
    
-   //boolean fakeFinished = false;
-   
    private int m_currentHeading;
       
-   private static final int TOLERANCE = 1;
+   private static final int TOLERANCE = 0;
    private static final double MIN_ROTATION_OUTPUT = 0.3;
    
    public TurnByNDegreesStep(int p_deltaHeading) 
@@ -36,21 +34,11 @@ public class TurnByNDegreesStep extends AutoStep
       m_gyro = (WsAnalogGyro)Core.getInputManager().getInput(WSInputs.GYRO.getName());
       m_drive = (Drive)Core.getSubsystemManager().getSubsystem(WSSubsystems.DRIVE_BASE.getName());
 
-//      m_gyro.calibrate();
       // The gyro drift compensation means we should be able to set the target in initialize() rather than on
       // first time through update()
       m_currentHeading = getCompassHeading((int)m_gyro.getValue());
       m_target = getCompassHeading((m_currentHeading + m_deltaHeading));
 
-//      if (m_deltaHeading < 0)
-//      { 
-//         // here we add a little overshoot to make up for increased friction on carpet
-//         m_deltaHeading -= 0;
-//      }
-//      else if (m_deltaHeading > 0)
-//      {
-//         m_deltaHeading += 0;
-//      }
       m_drive.setOpenLoopDrive();
       m_drive.setHighGear(false);
       m_drive.setQuickTurn(true);
@@ -58,7 +46,7 @@ public class TurnByNDegreesStep extends AutoStep
       SmartDashboard.putNumber("Initial heading", m_currentHeading);
       SmartDashboard.putNumber("Target heading", m_target);
    }
- //35,399 and 40,626
+
    @Override
    public void update()
    {      
@@ -66,22 +54,8 @@ public class TurnByNDegreesStep extends AutoStep
 
       // Every 5 cycles (about 100ms) recalculate to adjust for slipping
       // This will also execute on the first run, setting the initial targets
-//      if (m_cycleCount++ % 5 == 0)
-//      {
-         // These values are rotations, for Motion Magic
-//         double rotations = getRotationsForDeltaAngle(m_currentHeading - m_target);
-//         
-//         // Turning left means right is a positive count
-//         m_rightTarget = rotations;
-//         m_leftTarget = -rotations;
-//         if (!fakeFinished)
-//         {
       double throttle = calculateRotationSpeed(m_currentHeading, m_target, TOLERANCE);
       m_drive.setHeading(throttle);
-      
-//            m_drive.setMotionMagicTargetAbsolute(m_leftTarget, m_rightTarget);
-//         }
-//      }
             
       if (Math.abs(m_target - m_currentHeading) <= TOLERANCE)
       {
@@ -151,7 +125,6 @@ public class TurnByNDegreesStep extends AutoStep
       // Scale based on proportion of distance to travel of 180 degrees
       // - 180 degrees away results in full speed
       // - closer is slower
-      // - limit minimum output to 15%
       rotationSpeed = (((double)distanceToTarget * (1-MIN_ROTATION_OUTPUT))/ 180) + MIN_ROTATION_OUTPUT;
 
       // If we are within tolerance of the target angle, stop turning
