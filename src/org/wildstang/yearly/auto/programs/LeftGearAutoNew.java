@@ -13,11 +13,10 @@ public class LeftGearAutoNew extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      // TODO Auto-generated method stub
-      //addStep(new PathFollowerStep(PathNameConstants.GEAR_AUTO_FORWARD));
-      addStep(new MotionMagicStraightLine(7));
+
+      addStep(new MotionMagicStraightLine(87));
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStepMagic(70));
+      addStep(new TurnByNDegreesStepMagic(60));
       addStep(new AutoStepDelay(200));
       addStep(new TrackVisionToGearStep());
    }
@@ -25,7 +24,6 @@ public class LeftGearAutoNew extends AutoProgram
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Left Gear vChamps";
    }
 
