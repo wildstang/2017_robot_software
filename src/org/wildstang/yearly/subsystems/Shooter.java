@@ -260,6 +260,8 @@ public class Shooter implements Subsystem
          }
          m_shooterPrev = m_shooterCurrent;
       }
+      
+      // Steve was here
     
       else if (p_source == m_leftBeltJoystick)
       {

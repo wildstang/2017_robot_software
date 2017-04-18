@@ -77,7 +77,7 @@ public class Gear implements Subsystem
       m_deliverGearButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.DELIVER_GEAR_BUTTON.getName());
       m_deliverGearButton.addInputListener(this);
       
-      m_mechUpSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
+      m_mechUpSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.MECH_UP.getName());
       m_rollerTalon = new CANTalon(CANConstants.GEAR_ROLLER_ID);
       
       m_rollerTalon.enableBrakeMode(true);
@@ -134,7 +134,7 @@ public class Gear implements Subsystem
       }
       else if (m_rollerOut)
       {
-         m_rollerTalon.set(-0.2);
+         m_rollerTalon.set(-1);
       }
       else
       {

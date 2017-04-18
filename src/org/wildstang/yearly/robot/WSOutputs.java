@@ -43,7 +43,7 @@ public enum WSOutputs implements Outputs
    SHIFTER("Shifter single solenoid",        WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 7, false), true),  // Ctrl 1, Pins 0 Driver Subsystem
    //GATE("Gate",                              WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 4, false), true),  // Ctrl 1, Pin  1 Shooter Subsystem
    GEAR_HOLD("Gear Doors",               WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 6, false), true),  // Ctrl 1, Pin  2 Gear Subsystem
-   GEAR_TILT("Gear Tilt",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), true),  // Ctrl 1, Pin  3 Gear Subsystem
+   MECH_UP("Gear Tilt",                WSOutputType.SOLENOID_SINGLE, new WsSolenoidConfig(0, 5, false), true),  // Ctrl 1, Pin  3 Gear Subsystem
 
    // ********************************
    // Relays
