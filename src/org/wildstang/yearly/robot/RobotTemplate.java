@@ -187,11 +187,11 @@ public class RobotTemplate extends IterativeRobot
       startloggingState();
 
       // 2. Add Auto programs
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLineFastPath());
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLineMediumPath());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLineFastPath());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLineMediumPath());
       AutoManager.getInstance().addProgram(new TEST10FtStraightLineSlowPath());
-      AutoManager.getInstance().addProgram(new TEST5FtStraightLinePath());
+//      AutoManager.getInstance().addProgram(new TEST5FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
@@ -201,9 +201,9 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new HopperShoot());
-      AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
+//      AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
       AutoManager.getInstance().addProgram(new HopperShootStraight());
-      AutoManager.getInstance().addProgram(new TurnTesting());
+//      AutoManager.getInstance().addProgram(new TurnTesting());
       // 3. Start Vision server
       if (m_visionServer != null)
       {

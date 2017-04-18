@@ -17,7 +17,7 @@ public class TEST10FtStraightLineSlowPath extends AutoProgram
    @Override
    public String toString()
    {
-      return "10ft straight line Slow";
+      return "7ft straight motion magic";
    }
 
 
