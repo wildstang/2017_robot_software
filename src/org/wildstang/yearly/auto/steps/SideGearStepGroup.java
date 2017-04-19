@@ -26,7 +26,7 @@ public class SideGearStepGroup extends AutoSerialStepGroup
       addStep(new AutoStepDelay(200));
       addStep(new TurnByNDegreesStep(p_turnAngle));
       addStep(new AutoStepDelay(200));
-
+      addStep(new MotionMagicStraightLine(24));
       // Track the vision target
       addStep(new TrackVisionToGearStep());
       
