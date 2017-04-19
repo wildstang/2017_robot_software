@@ -2,6 +2,7 @@ package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
+import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
@@ -19,11 +20,11 @@ public class RightGearToShoot extends AutoProgram
 
       // Go backwards 2ft
 //      addStep(new DriveDistanceStraightStep(-0.5, 24));
-      addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
+      addStep(new MotionMagicStraightLine(-24));
 
       addStep(new TurnByNDegreesStepMagic(-175)); //Not sure if negative or positive 175 degrees
 
-      addStep(new PathFollowerStep(PathNameConstants.RIGHT_GEAR_TO_BOILER));
+      addStep(new MotionMagicStraightLine(60));
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
       addStep(new AutoStepDelay(10000));
