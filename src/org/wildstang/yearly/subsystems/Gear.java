@@ -26,9 +26,14 @@ public class Gear implements Subsystem
    private boolean m_receivePrev;
    private boolean m_receiveCurrent;
 
+   private boolean m_deliverPrev;
+   private boolean m_deliverCurrent;
+   private boolean m_deliverGear;
+
    private DigitalInput m_tiltButton;
    private DigitalInput m_doorButton;
    private DigitalInput m_receiveButton;
+   private DigitalInput m_deliverButton;
    
    private WsSolenoid m_tiltSolenoid;
    private WsSolenoid m_doorSolenoid;
@@ -44,6 +49,10 @@ public class Gear implements Subsystem
    {
       m_doorOpen = DOOR_CLOSED;
       m_receiveGear = GEAR_FORWARD;
+      
+      m_deliverCurrent = false;
+      m_deliverPrev = false;
+      m_deliverGear = false;
       
       m_gearPrev = false;
       m_gearCurrent = false;
@@ -74,6 +83,9 @@ public class Gear implements Subsystem
       
       m_receiveButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_RECEIVE.getName());
       m_receiveButton.addInputListener(this);
+
+      m_deliverButton = (DigitalInput)Core.getInputManager().getInput(WSInputs.GEAR_DELIVER.getName());
+      m_deliverButton.addInputListener(this);
 
       m_tiltSolenoid =  (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_TILT.getName());
       m_doorSolenoid = (WsSolenoid)Core.getOutputManager().getOutput(WSOutputs.GEAR_HOLD.getName());
@@ -113,15 +125,31 @@ public class Gear implements Subsystem
         
         if (m_receiveCurrent && !m_receivePrev)
         {
-//           m_receive = true;
            m_doorOpen = DOOR_OPEN;
            m_receiveGear = GEAR_BACK;
         }
-//        else
-//        {
-//           m_doorOpen = DOOR_CLOSED;
-//        }
         m_receivePrev = m_receiveCurrent;
+      }
+      if (source == m_deliverButton)
+      {
+        m_deliverCurrent = m_deliverButton.getValue();
+        
+        if (m_deliverCurrent && !m_deliverPrev)
+        {
+           // Toggle deliver state
+           m_deliverGear = !m_deliverGear;
+        }
+        
+        if (m_deliverGear)
+        {
+           deliverGear();
+        }
+        else
+        {
+           // Close doors
+//           closeDoor();
+        }
+        m_deliverPrev = m_deliverCurrent;
       }
    }
 
@@ -153,5 +181,11 @@ public class Gear implements Subsystem
    public void tiltGearForward()
    {
       m_receiveGear = GEAR_FORWARD;
+   }
+   
+   public void deliverGear()
+   {
+      m_receiveGear = GEAR_FORWARD;
+      m_doorOpen = DOOR_OPEN;
    }
 }

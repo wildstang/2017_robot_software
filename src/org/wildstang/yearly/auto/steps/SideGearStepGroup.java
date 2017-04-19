@@ -31,7 +31,6 @@ public class SideGearStepGroup extends AutoSerialStepGroup
       addStep(new TrackVisionToGearStep());
       
       addStep(new DeliverGearStep());
-      addStep(new OpenGearHolderStep());
       // Wait to let it settle
       addStep(new AutoStepDelay(waitTime));
 

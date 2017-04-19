@@ -18,29 +18,43 @@ public class HopperShootStraight extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      // TODO Auto-generated method stub
       addStep(new SetHighGearStep(true));
       addStep(new SetBrakeModeStep(true));
-      //addStep(new MotionMagicStraightLine());
+
+      // Drive out to hopper
       addStep(new MotionMagicStraightLine(96)); //Need to tune distances
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStepMagic(-86));
+
+      // Turn towards hopper
+      addStep(new TurnByNDegreesStepMagic(-90));
       addStep(new AutoStepDelay(200));
+
+      // Drive into hopper and wait
       addStep(new MotionMagicStraightLine(24));
       addStep(new AutoStepDelay(3000));
+
+      // Backup to turn
       addStep(new MotionMagicStraightLine(-12));
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStepMagic(-86));
+
+      // Turn towards boiler
+      addStep(new TurnByNDegreesStepMagic(-90));
       addStep(new AutoStepDelay(200));
+
+      // Drive towards boiler wall
       addStep(new MotionMagicStraightLine(78));
       addStep(new AutoStepDelay(200));
-      //addStep(new ShooterOnAndReady());
+
+      
+      // Turn towards boiler and drive forward
       addStep(new TurnByNDegreesStepMagic(45));
-      addStep(new AutoStepDelay(500));
+      
+      addStep(new ShooterOnAndReady());
+      // This delay should b unnecessary
+//      addStep(new AutoStepDelay(500));
       addStep(new MotionMagicStraightLine(12));
       
       //Shoot
-      
       addStep(new ShootStep());
       addStep(new AutoStepDelay(15000));
       addStep(new StopShooting());
@@ -49,7 +63,6 @@ public class HopperShootStraight extends AutoProgram
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Hopper Shoot Straight Paths";
    }
 

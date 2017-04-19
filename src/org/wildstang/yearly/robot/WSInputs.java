@@ -89,10 +89,10 @@ public enum WSInputs implements Inputs
    GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), true),      // Gear Subsystem
    GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), true),      // Gear Subsystem
    GEAR_RECEIVE("Gear Receive",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), true),      // Gear Subsystem
+   GEAR_DELIVER("Gear Deliver",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), true),      // Gear Subsystem
    INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), true),     // Intake Subsystem
    FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), true),
-   //MAN_BUTTON_6("Manipulator Button 6",                   WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 6), true),        // Shooter Subsystem
-   //GEAR("Gear Positioner Control",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 7), true),
+
    OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), true),
 
 

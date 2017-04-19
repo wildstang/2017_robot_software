@@ -6,13 +6,11 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.RobotTemplate;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
-import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.shooter.Flywheel;
 import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
@@ -23,7 +21,6 @@ import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
