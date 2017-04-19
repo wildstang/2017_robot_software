@@ -9,7 +9,6 @@ import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.LED;
 import org.wildstang.yearly.subsystems.Monitor;
 import org.wildstang.yearly.subsystems.Shooter;
-import org.wildstang.yearly.subsystems.WsGyro;
 
 public enum WSSubsystems implements Subsystems
 {
