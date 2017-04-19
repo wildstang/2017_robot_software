@@ -22,22 +22,22 @@ public class HopperShootStraight extends AutoProgram
       addStep(new SetHighGearStep(true));
       addStep(new SetBrakeModeStep(true));
       //addStep(new MotionMagicStraightLine());
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_1));
+      addStep(new MotionMagicStraightLine(96)); //Need to tune distances
       addStep(new AutoStepDelay(200));
       addStep(new TurnByNDegreesStepMagic(-86));
-      addStep(new AutoStepDelay(5000));
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_2));
+      addStep(new AutoStepDelay(200));
+      addStep(new MotionMagicStraightLine(24));
       addStep(new AutoStepDelay(3000));
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_3));
+      addStep(new MotionMagicStraightLine(-12));
       addStep(new AutoStepDelay(200));
       addStep(new TurnByNDegreesStepMagic(-86));
       addStep(new AutoStepDelay(200));
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_4));
+      addStep(new MotionMagicStraightLine(78));
       addStep(new AutoStepDelay(200));
       //addStep(new ShooterOnAndReady());
       addStep(new TurnByNDegreesStepMagic(45));
       addStep(new AutoStepDelay(500));
-      addStep(new PathFollowerStep(PathNameConstants.HOPPER_SHOOT_5));
+      addStep(new MotionMagicStraightLine(12));
       
       //Shoot
       
