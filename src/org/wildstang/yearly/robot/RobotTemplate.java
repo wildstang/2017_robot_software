@@ -23,8 +23,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.opencv.core.Mat;
-//import org.opencv.core.Mat;
 import org.wildstang.framework.auto.AutoManager;
 import org.wildstang.framework.core.Core;
 import org.wildstang.framework.logger.StateLogger;
@@ -32,28 +30,15 @@ import org.wildstang.framework.timer.ProfilingTimer;
 import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
-import org.wildstang.yearly.auto.programs.BoilerShoot;
-import org.wildstang.yearly.auto.programs.GearPlus10;
-import org.wildstang.yearly.auto.programs.HopperShoot;
-import org.wildstang.yearly.auto.programs.HopperShootStraight;
-import org.wildstang.yearly.auto.programs.LeftGear;
-import org.wildstang.yearly.auto.programs.MiddleGear;
-import org.wildstang.yearly.auto.programs.RightGear;
-import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
+import org.wildstang.yearly.auto.programs.*;
 import org.wildstang.yearly.auto.testprograms.*;
 import org.wildstang.yearly.robot.vision.VisionServer;
 
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.LED;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-//import edu.wpi.cscore.CvSink;
-//import edu.wpi.cscore.CvSource;
-//import edu.wpi.cscore.UsbCamera;
-//import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -197,15 +182,18 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
 //      AutoManager.getInstance().addProgram(new VisionTest());
 
+      AutoManager.getInstance().addProgram(new Baseline());
       AutoManager.getInstance().addProgram(new BoilerShoot());
       AutoManager.getInstance().addProgram(new LeftGear());
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new HopperShoot());
       AutoManager.getInstance().addProgram(new GearPlus10());
-//      AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
+      AutoManager.getInstance().addProgram(new GearPlus10StraightLeft());
+      AutoManager.getInstance().addProgram(new GearPlus10StraightRight());
+      
       AutoManager.getInstance().addProgram(new HopperShootStraight());
-//      AutoManager.getInstance().addProgram(new TurnTesting());
+      AutoManager.getInstance().addProgram(new TurnTesting());
       // 3. Start Vision server
       if (m_visionServer != null)
       {
@@ -229,7 +217,6 @@ public class RobotTemplate extends IterativeRobot
 
       s_log.logp(Level.ALL, this.getClass().getName(), "robotInit", "Startup Completed");
 
-      // Untested!!  Set up USB camera as additional vision back to dashboard.
       // Processing should not be necessary, but code is here for reference.
       // Code used is to resize for bandwidth restrictions in case setResolution() is not sufficient.
 //      new Thread(() -> {
