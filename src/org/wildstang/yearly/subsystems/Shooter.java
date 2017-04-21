@@ -241,7 +241,7 @@ public class Shooter implements Subsystem
       p_talon.setF(p_fGain);
       p_talon.setP(p_pGain);
       p_talon.setI(p_iGain);
-      p_talon.setD(p_pGain);
+      p_talon.setD(p_dGain);
    }
 
    @Override
