@@ -136,8 +136,8 @@ public class Drive implements Subsystem, PIDOutput
       m_antiTurboInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.ANTITURBO.getName());
       m_antiTurboInput.addInputListener(this);
 
-//      m_baseLockInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.BASE_LOCK.getName());
-//      m_baseLockInput.addInputListener(this);
+      m_baseLockInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.BASE_LOCK.getName());
+      m_baseLockInput.addInputListener(this);
 
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
@@ -290,22 +290,22 @@ public class Drive implements Subsystem, PIDOutput
       {
          m_antiTurbo = m_antiTurboInput.getValue();
       }
-//      else if (p_source == m_baseLockInput)
-//      {
-//         m_rawModeCurrent = m_baseLockInput.getValue();
-//
-//         // Determine drive state override
-//         if (m_rawModeCurrent)
-//         {
-//            setFullBrakeMode();
-//         }
-//         else
-//         {
-//            setOpenLoopDrive();
-//            setHeading(0);
-//            setThrottle(0);
-//         }
-//      }
+      else if (p_source == m_baseLockInput)
+      {
+         m_rawModeCurrent = m_baseLockInput.getValue();
+
+         // Determine drive state override
+         if (m_rawModeCurrent)
+         {
+            setFullBrakeMode();
+         }
+         else
+         {
+            setOpenLoopDrive();
+            setHeading(0);
+            setThrottle(0);
+         }
+      }
    }
 
    @Override
