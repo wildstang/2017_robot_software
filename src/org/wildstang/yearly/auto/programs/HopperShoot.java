@@ -60,7 +60,7 @@ public class HopperShoot extends AutoProgram
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Hopper-Shoot";
+      return "Hopper Shoot";
    }
 
 }

@@ -39,7 +39,7 @@ public class GearPlus10StraightRight extends AutoProgram
    @Override
    public String toString()
    {
-      return "Gear + 10 Right";
+      return "Gear plus 10 Right";
    }
 
 }

@@ -34,7 +34,6 @@ public class RightGearToShoot extends AutoProgram
    @Override
    public String toString()
    {
-      // TODO Auto-generated method stub
       return "Right Gear to Shoot";
    }
 

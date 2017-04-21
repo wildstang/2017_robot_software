@@ -60,7 +60,7 @@ public class TurnByNDegreesStep extends AutoStep
       // This will also execute on the first run, setting the initial targets
       double throttle = calculateRotationSpeed(m_currentHeading, m_target, TOLERANCE);
       m_drive.setHeading(throttle);
-            
+
       if (Math.abs(m_target - m_currentHeading) <= TOLERANCE)
       {
          SmartDashboard.putBoolean("Gyro turn on target", true);
