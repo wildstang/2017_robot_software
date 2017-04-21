@@ -2,7 +2,6 @@ package org.wildstang.yearly.auto.programs;
 
 import org.wildstang.framework.auto.AutoProgram;
 import org.wildstang.framework.auto.steps.control.AutoStepDelay;
-import org.wildstang.yearly.auto.steps.MotionMagicStraightLine;
 import org.wildstang.yearly.auto.steps.PathFollowerStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
@@ -21,11 +20,11 @@ public class GearPlus10 extends AutoProgram
       //Drop off Gear
       addStep(new SideGearStepGroup(60));
       
-      addStep(new MotionMagicStraightLine(-36));
+      addStep(new PathFollowerStep(PathNameConstants.GEAR_BACKUP_FAR));
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStep(175, 0.4));
+      addStep(new TurnByNDegreesStep(-175, 0.6));
       addStep(new AutoStepDelay(200));
-      addStep(new MotionMagicStraightLine(108));
+      addStep(new PathFollowerStep(PathNameConstants.GEAR_TO_BOILER));
       
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
