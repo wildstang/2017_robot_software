@@ -33,6 +33,7 @@ import org.wildstang.hardware.crio.RoboRIOInputFactory;
 import org.wildstang.hardware.crio.RoboRIOOutputFactory;
 import org.wildstang.hardware.crio.outputs.WsI2COutput;
 import org.wildstang.yearly.auto.programs.BoilerShoot;
+import org.wildstang.yearly.auto.programs.GearPlus10;
 import org.wildstang.yearly.auto.programs.HopperShoot;
 import org.wildstang.yearly.auto.programs.HopperShootStraight;
 import org.wildstang.yearly.auto.programs.LeftGear;
@@ -70,7 +71,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotTemplate extends IterativeRobot
 {
 
-   public static boolean LOG_STATE = true;
+   public static boolean LOG_STATE = false;
 
    private static long lastCycleTime = 0;
    private StateLogger m_stateLogger = null;
@@ -190,7 +191,7 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new TEST10FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TEST10FtStraightLineFastPath());
 //      AutoManager.getInstance().addProgram(new TEST10FtStraightLineMediumPath());
-      AutoManager.getInstance().addProgram(new TEST10FtStraightLineSlowPath());
+//      AutoManager.getInstance().addProgram(new TEST10FtStraightLineSlowPath());
 //      AutoManager.getInstance().addProgram(new TEST5FtStraightLinePath());
 //      AutoManager.getInstance().addProgram(new TESTHopperToBoilerPath());
 //      AutoManager.getInstance().addProgram(new TESTWallToGearCenterPath());
@@ -201,6 +202,7 @@ public class RobotTemplate extends IterativeRobot
       AutoManager.getInstance().addProgram(new MiddleGear());
       AutoManager.getInstance().addProgram(new RightGear());
       AutoManager.getInstance().addProgram(new HopperShoot());
+      AutoManager.getInstance().addProgram(new GearPlus10());
 //      AutoManager.getInstance().addProgram(new TestTurnMotionMagic());
       AutoManager.getInstance().addProgram(new HopperShootStraight());
 //      AutoManager.getInstance().addProgram(new TurnTesting());

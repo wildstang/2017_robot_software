@@ -20,13 +20,21 @@ public class SideGearStepGroup extends AutoSerialStepGroup
       // For this step, turn off brake mode so we can transition smoothly to vision
       addStep(new SetBrakeModeStep(false));
       addStep(new CloseGearHolderStep());
+      addStep(new GearBackStep());
 
       // Drive forward and turn 60 degrees towards peg
-      addStep(new MotionMagicStraightLine(87));
+      addStep(new MotionMagicStraightLine(76));
       addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStep(p_turnAngle));
+      if (p_turnAngle < 0)
+      {
+         addStep(new TurnByNDegreesStep(p_turnAngle, 0.5));
+      }
+      else
+      {
+         addStep(new TurnByNDegreesStep(p_turnAngle, 0.4));
+      }
       addStep(new AutoStepDelay(200));
-      addStep(new MotionMagicStraightLine(24));
+      addStep(new MotionMagicStraightLine(36));
       // Track the vision target
       addStep(new TrackVisionToGearStep());
       

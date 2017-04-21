@@ -19,15 +19,17 @@ public class TurnByNDegreesStep extends AutoStep
    double m_leftTarget;
    
    private int m_currentHeading;
-      
+   private double m_minRotation;
+   
    private static final int TOLERANCE = 0;
 
-   private static final double TURN_EXPONENT = 3; //Adjust for turning speed curve. Higher = faster theoretical turn
-   private static final double MIN_ROTATION_OUTPUT = 0.33;
+   private static final double TURN_EXPONENT = 3.5; //Adjust for turning speed curve. Higher = faster theoretical turn
+   private static final double MIN_ROTATION_OUTPUT = 0.4;
    
-   public TurnByNDegreesStep(int p_deltaHeading) 
+   public TurnByNDegreesStep(int p_deltaHeading, double p_minRotation) 
    {
       m_deltaHeading = p_deltaHeading;
+      m_minRotation = p_minRotation;
    }
    
    @Override
@@ -127,7 +129,8 @@ public class TurnByNDegreesStep extends AutoStep
       // Scale based on proportion of distance to travel of 180 degrees
       // - 180 degrees away results in full speed
       // - closer is slower
-      rotationSpeed = Math.pow((((double)distanceToTarget * (1-Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT)))/ 180) + Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT), 1 / TURN_EXPONENT);
+//      rotationSpeed = Math.pow((((double)distanceToTarget * (1-Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT)))/ 180) + Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT), 1 / TURN_EXPONENT);
+      rotationSpeed = (((double)distanceToTarget * (1-m_minRotation))/ 180) + m_minRotation;
 
       // If we are within tolerance of the target angle, stop turning
       if (distanceToTarget <= p_tolerance)

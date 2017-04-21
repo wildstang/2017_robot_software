@@ -16,7 +16,7 @@ public class TurnTesting extends AutoProgram
    {
       //addStep(new PathFollowerStep(PathNameConstants.GEAR_AUTO_FORWARD));
       //addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStep((int) SmartDashboard.getNumber("Test Turn Angle", 0)));
+      addStep(new TurnByNDegreesStep((int) SmartDashboard.getNumber("Test Turn Angle", 0), 0.4));
       //addStep(new AutoStepDelay(200));
       //addStep(new TrackVisionToGearStep());
    }

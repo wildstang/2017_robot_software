@@ -1,6 +1,7 @@
 package org.wildstang.yearly.subsystems;
 
 import java.io.*;
+import java.sql.DriverManager;
 import java.util.LinkedList;
 
 import org.wildstang.framework.core.Core;
@@ -40,7 +41,7 @@ public class Drive implements Subsystem, PIDOutput
    private AnalogInput m_headingInput;
    private AnalogInput m_throttleInput;
    private WsSolenoid m_shifterSolenoid;
-//   private DigitalInput m_rawModeInput;
+   private DigitalInput m_baseLockInput;
    private DigitalInput m_shifterInput;
    private DigitalInput m_quickTurnInput;
    private DigitalInput m_autoDropInput;
@@ -134,6 +135,9 @@ public class Drive implements Subsystem, PIDOutput
 
       m_antiTurboInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.ANTITURBO.getName());
       m_antiTurboInput.addInputListener(this);
+
+//      m_baseLockInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.BASE_LOCK.getName());
+//      m_baseLockInput.addInputListener(this);
 
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
@@ -286,13 +290,21 @@ public class Drive implements Subsystem, PIDOutput
       {
          m_antiTurbo = m_antiTurboInput.getValue();
       }
-//      // If SELECT is pressed, use Raw mode
-//      else if (p_source == m_rawModeInput)
+//      else if (p_source == m_baseLockInput)
 //      {
-//         m_rawModeCurrent = m_rawModeInput.getValue();
+//         m_rawModeCurrent = m_baseLockInput.getValue();
 //
 //         // Determine drive state override
-//         calculateRawMode();
+//         if (m_rawModeCurrent)
+//         {
+//            setFullBrakeMode();
+//         }
+//         else
+//         {
+//            setOpenLoopDrive();
+//            setHeading(0);
+//            setThrottle(0);
+//         }
 //      }
    }
 
@@ -586,12 +598,12 @@ public class Drive implements Subsystem, PIDOutput
 
    public double getLeftSensorValue()
    {
-      return m_leftMaster.get();
+      return m_leftMaster.getEncPosition();
    }
    
    public double getRightSensorValue()
    {
-      return m_rightMaster.get();
+      return m_rightMaster.getEncPosition();
    }
    
    public void setMotionMagicTargetAbsolute(double p_leftTarget, double p_rightTarget)
@@ -712,8 +724,8 @@ public class Drive implements Subsystem, PIDOutput
          m_rightMaster.set(m_rightMaster.getPosition());
 
          
-         m_leftMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_rightMaster.setPID(DriveConstants.BASE_P_GAIN, DriveConstants.BASE_I_GAIN, DriveConstants.BASE_D_GAIN, DriveConstants.BASE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_leftMaster.setPID(DriveConstants.BASE_LOCK_P_GAIN, DriveConstants.BASE_LOCK_I_GAIN, DriveConstants.BASE_LOCK_D_GAIN, DriveConstants.BASE_LOCK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         m_rightMaster.setPID(DriveConstants.BASE_LOCK_P_GAIN, DriveConstants.BASE_LOCK_I_GAIN, DriveConstants.BASE_LOCK_D_GAIN, DriveConstants.BASE_LOCK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
          m_driveMode = DriveType.FULL_BRAKE;
 

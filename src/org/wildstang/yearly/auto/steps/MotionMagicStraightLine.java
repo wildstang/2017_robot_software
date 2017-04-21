@@ -6,6 +6,8 @@ import org.wildstang.yearly.robot.WSSubsystems;
 import org.wildstang.yearly.subsystems.Drive;
 import org.wildstang.yearly.subsystems.drive.DriveConstants;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class MotionMagicStraightLine extends AutoStep
 {
 
@@ -21,7 +23,7 @@ public class MotionMagicStraightLine extends AutoStep
    
    public MotionMagicStraightLine(double p_inches)
    {
-      m_rotations = (p_inches / 12) * ONE_ROTATION_INCHES;
+      m_rotations = p_inches / ONE_ROTATION_INCHES;
    }
    
    @Override
@@ -31,6 +33,7 @@ public class MotionMagicStraightLine extends AutoStep
 
       m_drive.setMotionMagicMode(true, DriveConstants.MM_DRIVE_F_GAIN);
       m_drive.resetEncoders();
+      m_drive.setBrakeMode(true);
    }
 
    @Override
@@ -44,8 +47,15 @@ public class MotionMagicStraightLine extends AutoStep
       }
       else
       {
+         SmartDashboard.putNumber("Target rotations", m_rotations);
+         SmartDashboard.putNumber("Left sensor", m_drive.getLeftSensorValue());
+
+         SmartDashboard.putNumber("Rotations", Math.abs(m_drive.getLeftSensorValue() / 4096));
+         SmartDashboard.putNumber("Difference", Math.abs(Math.abs(m_drive.getLeftSensorValue() / 4096) - m_rotations));
+         SmartDashboard.putNumber("Tolerance", TOLERANCE);
          // Check if we've gone far enough
-         if (Math.abs(m_drive.getLeftSensorValue() - m_rotations) <= TOLERANCE)
+//         if (Math.abs((m_drive.getRightSensorValue() / 4096)) >= m_rotations)
+         if (Math.abs(Math.abs(m_drive.getLeftSensorValue() / 4096) - m_rotations) <= TOLERANCE)
          {
             m_drive.setOpenLoopDrive();
             m_drive.setBrakeMode(true);

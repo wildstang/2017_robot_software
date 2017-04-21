@@ -60,53 +60,54 @@ public enum WSInputs implements Inputs
    //---------------------------------
    // Driver Joysticks
    //---------------------------------
-   DRV_THROTTLE("Throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), true),     // Driver Subsystem
-   DRV_HEADING("Heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), true),    // Driver Subsystem
+   DRV_THROTTLE("Throttle",                 WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.LEFT_JOYSTICK_Y), false),     // Driver Subsystem
+   DRV_HEADING("Heading",                   WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(0, JoystickConstants.RIGHT_JOYSTICK_X), false),    // Driver Subsystem
                                                 
    //---------------------------------             
    // Driver Buttons                               
    //---------------------------------             
-   AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), true),     // Intake Subsystem
-   ANTITURBO("Antiturbo",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), true),     // Drive Subsystem
-   SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), true),     // Driver Subsystem
-   QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), true),     // Driver Subsystem
+   AUTO_GEAR_DROP("Auto gear drop",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 1), false),     // Intake Subsystem
+   ANTITURBO("Antiturbo",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 4), false),     // Drive Subsystem
+   SHIFT("Driver Shift",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 5), false),     // Driver Subsystem
+   QUICK_TURN("Quick Turn",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 7), false),     // Driver Subsystem
+   BASE_LOCK("Base lock",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(0, 3), false),     // Driver Subsystem
 
    //---------------------------------             
    // Manipulator Joysticks                        
    //---------------------------------             
-   FEEDER_LEFT("Feeder Left Up/Down",              WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y), true),     // Shooter Subsystem
-   FEEDER_RIGHT("Feeder Right Up/Down",            WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), true),    // Shooter Subsystem
+   FEEDER_LEFT("Feeder Left Up/Down",              WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.LEFT_JOYSTICK_Y), false),     // Shooter Subsystem
+   FEEDER_RIGHT("Feeder Right Up/Down",            WSInputType.JS_JOYSTICK, new WsJSJoystickInputConfig(1, JoystickConstants.RIGHT_JOYSTICK_Y), false),    // Shooter Subsystem
 
    //---------------------------------             
    // Manipulator DPAD Buttons                     
    //---------------------------------             
-   CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), true),          // Climber Subsystem
-   CLIMBER_HALF_SPEED("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), true),        // Climber Subsystem
+   CLIMBER_UP("Climber Up",                        WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_UP), false),          // Climber Subsystem
+   CLIMBER_HALF_SPEED("Climber Down",                    WSInputType.JS_DPAD_BUTTON, new WsJSButtonInputConfig(1, JoystickConstants.DPAD_Y_DOWN), false),        // Climber Subsystem
 
    //---------------------------------             
    // Manipulator Buttons                          
    //---------------------------------             
-   GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), true),      // Gear Subsystem
-   GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), true),      // Gear Subsystem
-   GEAR_RECEIVE("Gear Receive",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), true),      // Gear Subsystem
-   GEAR_DELIVER("Gear Deliver",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), true),      // Gear Subsystem
-   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), true),     // Intake Subsystem
-   FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), true),
+   GEAR_TILT_BUTTON("Gear Wall",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 0), false),      // Gear Subsystem
+   GEAR_HOLD_BUTTON("Gear Hold",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 1), false),      // Gear Subsystem
+   GEAR_RECEIVE("Gear Receive",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 2), false),      // Gear Subsystem
+   GEAR_DELIVER("Gear Deliver",                  WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 3), false),      // Gear Subsystem
+   INTAKE_ON("Intake Turn on/off",                 WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 4), false),     // Intake Subsystem
+   FLYWHEEL("Flywheel On/Off",                    WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 5), false),
 
-   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), true),
+   OVERRIDE("Override",                           WSInputType.JS_BUTTON, new WsJSButtonInputConfig(1, 9), false),
 
 
    // ********************************             
    // Digital IOs                                  
    // ********************************             
-//   GEAR_IN_POSITION("Gear In Position Sensor",     WSInputType.SWITCH, new WsDigitalInputConfig(0, true), true),	// Gear Subsystem
-//   BALLS_WAITING_LEFT("Balls Waiting Left",        WSInputType.SWITCH, new WsDigitalInputConfig(1, true), true),	// Shooter Subsystem
-//   BALLS_WAITING_RIGHT("Digital Waiting Right",    WSInputType.SWITCH, new WsDigitalInputConfig(2, true), true),	// Shooter Subsystem
+//   GEAR_IN_POSITION("Gear In Position Sensor",     WSInputType.SWITCH, new WsDigitalInputConfig(0, true), false),	// Gear Subsystem
+//   BALLS_WAITING_LEFT("Balls Waiting Left",        WSInputType.SWITCH, new WsDigitalInputConfig(1, true), false),	// Shooter Subsystem
+//   BALLS_WAITING_RIGHT("Digital Waiting Right",    WSInputType.SWITCH, new WsDigitalInputConfig(2, true), false),	// Shooter Subsystem
 
    // ********************************             
    // Others ...                                   
    // ********************************             
-   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, true), true);
+   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, true), false);
 //   IMU("IMU", WSInputType.COMPASS,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), true);
 
 
