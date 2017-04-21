@@ -132,7 +132,7 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-      if (RobotTemplate.LOG_STATE)
+      if (true)//RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);

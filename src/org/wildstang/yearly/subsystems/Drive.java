@@ -99,10 +99,12 @@ public class Drive implements Subsystem, PIDOutput
    public void init()
    {
       // Add any additional items to track in the logger
-      if (RobotTemplate.LOG_STATE)
+      if (true)//RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Left output", "Drive", "Input", null);
+         Core.getStateTracker().addIOInfo("Right output", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Left 1 current", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Left 2 current", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right 1 current", "Drive", "Input", null);
@@ -387,6 +389,9 @@ public class Drive implements Subsystem, PIDOutput
          Core.getStateTracker().addState("Drive throttle", "Drive", m_throttleValue);
          Core.getStateTracker().addState("Vision distance", "Drive", m_visionDistance);
          Core.getStateTracker().addState("Vision correction", "Drive", m_visionXCorrection);
+         
+         Core.getStateTracker().addState("Left output", "Drive", m_leftMaster.get());
+         Core.getStateTracker().addState("Right output", "Drive", m_rightMaster.get());
 
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());

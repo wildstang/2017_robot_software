@@ -75,6 +75,7 @@ public class TurnByNDegreesStep extends AutoStep
       }
       
       SmartDashboard.putNumber("Current heading", m_currentHeading);
+      SmartDashboard.putNumber("Turn rotation speed", throttle);
    }
 
    
