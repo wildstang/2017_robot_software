@@ -130,8 +130,8 @@ public class TurnByNDegreesStep extends AutoStep
       // Scale based on proportion of distance to travel of 180 degrees
       // - 180 degrees away results in full speed
       // - closer is slower
-//      rotationSpeed = Math.pow((((double)distanceToTarget * (1-Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT)))/ 180) + Math.pow(MIN_ROTATION_OUTPUT, TURN_EXPONENT), 1 / TURN_EXPONENT);
-      rotationSpeed = (((double)distanceToTarget * (1-m_minRotation))/ 180) + m_minRotation;
+      rotationSpeed = Math.pow((((double)distanceToTarget * (1-Math.pow(m_minRotation, TURN_EXPONENT)))/ 180) + Math.pow(m_minRotation, TURN_EXPONENT), 1 / TURN_EXPONENT);
+//      rotationSpeed = (((double)distanceToTarget * (1-m_minRotation))/ 180) + m_minRotation;
 
       // If we are within tolerance of the target angle, stop turning
       if (distanceToTarget <= p_tolerance)

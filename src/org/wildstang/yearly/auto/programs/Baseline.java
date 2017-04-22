@@ -9,7 +9,7 @@ public class Baseline extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new MotionMagicStraightLine(96));
+      addStep(new MotionMagicStraightLine(83));
    }
 
    @Override

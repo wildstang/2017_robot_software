@@ -31,7 +31,7 @@ public class SideGearStepGroup extends AutoSerialStepGroup
       }
       else
       {
-         addStep(new TurnByNDegreesStep(p_turnAngle, 0.4));
+         addStep(new TurnByNDegreesStep(p_turnAngle, 0.45));
       }
       addStep(new AutoStepDelay(200));
       addStep(new MotionMagicStraightLine(36));

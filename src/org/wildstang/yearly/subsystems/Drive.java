@@ -565,10 +565,10 @@ public class Drive implements Subsystem, PIDOutput
          // Set up Talons for the Motion Magic mode
 
          m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+         m_leftMaster.changeControlMode(TalonControlMode.MotionMagic);
 
          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+         m_rightMaster.changeControlMode(TalonControlMode.MotionMagic);
 
 //         m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 //         m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
@@ -695,6 +695,8 @@ public class Drive implements Subsystem, PIDOutput
       m_driveMode = DriveType.CHEESY;
 
       m_gearDropFinished = true;
+      
+      setBrakeMode(false);
       
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
