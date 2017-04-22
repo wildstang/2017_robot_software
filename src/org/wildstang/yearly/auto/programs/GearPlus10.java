@@ -18,7 +18,7 @@ public class GearPlus10 extends AutoProgram
    protected void defineSteps()
    {
       //Drop off Gear
-      addStep(new SideGearStepGroup(60));
+      addStep(new SideGearStepGroup(60, 76));
       
       addStep(new PathFollowerStep(PathNameConstants.GEAR_BACKUP_FAR));
       addStep(new AutoStepDelay(200));

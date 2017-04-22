@@ -107,6 +107,7 @@ public class Gear implements Subsystem
            m_receiveGear = !m_receiveGear;
         }
         m_gearPrev = m_gearCurrent;
+        m_deliverGear = false;
       }
       
       if (source == m_doorButton)
@@ -118,6 +119,7 @@ public class Gear implements Subsystem
            m_doorOpen = !m_doorOpen;
         }
         m_doorPrev = m_doorCurrent;
+        m_deliverGear = false;
       }
       if (source == m_receiveButton)
       {
@@ -129,6 +131,7 @@ public class Gear implements Subsystem
            m_receiveGear = GEAR_BACK;
         }
         m_receivePrev = m_receiveCurrent;
+        m_deliverGear = false;
       }
       if (source == m_deliverButton)
       {
@@ -150,6 +153,7 @@ public class Gear implements Subsystem
 //           closeDoor();
         }
         m_deliverPrev = m_deliverCurrent;
+    
       }
    }
 

@@ -18,7 +18,7 @@ public class GearPlus10StraightLeft extends AutoProgram
    protected void defineSteps()
    {
       //Drop off Gear
-      addStep(new SideGearStepGroup(60));
+      addStep(new SideGearStepGroup(60, 76));
       
       addStep(new MotionMagicStraightLine(-24));
       addStep(new AutoStepDelay(200));
