@@ -10,7 +10,7 @@ public class RightGear extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      addStep(new SideGearStepGroup(-60));
+      addStep(new SideGearStepGroup(-60, 64));
 
       // Go backwards 2ft
       addStep(new MotionMagicStraightLine(-24));

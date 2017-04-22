@@ -696,6 +696,8 @@ public class Drive implements Subsystem, PIDOutput
 
       m_gearDropFinished = true;
       
+      setBrakeMode(false);
+      
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
