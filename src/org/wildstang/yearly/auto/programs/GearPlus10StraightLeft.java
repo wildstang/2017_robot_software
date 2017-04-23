@@ -17,29 +17,22 @@ public class GearPlus10StraightLeft extends AutoProgram
    @Override
    protected void defineSteps()
    {
-      //Drop off Gear
-      addStep(new SideGearStepGroup(60, 76));
-      
-      addStep(new MotionMagicStraightLine(-24));
-      addStep(new AutoStepDelay(200));
-      addStep(new TurnByNDegreesStepMagic(120));
-      addStep(new AutoStepDelay(200));
-      addStep(new MotionMagicStraightLine(50));
-      
-      addStep(new TurnByNDegreesStepMagic(45));
-      addStep(new AutoStepDelay(200));
-      addStep(new MotionMagicStraightLine(24));
-
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
-      addStep(new AutoStepDelay(15000));
+      addStep(new AutoStepDelay(10000));
+
       addStep(new StopShooting());
+      
+      addStep(new TurnByNDegreesStepMagic(80));
+      addStep(new AutoStepDelay(200));
+      addStep(new MotionMagicStraightLine(90));
+
    }
 
    @Override
    public String toString()
    {
-      return "Gear plus 10 Left";
+      return "Shoot 10 baseline blue";
    }
 
 }
