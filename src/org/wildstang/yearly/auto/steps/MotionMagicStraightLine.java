@@ -51,11 +51,11 @@ public class MotionMagicStraightLine extends AutoStep
          SmartDashboard.putNumber("Left sensor", m_drive.getLeftSensorValue());
 
          SmartDashboard.putNumber("Rotations", Math.abs(m_drive.getLeftSensorValue() / 4096));
-         SmartDashboard.putNumber("Difference", Math.abs(Math.abs(m_drive.getLeftSensorValue() / 4096) - m_rotations));
+         SmartDashboard.putNumber("Difference", Math.abs((Math.abs(m_rotations) - (Math.abs(m_drive.getLeftSensorValue() / 4096)))));
          SmartDashboard.putNumber("Tolerance", TOLERANCE);
          // Check if we've gone far enough
 //         if (Math.abs((m_drive.getRightSensorValue() / 4096)) >= m_rotations)
-         if (Math.abs(Math.abs(m_drive.getLeftSensorValue() / 4096) - m_rotations) <= TOLERANCE)
+         if (Math.abs((Math.abs(m_rotations) - (Math.abs(m_drive.getLeftSensorValue() / 4096)))) <= TOLERANCE)
          {
             m_drive.setOpenLoopDrive();
             m_drive.setBrakeMode(true);
