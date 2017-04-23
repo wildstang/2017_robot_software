@@ -684,8 +684,8 @@ public class Drive implements Subsystem, PIDOutput
    
    public void resetEncoders()
    {
-      m_leftMaster.setPosition(0);
-      m_rightMaster.setPosition(0);
+      m_leftMaster.setEncPosition(0);
+      m_rightMaster.setEncPosition(0);
    }
 
    public void setOpenLoopDrive()
