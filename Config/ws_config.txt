@@ -10,8 +10,8 @@ boiler.to.hopper.auto.red=/home/lvuser/path.test.txt
 boiler.to.hopper.auto.blue="/home/lvuser/path.test.txt"
 
 //Shooter
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5100.0
-org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5100.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedLeft=5150.0
+org.wildstang.yearly.subsystems.Shooter.flywheelSpeedRight=5150.0
 
 org.wildstang.yearly.subsystems.Shooter.lowLimitSpeed=4600.0
 org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=5650.0
@@ -23,15 +23,15 @@ org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
 org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
 
-org.wildstang.yearly.subsystems.Shooter.L_F=0.0234
-org.wildstang.yearly.subsystems.Shooter.L_P=0.04
+org.wildstang.yearly.subsystems.Shooter.L_F=0.022
+org.wildstang.yearly.subsystems.Shooter.L_P=0.05
 org.wildstang.yearly.subsystems.Shooter.L_I=0.0
-org.wildstang.yearly.subsystems.Shooter.L_D=3.0
+org.wildstang.yearly.subsystems.Shooter.L_D=4.5
 
-org.wildstang.yearly.subsystems.Shooter.R_F=0.0234
-org.wildstang.yearly.subsystems.Shooter.R_P=0.04
+org.wildstang.yearly.subsystems.Shooter.R_F=0.0222
+org.wildstang.yearly.subsystems.Shooter.R_P=0.05
 org.wildstang.yearly.subsystems.Shooter.R_I=0.0
-org.wildstang.yearly.subsystems.Shooter.R_D=3.0
+org.wildstang.yearly.subsystems.Shooter.R_D=4.5
 
 
 // Vision
