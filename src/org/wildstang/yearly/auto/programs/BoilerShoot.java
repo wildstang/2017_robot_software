@@ -6,8 +6,8 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.auto.steps.SetBrakeModeStep;
 import org.wildstang.yearly.auto.steps.SetHighGearStep;
 import org.wildstang.yearly.auto.steps.ShootStep;
-import org.wildstang.yearly.auto.steps.StopShooting;
 import org.wildstang.yearly.auto.steps.ShooterOnAndReady;
+import org.wildstang.yearly.auto.steps.StopShooting;
 
 public class BoilerShoot extends AutoProgram
 {

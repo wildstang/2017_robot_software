@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Properties;
 import org.wildstang.framework.core.Core;
+import org.wildstang.yearly.robot.RobotTemplate;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,6 +17,10 @@ public class VisionHandler implements Runnable
 
    final int CORRECTION_LEVEL_INDEX = 0;
    final int DISTANCE_INDEX = 1;
+   final int SET_INDEX = 2;
+   final int IMAGE_INDEX = 3;
+   
+   
    private Socket m_socket;
    private boolean m_running;
    private InputStream m_inputStream;
@@ -73,6 +77,12 @@ public class VisionHandler implements Runnable
       center = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + CENTER_KEY, CENTER_DEFAULT);
       threshold = Core.getConfigManager().getConfig().getInt(this.getClass().getName() + THRESHOLD_KEY, THRESHOLD_DEFAULT);
       blurRadius = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + BLUR_RADIUS_KEY, BLUR_RADIUS_DEFAULT);
+      
+      if (RobotTemplate.LOG_STATE)
+      {
+         Core.getStateTracker().addIOInfo("Image set", "Vision", "Input", null);
+         Core.getStateTracker().addIOInfo("Image number", "Vision", "Input", null);
+      }
    }
 
    public boolean isRunning()
@@ -137,11 +147,22 @@ public class VisionHandler implements Runnable
                   if (parms.length > 0)
                   {
                      m_visionServer.setXCorrectionLevel(parms[CORRECTION_LEVEL_INDEX]);
-                     if (parms.length > 1)
-                     {
-                        m_visionServer.setDistance(parms[DISTANCE_INDEX]);
-                     }
                   }                  
+                  if (parms.length > 1)
+                  {
+                     m_visionServer.setDistance(parms[DISTANCE_INDEX]);
+                  }
+                  if (RobotTemplate.LOG_STATE)
+                  {
+                     if (parms.length > 2)
+                     {
+                        Core.getStateTracker().addState("Image set", "Vision", parms[SET_INDEX]);
+                     }
+                     if (parms.length > 3)
+                     {
+                        Core.getStateTracker().addState("Image number", "Vision", parms[IMAGE_INDEX]);
+                     }
+                  }
 
                   long now = System.currentTimeMillis();
                   SmartDashboard.putNumber("Vision update delta", (now - m_lastMsgReceived));

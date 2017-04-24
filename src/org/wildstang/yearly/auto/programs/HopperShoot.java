@@ -38,29 +38,21 @@ public class HopperShoot extends AutoProgram
       // Drive from the wall to the hopper
       addStep(new PathFollowerStep(PathNameConstants.WALL_TO_HOPPER));
 
-//      addStep(new FeedOnStep());
-      addStep(new AutoStepDelay(hopperWaitTime));
-//      addStep(new FeedOffStep());
+      addStep(new AutoStepDelay(hopperWaitTime));      
       
-      
-//      addStep(new SetBrakeModeStep(false));
       // Backup from the hopper
       addStep(new PathFollowerStep(PathNameConstants.BACKUP_FROM_HOPPER));
 
       // Turn on feed and wait for balls
       
-
-//      addStep(new SetBrakeModeStep(true));
       addStep(new PathFollowerStep(PathNameConstants.HOPPER_TO_BOILER));
 
       // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
       addStep(new ShootStep());
-      //addStep(new FeedOnStep());
+
       addStep(new AutoStepDelay(delayWhileShooting));
       addStep(new StopShooting());
-      
-      // TODO: Back up over auto line?
    }
 
 
@@ -68,7 +60,7 @@ public class HopperShoot extends AutoProgram
    public String toString()
    {
       // TODO Auto-generated method stub
-      return "Hopper-Shoot";
+      return "Hopper Shoot";
    }
 
 }

@@ -6,7 +6,6 @@ import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
 import org.wildstang.framework.subsystems.Subsystem;
-import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.CANConstants;
 import org.wildstang.yearly.robot.RobotTemplate;
@@ -22,11 +21,13 @@ import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter implements Subsystem
 {
+   // Send signals directly from this subsystem
+   private LED m_led;
+   
    // Flywheels
    private CANTalon m_CANFlywheelLeft;
    private CANTalon m_CANFlywheelRight;
@@ -131,7 +132,7 @@ public class Shooter implements Subsystem
    @Override
    public void init()
    {
-      if (RobotTemplate.LOG_STATE)
+      if (true)//RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left shooter (RPM)", "Shooter", "Input", null);
          Core.getStateTracker().addIOInfo("Right shooter (RPM)", "Shooter", "Input", null);
@@ -178,6 +179,8 @@ public class Shooter implements Subsystem
       m_overrideButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.OVERRIDE.getName());
       m_overrideButton.addInputListener(this);
       
+//      m_led = (LED)Core.getSubsystemManager().getSubsystem(WSSubsystems.LED.getName());
+      
       resetState();
    }
 
@@ -201,22 +204,22 @@ public class Shooter implements Subsystem
    private void readConfigValues()
    {
       // Reads values from Ws Config
-      m_targetSpeedLeft = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 5450.0);
-      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 5450.0);
-      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 5400.0);
-      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5550.0);
-      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 1.0);
+      m_targetSpeedLeft = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedLeft", 4700.0);
+      m_targetSpeedRight = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".flywheelSpeedRight", 4700.0);
+      m_lowLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".lowLimitSpeed", 4600.0);
+      m_highLimitSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".highLimitSpeed", 5000.0);
+      m_feedSpeed = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedSpeed", 0.8);
       m_feedDeadBand = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".feedDeadBand", 0.05);
       
-      m_LF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_F",  0.0238);
-      m_LP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_P", 0.013);
+      m_LF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_F",  0.0225);
+      m_LP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_P", 0.03);
       m_LI = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_I", 0);
-      m_LD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_D", 0);
+      m_LD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".L_D", 0.5);
       
-      m_RF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_F", 0.0237);
-      m_RP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_P", 0.013);
+      m_RF = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_F", 0.0225 );
+      m_RP = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_P", 0.03);
       m_RI = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_I", 0);
-      m_RD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_D", 0);
+      m_RD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_D", 0.5);
    }
 
    private void configureFlywheelTalon(CANTalon p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
@@ -231,14 +234,14 @@ public class Shooter implements Subsystem
 
       p_talon.configNominalOutputVoltage(+0.0f, -0.0f);
       p_talon.configPeakOutputVoltage(+12.0f, 0.0f);
-      // p_talon.setVoltageRampRate(24.0); // Max spinup of 24V/s - start here
+//      p_talon.setVoltageRampRate(24.0); // Max spinup of 24V/s - start here
 
       // Set up closed loop PID control gains in slot 0
       p_talon.setProfile(0);
       p_talon.setF(p_fGain);
       p_talon.setP(p_pGain);
       p_talon.setI(p_iGain);
-      p_talon.setD(p_pGain);
+      p_talon.setD(p_dGain);
    }
 
    @Override
@@ -401,12 +404,14 @@ public class Shooter implements Subsystem
       if (checkLeftFeedJammed())
       {
          m_leftFeedDirection = FeedDirection.STOP;
+//         m_led.sendLeftFeedJammed();
       }
 
       // RIGHT SIDE
       if (checkRightFeedJammed())
       {
          m_rightFeedDirection = FeedDirection.STOP;
+//         m_led.sendLeftFeedJammed();
       }
 
       runFeedBelt(m_leftFeed, m_leftFeedDirection);

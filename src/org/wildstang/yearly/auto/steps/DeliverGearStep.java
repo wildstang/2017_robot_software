@@ -18,7 +18,7 @@ public class DeliverGearStep extends AutoStep
    @Override
    public void update()
    {
-      m_gearSubsystem.tiltGearForward();
+      m_gearSubsystem.deliverGear();
       setFinished(true);
    }
 
