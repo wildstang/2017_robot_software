@@ -33,6 +33,7 @@ public class MotionMagicStraightLine extends AutoStep
 
       m_drive.setMotionMagicMode(true, DriveConstants.MM_DRIVE_F_GAIN);
       m_drive.resetEncoders();
+      m_drive.setHighGear(true);
       m_drive.setBrakeMode(true);
    }
 

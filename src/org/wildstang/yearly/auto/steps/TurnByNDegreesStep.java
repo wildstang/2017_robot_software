@@ -23,7 +23,7 @@ public class TurnByNDegreesStep extends AutoStep
    
    private static final int TOLERANCE = 0;
 
-   private static final double TURN_EXPONENT = 3.5; //Adjust for turning speed curve. Higher = faster theoretical turn
+   private static final double TURN_EXPONENT = 3.3; //Adjust for turning speed curve. Higher = faster theoretical turn
    private static final double MIN_ROTATION_OUTPUT = 0.4;
    
    public TurnByNDegreesStep(int p_deltaHeading, double p_minRotation) 
