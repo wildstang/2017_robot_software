@@ -179,15 +179,15 @@ public class LED implements Subsystem
             m_gettingToSpeed = false;
          }
       }
-      else if (source.getName().equals(WSInputs.FEEDER_LEFT))
+      else if (source.getName().equals(WSInputs.FEEDER_LEFT.getName()))
       {
          m_shooting = m_shooter.isShooting();
       }
-      else if (source.getName().equals(WSInputs.FEEDER_RIGHT))
+      else if (source.getName().equals(WSInputs.FEEDER_RIGHT.getName()))
       {
          m_shooting = m_shooter.isShooting();
       }
-      else if (source.getName().equals(WSInputs.CLIMBER_UP))
+      else if (source.getName().equals(WSInputs.CLIMBER_UP.getName()))
       {
          m_climbing = ((DigitalInput)source).getValue();
       }
