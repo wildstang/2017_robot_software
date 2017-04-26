@@ -27,11 +27,11 @@ public class SideGearStepGroup extends AutoSerialStepGroup
       addStep(new AutoStepDelay(200));
       if (p_turnAngle < 0)
       {
-         addStep(new TurnByNDegreesStep(p_turnAngle, 0.65));
+         addStep(new TurnByNDegreesStep(p_turnAngle, 0.5));
       }
       else
       {
-         addStep(new TurnByNDegreesStep(p_turnAngle, 0.65));
+         addStep(new TurnByNDegreesStep(p_turnAngle, 0.5));
       }
       addStep(new AutoStepDelay(200));
       addStep(new GearBackStep());

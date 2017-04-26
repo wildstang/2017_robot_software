@@ -21,7 +21,7 @@ org.wildstang.yearly.subsystems.Shooter.highLimitSpeed=5800.0
 org.wildstang.yearly.subsystems.Shooter.feedSpeed=1.0
 org.wildstang.yearly.subsystems.Shooter.feedDeadBand=0.05
 
-org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=1.0
+org.wildstang.yearly.subsystems.shooter.Blender.blenderSpeed=0.7
 
 org.wildstang.yearly.subsystems.Shooter.L_F=0.022
 org.wildstang.yearly.subsystems.Shooter.L_P=0.05

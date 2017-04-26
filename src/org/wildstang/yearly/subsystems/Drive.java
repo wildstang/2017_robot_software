@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive implements Subsystem, PIDOutput
+public class Drive implements Subsystem
 {
    // Constants
    private static final double ROBOT_WIDTH_INCHES = 30;
@@ -584,11 +584,11 @@ public class Drive implements Subsystem, PIDOutput
          }
          else
          {
-            m_leftMaster.setMotionMagicAcceleration(800);  // RPM
+            m_leftMaster.setMotionMagicAcceleration(900);  // RPM
             m_leftMaster.setMotionMagicCruiseVelocity(800);  // RPM
             m_leftMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
-            m_rightMaster.setMotionMagicAcceleration(800);  // RPM
+            m_rightMaster.setMotionMagicAcceleration(900);  // RPM
             m_rightMaster.setMotionMagicCruiseVelocity(800);  // RPM
             m_rightMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          }
@@ -872,11 +872,6 @@ public class Drive implements Subsystem, PIDOutput
 
 
 
-   @Override
-   public void pidWrite(double p_output)
-   {
-      setHeading(p_output);
-   }
    
    
    
