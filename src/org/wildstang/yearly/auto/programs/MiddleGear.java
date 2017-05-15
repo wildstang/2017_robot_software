@@ -24,7 +24,7 @@ public class MiddleGear extends AutoProgram
       addStep(new CloseGearHolderStep());
       addStep(new GearBackStep());
 
-      addStep(new PathFollowerStep(PathNameConstants.WALL_TO_GEAR_CENTER));
+      addStep(new MotionMagicStraightLine(36));
       addStep(new AutoStepDelay(500));
 //      addStep(new DriveDistanceStraightStep(0.5, 48));
       addStep(new TrackVisionToGearStep());
@@ -35,7 +35,7 @@ public class MiddleGear extends AutoProgram
 
       // Go backwards 2ft
 //      addStep(new DriveDistanceStraightStep(0.5, -24));
-      addStep(new PathFollowerStep(PathNameConstants.BACKWARDS_2FT));
+      addStep(new MotionMagicStraightLine(-24));
       
    }
 

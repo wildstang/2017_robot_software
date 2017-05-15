@@ -56,7 +56,7 @@ public class MotionMagicStraightLine extends AutoStep
          SmartDashboard.putNumber("Tolerance", TOLERANCE);
          // Check if we've gone far enough
 //         if (Math.abs((m_drive.getRightSensorValue() / 4096)) >= m_rotations)
-         if (Math.abs((Math.abs(m_rotations) - (Math.abs(m_drive.getLeftSensorValue() / 4096)))) <= TOLERANCE)
+         if (Math.abs((Math.abs(m_rotations) - (Math.abs(m_drive.getRightSensorValue() / 4096)))) <= TOLERANCE)
          {
             m_drive.setOpenLoopDrive();
             m_drive.setBrakeMode(true);
