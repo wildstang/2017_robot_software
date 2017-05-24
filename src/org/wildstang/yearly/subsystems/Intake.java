@@ -8,6 +8,7 @@ import org.wildstang.hardware.crio.outputs.WsVictor;
 import org.wildstang.yearly.robot.WSInputs;
 import org.wildstang.yearly.robot.WSOutputs;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake implements Subsystem
@@ -22,7 +23,11 @@ public class Intake implements Subsystem
    private boolean m_intakeCurrent = false;
    private boolean m_intakePrev = false;
 
-   
+   private boolean jammed = false;
+   private double limit = 50;
+
+   private PowerDistributionPanel pdp;
+
    @Override
    public void resetState()
    {
@@ -55,9 +60,10 @@ public class Intake implements Subsystem
       m_intakeButton = (DigitalInput) Core.getInputManager().getInput(WSInputs.INTAKE_ON.getName());
       m_intakeButton.addInputListener(this);
 
+      pdp = new PowerDistributionPanel();
+
    }
-   
-   
+
    @Override
    public void inputUpdate(Input p_source)
    {
@@ -80,7 +86,19 @@ public class Intake implements Subsystem
 
       if (m_intakeOn)
       {
-         m_intakeMotor.setValue(m_motorSpeed);
+         double current = pdp.getCurrent(11);
+
+         if (current < 50)
+         {
+            m_intakeMotor.setValue(m_motorSpeed);
+            SmartDashboard.putBoolean("Intake Jammed", false);
+         }
+         else
+         {
+            SmartDashboard.putBoolean("Intake Jammed", true);
+            m_intakeMotor.setValue(0);
+         }
+         
       }
       else
       {

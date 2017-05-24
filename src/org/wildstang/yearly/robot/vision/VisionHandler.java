@@ -152,17 +152,17 @@ public class VisionHandler implements Runnable
                   {
                      m_visionServer.setDistance(parms[DISTANCE_INDEX]);
                   }
-                  if (RobotTemplate.LOG_STATE)
-                  {
-                     if (parms.length > 2)
-                     {
-                        Core.getStateTracker().addState("Image set", "Vision", parms[SET_INDEX]);
-                     }
-                     if (parms.length > 3)
-                     {
-                        Core.getStateTracker().addState("Image number", "Vision", parms[IMAGE_INDEX]);
-                     }
-                  }
+//                  if (RobotTemplate.LOG_STATE)
+//                  {
+//                     if (parms.length > 2)
+//                     {
+//                        Core.getStateTracker().addState("Image set", "Vision", parms[SET_INDEX]);
+//                     }
+//                     if (parms.length > 3)
+//                     {
+//                        Core.getStateTracker().addState("Image number", "Vision", parms[IMAGE_INDEX]);
+//                     }
+//                  }
 
                   long now = System.currentTimeMillis();
                   SmartDashboard.putNumber("Vision update delta", (now - m_lastMsgReceived));

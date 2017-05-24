@@ -184,11 +184,11 @@ public class RobotTemplate extends IterativeRobot
 
       AutoManager.getInstance().addProgram(new Baseline());
       AutoManager.getInstance().addProgram(new BoilerShoot());
-      AutoManager.getInstance().addProgram(new LeftGear());
+      AutoManager.getInstance().addProgram(new LeftGearStraight());
       AutoManager.getInstance().addProgram(new MiddleGear());
-      AutoManager.getInstance().addProgram(new RightGear());
+      AutoManager.getInstance().addProgram(new RightGearStraight());
       AutoManager.getInstance().addProgram(new HopperShoot());
-      AutoManager.getInstance().addProgram(new GearPlus10());
+//      AutoManager.getInstance().addProgram(new GearPlus10());
       AutoManager.getInstance().addProgram(new GearPlus10StraightLeft());
       AutoManager.getInstance().addProgram(new GearPlus10StraightRight());
       

@@ -35,6 +35,7 @@ public class BoilerShoot extends AutoProgram
 //
       // Turn on shooter and shoot
       addStep(new ShooterOnAndReady());
+      addStep(new AutoStepDelay(1000));
       addStep(new ShootStep());
       //addStep(new FeedOnStep());
       addStep(new AutoStepDelay(delayWhileShooting));
