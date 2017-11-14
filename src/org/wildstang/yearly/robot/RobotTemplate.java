@@ -183,17 +183,19 @@ public class RobotTemplate extends IterativeRobot
 //      AutoManager.getInstance().addProgram(new VisionTest());
 
       AutoManager.getInstance().addProgram(new Baseline());
-      AutoManager.getInstance().addProgram(new BoilerShoot());
-      AutoManager.getInstance().addProgram(new LeftGearStraight());
-      AutoManager.getInstance().addProgram(new MiddleGear());
-      AutoManager.getInstance().addProgram(new RightGearStraight());
-      AutoManager.getInstance().addProgram(new HopperShoot());
+//      AutoManager.getInstance().addProgram(new BoilerShoot());
+//      AutoManager.getInstance().addProgram(new LeftGearStraight());
+//      AutoManager.getInstance().addProgram(new MiddleGear());
+//      AutoManager.getInstance().addProgram(new RightGearStraight());
+//      AutoManager.getInstance().addProgram(new HopperShoot());
 //      AutoManager.getInstance().addProgram(new GearPlus10());
-      AutoManager.getInstance().addProgram(new GearPlus10StraightLeft());
-      AutoManager.getInstance().addProgram(new GearPlus10StraightRight());
+//      AutoManager.getInstance().addProgram(new GearPlus10StraightLeft());
+//      AutoManager.getInstance().addProgram(new GearPlus10StraightRight());
       
       AutoManager.getInstance().addProgram(new HopperShootStraight());
       AutoManager.getInstance().addProgram(new TurnTesting());
+      AutoManager.getInstance().addProgram(new DrivePIDProgram());
+      
       // 3. Start Vision server
       if (m_visionServer != null)
       {
