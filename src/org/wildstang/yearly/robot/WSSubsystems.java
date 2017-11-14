@@ -7,6 +7,7 @@ import org.wildstang.yearly.subsystems.Gear;
 import org.wildstang.yearly.subsystems.Intake;
 import org.wildstang.yearly.subsystems.Monitor;
 import org.wildstang.yearly.subsystems.Shooter;
+import org.wildstang.yearly.subsystems.gyro.GyroController;
 
 public enum WSSubsystems implements Subsystems
 {

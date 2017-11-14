@@ -7,5 +7,6 @@ public enum DriveType
    FULL_BRAKE,
    MAGIC,
    AUTO_GEAR_DROP,
+   PID,
    PATH;
 }

@@ -107,7 +107,7 @@ public enum WSInputs implements Inputs
    // ********************************             
    // Others ...                                   
    // ********************************             
-   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, true), false);
+   GYRO("Gyro", WSInputType.ANALOG_GYRO,           new WsAnalogGyroConfig(0, false), false);
 //   IMU("IMU", WSInputType.COMPASS,                     new WsI2CInputConfig(I2C.Port.kMXP, 0x20), true);
 
 

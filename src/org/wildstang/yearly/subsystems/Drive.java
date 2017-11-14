@@ -8,10 +8,12 @@ import org.wildstang.framework.core.Core;
 import org.wildstang.framework.io.Input;
 import org.wildstang.framework.io.inputs.AnalogInput;
 import org.wildstang.framework.io.inputs.DigitalInput;
+import org.wildstang.framework.pid.controller.PidController;
 import org.wildstang.framework.subsystems.Subsystem;
 import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.*;
 import org.wildstang.yearly.subsystems.drive.*;
+import org.wildstang.yearly.subsystems.gyro.GyroController;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.StatusFrameRate;
@@ -28,13 +30,13 @@ public class Drive implements Subsystem
    private static final double ROBOT_WIDTH_INCHES = 30;
    private static final double WHEEL_DIAMETER_INCHES = 4;
    public static final double ENCODER_CPR = 4096;
-   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / ENCODER_CPR; //.0009817146
+   private static final double TICKS_TO_INCHES = WHEEL_DIAMETER_INCHES * Math.PI
+         / ENCODER_CPR; // .0009817146
    private static final double RADIANS = Math.PI / 180;
    private final double CORRECTION_HEADING_LEVEL = 1.2;
    private static final String DRIVER_STATES_FILENAME = "/home/lvuser/drive_state_";
    private int pathNum = 1;
    private static final double ANTI_TURBO_FACTOR = 0.5;
-   
 
    // Hold a reference to the input test for fast equality test during
    // inputUpdate()
@@ -61,7 +63,7 @@ public class Drive implements Subsystem
 
    // ALL variables below here are state that needs to be reset in resetState()
    private boolean m_gearDropFinished = false;
-   
+
    // Values from inputs
    private double m_throttleValue;
    private double m_headingValue;
@@ -80,7 +82,7 @@ public class Drive implements Subsystem
    private boolean m_autoDropMode = false;
 
    private boolean m_antiTurbo = false;
-   
+
    private DriveType m_driveMode = DriveType.CHEESY;
    private PathFollower m_pathFollower;
 
@@ -93,13 +95,16 @@ public class Drive implements Subsystem
 
    double m_visionXCorrection;
    double m_visionDistance;
-
    
+   PidController m_PIDController;
+   double m_PIDThrottle;
+   double m_PIDHeading;
+
    @Override
    public void init()
    {
       // Add any additional items to track in the logger
-      if (true)//RobotTemplate.LOG_STATE)
+      if (true)// RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addIOInfo("Left speed (RPM)", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Right speed (RPM)", "Drive", "Input", null);
@@ -118,7 +123,7 @@ public class Drive implements Subsystem
          Core.getStateTracker().addIOInfo("Vision distance", "Drive", "Input", null);
          Core.getStateTracker().addIOInfo("Vision correction", "Drive", "Input", null);
       }
-      
+
       // Drive
       m_headingInput = (AnalogInput) Core.getInputManager().getInput(WSInputs.DRV_HEADING.getName());
       m_headingInput.addInputListener(this);
@@ -128,7 +133,7 @@ public class Drive implements Subsystem
 
       m_shifterInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.SHIFT.getName());
       m_shifterInput.addInputListener(this);
-      
+
       m_quickTurnInput = (DigitalInput) Core.getInputManager().getInput(WSInputs.QUICK_TURN.getName());
       m_quickTurnInput.addInputListener(this);
 
@@ -144,11 +149,10 @@ public class Drive implements Subsystem
       m_shifterSolenoid = (WsSolenoid) Core.getOutputManager().getOutput(WSOutputs.SHIFTER.getName());
 
       initDriveTalons();
-      
+
       resetState();
    }
 
-   
    @Override
    public void resetState()
    {
@@ -171,13 +175,11 @@ public class Drive implements Subsystem
       m_autoDropCurrent = false;
       m_autoDropPrev = false;
       m_autoDropMode = false;
-      
+
       m_antiTurbo = false;
 
       maxSpeed = 0;
    }
-
-
 
    public void initDriveTalons()
    {
@@ -241,7 +243,9 @@ public class Drive implements Subsystem
 
       m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
       m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
-      
+
+      GyroController gyroController = new GyroController();
+      m_PIDController = new PidController(gyroController, gyroController, "GyroPID");
    }
 
    @Override
@@ -251,8 +255,9 @@ public class Drive implements Subsystem
       if (p_source == m_throttleInput)
       {
          m_throttleValue = m_throttleInput.getValue();
-         
-//         m_quickTurn = m_cheesyHelper.handleDeadband(m_throttleValue, CheesyDriveHelper.kThrottleDeadband) == 0.0;
+
+         // m_quickTurn = m_cheesyHelper.handleDeadband(m_throttleValue,
+         // CheesyDriveHelper.kThrottleDeadband) == 0.0;
       }
       else if (p_source == m_headingInput)
       {
@@ -337,7 +342,7 @@ public class Drive implements Subsystem
       SmartDashboard.putNumber("throttleValue", m_throttleValue);
       SmartDashboard.putNumber("heading value", m_headingValue);
       SmartDashboard.putString("Drive mode", m_driveMode.name());
-      
+
       switch (m_driveMode)
       {
          case PATH:
@@ -350,10 +355,10 @@ public class Drive implements Subsystem
             {
                effectiveThrottle = m_throttleValue * ANTI_TURBO_FACTOR;
             }
-            
+
             m_driveSignal = m_cheesyHelper.cheesyDrive(effectiveThrottle, m_headingValue, m_quickTurn);
             setMotorSpeeds(m_driveSignal);
-            
+
             if (RobotTemplate.LOG_STATE)
             {
                double tempMax = Math.max(Math.abs(m_leftMaster.getSpeed()), Math.abs(m_rightMaster.getSpeed()));
@@ -361,7 +366,7 @@ public class Drive implements Subsystem
                {
                   maxSpeed = tempMax;
                }
-                
+
                SmartDashboard.putNumber("Max Encoder Speed", maxSpeed);
             }
             break;
@@ -372,30 +377,34 @@ public class Drive implements Subsystem
             break;
          case MAGIC:
             break;
+         case PID:
+            m_PIDController.calcPid();
+            PIDcalc();
+            setMotorSpeeds(m_driveSignal);
+            break;
          case RAW:
          default:
             // Raw is default
             m_driveSignal = new DriveSignal(m_throttleValue, m_throttleValue);
             break;
       }
-      
+
       SmartDashboard.putNumber("Left Encoder", m_leftMaster.getEncPosition());
       SmartDashboard.putNumber("Right Encoder", m_rightMaster.getEncPosition());
-      
-      
+
       if (RobotTemplate.LOG_STATE)
       {
          Core.getStateTracker().addState("Drive heading", "Drive", m_headingValue);
          Core.getStateTracker().addState("Drive throttle", "Drive", m_throttleValue);
          Core.getStateTracker().addState("Vision distance", "Drive", m_visionDistance);
          Core.getStateTracker().addState("Vision correction", "Drive", m_visionXCorrection);
-         
+
          Core.getStateTracker().addState("Left output", "Drive", m_leftMaster.get());
          Core.getStateTracker().addState("Right output", "Drive", m_rightMaster.get());
 
          Core.getStateTracker().addState("Left speed (RPM)", "Drive", m_leftMaster.getSpeed());
          Core.getStateTracker().addState("Right speed (RPM)", "Drive", m_rightMaster.getSpeed());
-   
+
          Core.getStateTracker().addState("Left 1 voltage", "Drive", m_leftMaster.getOutputVoltage());
          Core.getStateTracker().addState("Left 2 voltage", "Drive", m_leftFollower.getOutputVoltage());
          Core.getStateTracker().addState("Right 1 voltage", "Drive", m_rightMaster.getOutputVoltage());
@@ -412,7 +421,7 @@ public class Drive implements Subsystem
    {
       m_antiTurbo = p_antiTurbo;
    }
-   
+
    private void toggleShifter()
    {
       if (m_shifterCurrent && !m_shifterPrev)
@@ -420,7 +429,7 @@ public class Drive implements Subsystem
          m_highGear = !m_highGear;
       }
       m_shifterPrev = m_shifterCurrent;
-      
+
       // TODO: Remove this
       maxSpeed = 0; // Easy way to reset max speed.
    }
@@ -437,12 +446,14 @@ public class Drive implements Subsystem
    private void collectDriveState()
    {
       // Calculate all changes in DriveState
-      double deltaLeftTicks = m_leftMaster.getEncPosition() - absoluteDriveState.getDeltaLeftEncoderTicks();
-      double deltaRightTicks = m_rightMaster.getEncPosition() - absoluteDriveState.getDeltaRightEncoderTicks();
+      double deltaLeftTicks = m_leftMaster.getEncPosition()
+            - absoluteDriveState.getDeltaLeftEncoderTicks();
+      double deltaRightTicks = m_rightMaster.getEncPosition()
+            - absoluteDriveState.getDeltaRightEncoderTicks();
       double deltaHeading = 0 - absoluteDriveState.getHeadingAngle(); // CHANGE
-      double deltaTime = System.currentTimeMillis() - absoluteDriveState.getDeltaTime();
+      double deltaTime = System.currentTimeMillis()
+            - absoluteDriveState.getDeltaTime();
 
-      
       /****** CONVERT TICKS TO TURN RADIUS AND CIRCLE ******/
       long startTime = System.nanoTime();
 
@@ -450,10 +461,11 @@ public class Drive implements Subsystem
       double deltaRightInches = deltaRightTicks * TICKS_TO_INCHES;
       double deltaTheta;
       double straightLineInches = 0;
-      
+
       if (deltaLeftTicks != deltaRightTicks)
       {
-         deltaTheta = (Math.atan2((deltaRightInches - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
+         deltaTheta = (Math.atan2((deltaRightInches
+               - deltaLeftInches), ROBOT_WIDTH_INCHES) / RADIANS);
       }
       else
       {
@@ -466,30 +478,37 @@ public class Drive implements Subsystem
 
       if (deltaTheta < 0)
       {
-         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES) / (deltaLeftTicks - deltaRightTicks));
+         c = Math.abs((deltaRightTicks * ROBOT_WIDTH_INCHES)
+               / (deltaLeftTicks - deltaRightTicks));
       }
       else if (deltaTheta > 0)
       {
-         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES) / (deltaRightTicks - deltaLeftTicks));
+         c = Math.abs((deltaLeftTicks * ROBOT_WIDTH_INCHES)
+               / (deltaRightTicks - deltaLeftTicks));
       }
       else
       {
          c = (double) Integer.MAX_VALUE;
       }
 
-      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the larger turn radius.
+      rLong = c + ROBOT_WIDTH_INCHES; // Will probably use later, this is the
+                                      // larger turn radius.
 
       // System.out.println("Time Elapsed: " + (System.nanoTime() - startTime));
       /*********************************/
-      
+
       // Add the DriveState to the list
       driveStates.add(new DriveState(deltaTime, deltaRightTicks, deltaLeftTicks, deltaHeading, straightLineInches, c, deltaTheta));
 
       // reset the absolute DriveState for the next cycle
-      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime() + deltaTime);
-      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks() + deltaRightTicks);
-      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks() + deltaLeftTicks);
-      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle() + deltaHeading);
+      absoluteDriveState.setDeltaTime(absoluteDriveState.getDeltaTime()
+            + deltaTime);
+      absoluteDriveState.setDeltaRightEncoderTicks(absoluteDriveState.getDeltaRightEncoderTicks()
+            + deltaRightTicks);
+      absoluteDriveState.setDeltaLeftEncoderTicks(absoluteDriveState.getDeltaLeftEncoderTicks()
+            + deltaLeftTicks);
+      absoluteDriveState.setHeading(absoluteDriveState.getHeadingAngle()
+            + deltaHeading);
    }
 
    private void autoGear()
@@ -513,11 +532,11 @@ public class Drive implements Subsystem
          setThrottle(0);
          m_gearDropFinished = true;
       }
-      
+
       m_driveSignal = m_cheesyHelper.cheesyDrive(m_throttleValue, m_headingValue, m_quickTurn);
       setMotorSpeeds(m_driveSignal);
    }
-   
+
    public boolean isGearDropFinished()
    {
       return m_gearDropFinished;
@@ -553,7 +572,7 @@ public class Drive implements Subsystem
       }
 
    }
-   
+
    public void setMotionMagicMode(boolean p_quickTurn, double f_gain)
    {
       // Stop following any current path
@@ -570,32 +589,37 @@ public class Drive implements Subsystem
          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
          m_rightMaster.changeControlMode(TalonControlMode.MotionMagic);
 
-//         m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
-//         m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         // m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN,
+         // DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN,
+         // f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
+         // m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN,
+         // DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN,
+         // f_gain, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          if (p_quickTurn)
          {
-            m_leftMaster.setMotionMagicAcceleration(350);  // RPM
-            m_leftMaster.setMotionMagicCruiseVelocity(350);  // RPM
+            m_leftMaster.setMotionMagicAcceleration(350); // RPM
+            m_leftMaster.setMotionMagicCruiseVelocity(350); // RPM
             m_leftMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
-            m_rightMaster.setMotionMagicAcceleration(350);  // RPM
-            m_rightMaster.setMotionMagicCruiseVelocity(350);  // RPM
+            m_rightMaster.setMotionMagicAcceleration(350); // RPM
+            m_rightMaster.setMotionMagicCruiseVelocity(350); // RPM
             m_rightMaster.setPID(DriveConstants.MM_QUICK_P_GAIN, DriveConstants.MM_QUICK_I_GAIN, DriveConstants.MM_QUICK_D_GAIN, DriveConstants.MM_QUICK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          }
          else
          {
-            m_leftMaster.setMotionMagicAcceleration(900);  // RPM
-            m_leftMaster.setMotionMagicCruiseVelocity(800);  // RPM
+            m_leftMaster.setMotionMagicAcceleration(900); // RPM
+            m_leftMaster.setMotionMagicCruiseVelocity(800); // RPM
             m_leftMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
-            m_rightMaster.setMotionMagicAcceleration(900);  // RPM
-            m_rightMaster.setMotionMagicCruiseVelocity(800);  // RPM
+            m_rightMaster.setMotionMagicAcceleration(900); // RPM
+            m_rightMaster.setMotionMagicCruiseVelocity(800); // RPM
             m_rightMaster.setPID(DriveConstants.MM_DRIVE_P_GAIN, DriveConstants.MM_DRIVE_I_GAIN, DriveConstants.MM_DRIVE_D_GAIN, DriveConstants.MM_DRIVE_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          }
 
          resetEncoders();
-         
+
          m_driveMode = DriveType.MAGIC;
+         m_PIDController.disable();
 
          setBrakeMode(true);
       }
@@ -605,19 +629,21 @@ public class Drive implements Subsystem
    {
       return m_leftMaster.getEncPosition();
    }
-   
+
    public double getRightSensorValue()
    {
       return m_rightMaster.getEncPosition();
    }
-   
-   public void setMotionMagicTargetAbsolute(double p_leftTarget, double p_rightTarget)
+
+   public void setMotionMagicTargetAbsolute(double p_leftTarget,
+         double p_rightTarget)
    {
       m_leftMaster.set(p_leftTarget);
       m_rightMaster.set(p_rightTarget);
    }
 
-   public void setMotionMagicTargetDelta(double p_leftDelta, double p_rightDelta)
+   public void setMotionMagicTargetDelta(double p_leftDelta,
+         double p_rightDelta)
    {
       m_leftMaster.set(m_leftMaster.getEncPosition() + p_leftDelta);
       m_rightMaster.set(m_rightMaster.getEncPosition() + p_rightDelta);
@@ -644,16 +670,17 @@ public class Drive implements Subsystem
       stopPathFollowing();
 
       m_driveMode = DriveType.AUTO_GEAR_DROP;
+      m_PIDController.disable();
       RobotTemplate.getVisionServer().startVideoLogging();
 
       setHighGear(true);
       m_gearDropFinished = false;
-      
+
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
    }
-   
+
    public void exitAutoGearMode()
    {
       if (RobotTemplate.getVisionServer() != null)
@@ -661,12 +688,13 @@ public class Drive implements Subsystem
          RobotTemplate.getVisionServer().stopVideoLogging();
       }
    }
-   
+
    public void setPathFollowingMode()
    {
 
       m_driveMode = DriveType.PATH;
-
+      m_PIDController.disable();
+      
       // Configure motor controller modes for path following
       m_leftMaster.changeControlMode(TalonControlMode.MotionProfile);
       m_leftMaster.setProfile(0);
@@ -675,13 +703,13 @@ public class Drive implements Subsystem
       m_rightMaster.setProfile(0);
 
       // Go as fast as possible
-//      setHighGear(true);
+      // setHighGear(true);
 
       // Use brake mode to stop quickly at end of path, since Talons will put
       // output to neutral
       setBrakeMode(true);
    }
-   
+
    public void resetEncoders()
    {
       m_leftMaster.setEncPosition(0);
@@ -693,11 +721,12 @@ public class Drive implements Subsystem
       stopPathFollowing();
 
       m_driveMode = DriveType.CHEESY;
-
+      m_PIDController.disable();
+      
       m_gearDropFinished = true;
-      
+
       setBrakeMode(false);
-      
+
       // Reconfigure motor controllers
       m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
       m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
@@ -708,7 +737,8 @@ public class Drive implements Subsystem
       setOpenLoopDrive();
 
       m_driveMode = DriveType.RAW;
-
+      m_PIDController.disable();
+      
    }
 
    public void setFullBrakeMode()
@@ -730,12 +760,12 @@ public class Drive implements Subsystem
          m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
          m_rightMaster.set(m_rightMaster.getPosition());
 
-         
          m_leftMaster.setPID(DriveConstants.BASE_LOCK_P_GAIN, DriveConstants.BASE_LOCK_I_GAIN, DriveConstants.BASE_LOCK_D_GAIN, DriveConstants.BASE_LOCK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
          m_rightMaster.setPID(DriveConstants.BASE_LOCK_P_GAIN, DriveConstants.BASE_LOCK_I_GAIN, DriveConstants.BASE_LOCK_D_GAIN, DriveConstants.BASE_LOCK_F_GAIN, 0, 0, DriveConstants.BASE_LOCK_PROFILE_SLOT);
 
          m_driveMode = DriveType.FULL_BRAKE;
-
+         m_PIDController.disable();
+         
          setBrakeMode(true);
       }
       setHighGear(false);
@@ -797,7 +827,6 @@ public class Drive implements Subsystem
    {
       return "Drive Base";
    }
-   
 
    public void writeDriveStatesToFile(String fileName)
    {
@@ -826,8 +855,8 @@ public class Drive implements Subsystem
             bw.close();
          }
       }
-      
-      //373x45=>31 ft, 1 inch x 3 ft 9 inches
+
+      // 373x45=>31 ft, 1 inch x 3 ft 9 inches
       // We got 23 ft 9 inches x 11 ft 4 inches
       // Our calculations were 7 ft 4 inches too short in the x direction, but
       // we were 7 ft 7 inches too long in the y direction
@@ -836,7 +865,7 @@ public class Drive implements Subsystem
          ex.printStackTrace();
       }
       driveStates.clear();
-      
+
    }
 
    public void setHeading(double newHeading)
@@ -848,18 +877,15 @@ public class Drive implements Subsystem
    {
       m_throttleValue = newThrottle;
    }
-   
-   
-   
+
    public void setQuickTurn(boolean p_quickTurn)
    {
       m_quickTurn = p_quickTurn;
    }
 
-
-
    /**
     * Returns distance traveled since encoders were set to zero, in inches.
+    * 
     * @return
     */
    public int getEncoderDistanceInches()
@@ -870,9 +896,31 @@ public class Drive implements Subsystem
       return (int) (((leftTick + rightTick) / 2) * TICKS_TO_INCHES);
    }
 
+   public void setPIDMode()
+   {
+      m_PIDController.enable();
+      m_PIDController.reset();
+      m_driveMode = DriveType.PID;
+      m_leftMaster.changeControlMode(TalonControlMode.PercentVbus);
+      m_rightMaster.changeControlMode(TalonControlMode.PercentVbus);
+      resetEncoders();
+   }
+   
+   public void setPIDThrottle(double throttle){
+      m_PIDThrottle = throttle;
+   }
+   
+   public void setPIDHeading(double heading){
+      m_PIDHeading = heading;
+   }
+   
+   private void PIDcalc(){
+      if(m_PIDThrottle <= 0.001 && m_PIDThrottle >= -0.001){
+         m_driveSignal = new DriveSignal(m_PIDThrottle - m_PIDHeading, m_PIDThrottle + m_PIDHeading);
+      }else{
+         double heading = m_PIDHeading * m_PIDThrottle * 0.5;
+         m_driveSignal = new DriveSignal(m_PIDThrottle - heading, m_PIDThrottle + heading);
+      }
+   }
 
-
-   
-   
-   
 }
