@@ -3,12 +3,12 @@ package org.wildstang.yearly.subsystems.shooter;
 import org.wildstang.framework.core.Core;
 import org.wildstang.yearly.subsystems.Shooter;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Flywheel extends Shooter
 {
 
-   private CANTalon m_talon;
+   private TalonSRX m_talon;
    private double m_speed;
 
    private boolean m_running = false;
@@ -17,7 +17,7 @@ public class Flywheel extends Shooter
    // Shooter subclass
    // as well as mutated accordingly with the functions below
 
-   public Flywheel(CANTalon p_talon, double p_speed)
+   public Flywheel(TalonSRX p_talon, double p_speed)
    {
       m_talon = p_talon;
       m_speed = p_speed;

@@ -15,10 +15,10 @@ import org.wildstang.yearly.subsystems.shooter.Flywheel;
 import org.wildstang.yearly.subsystems.shooter.Blender;
 import org.wildstang.yearly.subsystems.shooter.Feed;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.StatusFrameRate;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX.StatusFrameRate;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,8 +29,8 @@ public class Shooter implements Subsystem
    private LED m_led;
    
    // Flywheels
-   private CANTalon m_CANFlywheelLeft;
-   private CANTalon m_CANFlywheelRight;
+   private TalonSRX m_CANFlywheelLeft;
+   private TalonSRX m_CANFlywheelRight;
 
    private Flywheel m_leftFlywheel;
    private Flywheel m_rightFlywheel;
@@ -147,8 +147,8 @@ public class Shooter implements Subsystem
       
       // Flywheels
       // CAN talons
-      m_CANFlywheelLeft = new CANTalon(CANConstants.FLYWHEEL_LEFT_TALON_ID);
-      m_CANFlywheelRight = new CANTalon(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
+      m_CANFlywheelLeft = new TalonSRX(CANConstants.FLYWHEEL_LEFT_TALON_ID);
+      m_CANFlywheelRight = new TalonSRX(CANConstants.FLYWHEEL_RIGHT_TALON_ID);
 
       configureFlywheelTalons();
 
@@ -222,7 +222,7 @@ public class Shooter implements Subsystem
       m_RD = Core.getConfigManager().getConfig().getDouble(this.getClass().getName() + ".R_D", 0.5);
    }
 
-   private void configureFlywheelTalon(CANTalon p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
+   private void configureFlywheelTalon(TalonSRX p_talon, double p_fGain, double p_pGain, double p_iGain, double p_dGain)
    {
       p_talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
       p_talon.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
@@ -365,7 +365,7 @@ public class Shooter implements Subsystem
       return isReadyToShoot(m_CANFlywheelRight);
    }
 
-   public boolean isReadyToShoot(CANTalon p_talon)
+   public boolean isReadyToShoot(TalonSRX p_talon)
    {
       double speed = p_talon.getSpeed();
 

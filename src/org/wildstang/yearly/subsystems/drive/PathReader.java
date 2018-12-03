@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class PathReader
 {
@@ -49,8 +49,8 @@ public class PathReader
       }
       
       double[][] dataPoints = new double[rawData.size()][];
-      CANTalon.TrajectoryPoint mpPoint = null;
-      ArrayList<CANTalon.TrajectoryPoint> trajPoints = new ArrayList<CANTalon.TrajectoryPoint>();
+      TalonSRX.TrajectoryPoint mpPoint = null;
+      ArrayList<TalonSRX.TrajectoryPoint> trajPoints = new ArrayList<TalonSRX.TrajectoryPoint>();
       
       // Parse into numbers
       for (int i = 0; i < rawData.size(); i++)
@@ -68,7 +68,7 @@ public class PathReader
          dataPoints[i][2] = interval;
          
          // Create a TrajectoryPoint for the Talon - do this while reading the file
-         mpPoint = new CANTalon.TrajectoryPoint();
+         mpPoint = new TalonSRX.TrajectoryPoint();
          mpPoint.position = rotations;
          mpPoint.velocity = velocity;
          mpPoint.timeDurMs = (int) interval;

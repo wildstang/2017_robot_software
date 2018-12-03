@@ -2,14 +2,14 @@ package org.wildstang.yearly.subsystems.drive;
 
 import java.util.ArrayList;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Trajectory {
    
    // this array is indexed as [time][3]
    // each row is [rotation, velocity, time]
    private double[][] m_trajectoryPoints;
-   private ArrayList<CANTalon.TrajectoryPoint> m_points; 
+   private ArrayList<TalonSRX.TrajectoryPoint> m_points; 
    
    public Trajectory()
    {
@@ -25,12 +25,12 @@ public class Trajectory {
       m_trajectoryPoints = p_trajectoryPoints;
    }
 
-   public void setTalonPoints(ArrayList<CANTalon.TrajectoryPoint> p_points)
+   public void setTalonPoints(ArrayList<TalonSRX.TrajectoryPoint> p_points)
    {
       m_points = p_points;
    }
 
-   public ArrayList<CANTalon.TrajectoryPoint> getTalonPoints()
+   public ArrayList<TalonSRX.TrajectoryPoint> getTalonPoints()
    {
       return m_points;
    }

@@ -13,9 +13,11 @@ import org.wildstang.hardware.crio.outputs.WsSolenoid;
 import org.wildstang.yearly.robot.*;
 import org.wildstang.yearly.subsystems.drive.*;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.StatusFrameRate;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+//import com.ctre.phoenix.motorcontrol.can.TalonSRX.StatusFrameRate;
+//import com.ctre.phoenix.motorcontrol.can.TalonSRX.TalonControlMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -48,10 +50,10 @@ public class Drive implements Subsystem
    private DigitalInput m_antiTurboInput;
 
    // Talons for output
-   private CANTalon m_leftMaster;
-   private CANTalon m_rightMaster;
-   private CANTalon m_leftFollower;
-   private CANTalon m_rightFollower;
+   private TalonSRX m_leftMaster;
+   private TalonSRX m_rightMaster;
+   private TalonSRX m_leftFollower;
+   private TalonSRX m_rightFollower;
 
    private CheesyDriveHelper m_cheesyHelper = new CheesyDriveHelper();
 
@@ -181,37 +183,34 @@ public class Drive implements Subsystem
 
    public void initDriveTalons()
    {
-      m_leftMaster = new CANTalon(CANConstants.LEFT_MASTER_TALON_ID);
-      m_leftFollower = new CANTalon(CANConstants.LEFT_FOLLOWER_TALON_ID);
-      m_rightMaster = new CANTalon(CANConstants.RIGHT_MASTER_TALON_ID);
-      m_rightFollower = new CANTalon(CANConstants.RIGHT_FOLLOWER_TALON_ID);
+      m_leftMaster = new TalonSRX(CANConstants.LEFT_MASTER_TALON_ID);
+      m_leftFollower = new TalonSRX(CANConstants.LEFT_FOLLOWER_TALON_ID);
+      m_rightMaster = new TalonSRX(CANConstants.RIGHT_MASTER_TALON_ID);
+      m_rightFollower = new TalonSRX(CANConstants.RIGHT_FOLLOWER_TALON_ID);
 
       // Start in open loop mode
-      m_leftMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-      m_leftMaster.set(0);
-      m_leftFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-      m_leftFollower.set(CANConstants.LEFT_MASTER_TALON_ID);
+      m_leftMaster.set(ControlMode.PercentOutput, 0);
+      m_leftFollower.set(ControlMode.Follower, CANConstants.LEFT_MASTER_TALON_ID);
 
-      m_rightMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-      m_rightMaster.set(0);
-      m_rightFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-      m_rightFollower.set(CANConstants.RIGHT_MASTER_TALON_ID);
+      m_rightMaster.set(ControlMode.PercentOutput, 0);
+      m_rightFollower.set(ControlMode.Follower, CANConstants.RIGHT_MASTER_TALON_ID);
 
+      /* Unclear what the new WPI analog to these lines is. -Zack
       m_leftMaster.configNominalOutputVoltage(0.0, 0.0);
       m_leftMaster.configPeakOutputVoltage(+12.0f, -12.0f);
 
       m_rightMaster.configNominalOutputVoltage(0.0, 0.0);
-      m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f);
+      m_rightMaster.configPeakOutputVoltage(+12.0f, -12.0f); */
 
       setBrakeMode(false);
 
       // TODO: Enable when encoders are mounted
 
       // Set up the encoders
-      m_leftMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+      m_leftMaster.setFeedbackDevice(TalonSRX.FeedbackDevice.CtreMagEncoder_Relative);
       m_leftMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
       m_leftMaster.reverseSensor(true);
-      if (m_leftMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      if (m_leftMaster.isSensorPresent(TalonSRX.FeedbackDevice.CtreMagEncoder_Relative) != TalonSRX.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("LeftEncPresent", false);
       }
@@ -220,9 +219,9 @@ public class Drive implements Subsystem
          SmartDashboard.putBoolean("LeftEncPresent", true);
       }
 
-      m_rightMaster.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+      m_rightMaster.setFeedbackDevice(FeedbackDevice.CTRE_MagEncoder_Relative);
       m_rightMaster.setStatusFrameRateMs(StatusFrameRate.Feedback, 10);
-      if (m_rightMaster.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Relative) != CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
+      if (m_rightMaster.isSensorPresent(FeedbackDevice.CTRE_MagEncoder_Relative) != TalonSRX.FeedbackDeviceStatus.FeedbackStatusPresent)
       {
          SmartDashboard.putBoolean("RightEncPresent", false);
       }
@@ -721,12 +720,12 @@ public class Drive implements Subsystem
          // Set up Talons to hold their current position as close as possible
 
          m_leftMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_leftMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         m_leftMaster.changeControlMode(TalonSRX.TalonControlMode.Position);
          m_leftMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
          m_leftMaster.set(m_leftMaster.getPosition());
 
          m_rightMaster.setProfile(DriveConstants.BASE_LOCK_PROFILE_SLOT);
-         m_rightMaster.changeControlMode(CANTalon.TalonControlMode.Position);
+         m_rightMaster.changeControlMode(TalonSRX.TalonControlMode.Position);
          m_rightMaster.setAllowableClosedLoopErr(DriveConstants.BRAKE_MODE_ALLOWABLE_ERROR);
          m_rightMaster.set(m_rightMaster.getPosition());
 
